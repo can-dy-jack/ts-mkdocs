@@ -1,0 +1,88 @@
+site_name: ts-mkdocs
+site_description: A demo site built with ts-mkdocs to validate features during development
+site_url: https://example.com/
+repo_url: https://github.com/can-dy-jack/ts-mkdocs
+repo_name: can-dy-jack/ts-mkdocs
+copyright: Copyright &copy; 2024 ts-mkdocs contributors
+
+edit_uri: edit/main/docs/
+site_dir: site
+
+nav:
+  - Home: index.md
+  - Getting Started:
+      - Installation: guide/installation.md
+      - Configuration: guide/configuration.md
+  - Feature Showcase: showcase.md
+  - Reference:
+      - CLI: reference/cli.md
+      - Plugin API: reference/plugins.md
+  - Changelog: changelog.md
+
+theme:
+  name: material
+  language: en
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  font:
+    text: Inter
+    code: JetBrains Mono
+  # Syntax highlighting themes (Shiki built-in theme names)
+  # Light candidates: github-light, catppuccin-latte, solarized-light, min-light
+  # Dark  candidates: github-dark, dracula, nord, one-dark-pro, catppuccin-mocha
+  highlight:
+    theme_light: solarized-light
+    theme_dark: dracula
+  icons:
+    default: material
+    libraries:
+      - material
+      - fontawesome
+      - bootstrap
+  icon:
+    admonition:
+      note: material/info
+      tip: material/lightbulb
+  features:
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.footer
+    - navigation.top
+    - toc.follow
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+
+plugins:
+  - search
+  - tags
+  - social
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.superfences
+  - pymdownx.tasklist
+  - attr_list
+  - tables
+  - toc:
+      permalink: true
+
+extra:
+  version:
+    provider: mike
+    default: latest

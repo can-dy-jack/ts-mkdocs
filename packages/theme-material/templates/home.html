@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block nav %}{% endblock %}
+{% block toc %}{% endblock %}
+
+{% block content %}
+<div class="md-hero md-hero--expand" data-md-component="hero">
+  <div class="md-hero__inner md-grid">
+    <div class="md-hero__content">
+      <h1>{{ page.meta.hero.title if page.meta.hero and page.meta.hero.title else page.title | default(config.site_name) }}</h1>
+      {% if page.meta.hero and page.meta.hero.tagline %}
+      <p class="md-hero__tagline">{{ page.meta.hero.tagline }}</p>
+      {% elif config.site_description %}
+      <p class="md-hero__tagline">{{ config.site_description }}</p>
+      {% endif %}
+      {% if first_doc_url %}
+      <a href="{{ base_url }}{{ first_doc_url }}" class="md-button md-button--primary">
+        {{ i18n['hero.get_started'] }}
+      </a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+<article class="md-content__inner md-typeset">
+  {{ page.content | safe }}
+</article>
+{% endblock %}

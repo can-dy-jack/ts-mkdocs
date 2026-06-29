@@ -1,0 +1,50 @@
+{
+  "name": "ts-mkdocs",
+  "version": "0.1.0",
+  "description": "A TypeScript implementation of MkDocs with Material theme",
+  "type": "module",
+  "bin": {
+    "ts-mkdocs": "./dist/cli.js"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "chokidar": "^3.6.0",
+    "commander": "^12.1.0",
+    "gray-matter": "^4.0.3",
+    "js-yaml": "^4.1.0",
+    "lunr": "^2.3.9",
+    "markdown-it": "^14.1.0",
+    "markdown-it-anchor": "^9.1.0",
+    "markdown-it-attrs": "^4.2.0",
+    "nunjucks": "^3.2.4",
+    "picocolors": "^1.1.1",
+    "shiki": "^1.22.0",
+    "ts-mkdocs-theme-material": "workspace:*",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
+    "@types/lunr": "^2.3.7",
+    "@types/markdown-it": "^14.1.2",
+    "@types/node": "^22.0.0",
+    "@types/nunjucks": "^3.2.6",
+    "tsup": "^8.3.0",
+    "typescript": "^5.5.0",
+    "vitest": "^2.1.0"
+  }
+}

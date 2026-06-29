@@ -1,0 +1,36 @@
+{% macro render_nav(items, depth) %}
+<ul class="md-nav__list">
+  {% for item in items %}
+    {% if item.type == 'page' %}
+    <li class="md-nav__item{% if item.active %} md-nav__item--active{% endif %}">
+      <a href="{{ base_url }}{{ item.url }}" class="md-nav__link{% if item.active %} md-nav__link--active{% endif %}">
+        {{ item.title }}
+      </a>
+    </li>
+    {% elif item.type == 'section' %}
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="nav-section-{{ loop.index }}-{{ depth }}"
+        {% if item.children | selectattr('active') | list | length > 0 %}checked{% endif %}>
+      <label class="md-nav__link" for="nav-section-{{ loop.index }}-{{ depth }}">
+        {{ item.title }}
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+        </span>
+      </label>
+      <nav class="md-nav" aria-label="{{ item.title }}">
+        {{ render_nav(item.children, depth + 1) }}
+      </nav>
+    </li>
+    {% elif item.type == 'link' %}
+    <li class="md-nav__item">
+      <a href="{{ item.url }}" class="md-nav__link" target="_blank" rel="noopener">
+        {{ item.title }}
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="md-icon" style="width:.8em;height:.8em;vertical-align:middle"><path d="M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3m-2 16H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7h-2v7z"/></svg>
+      </a>
+    </li>
+    {% endif %}
+  {% endfor %}
+</ul>
+{% endmacro %}
+
+{{ render_nav(sidebar_nav | default(nav), 0) }}

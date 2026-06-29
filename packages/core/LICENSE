@@ -1,0 +1,15 @@
+{
+  "name": "ts-mkdocs",
+  "version": "0.1.0",
+  "description": "A TypeScript implementation of MkDocs with Material theme",
+  "type": "module",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/can-dy-jack/ts-mkdocs.git"
+  },
+  "keywords": ["mkdocs", "documentation", "material", "static-site", "typescript"],
+  "license": "MIT"
+}

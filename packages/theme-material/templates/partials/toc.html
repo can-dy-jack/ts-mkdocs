@@ -1,0 +1,14 @@
+{% macro render_toc(entries) %}
+<ul class="md-nav__list">
+  {% for entry in entries %}
+  <li class="md-nav__item">
+    <a href="#{{ entry.id }}" class="md-nav__link">{{ entry.title }}</a>
+    {% if entry.children | length > 0 %}
+    {{ render_toc(entry.children) }}
+    {% endif %}
+  </li>
+  {% endfor %}
+</ul>
+{% endmacro %}
+
+{{ render_toc(toc) }}

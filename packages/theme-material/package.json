@@ -1,0 +1,17 @@
+{
+  "name": "ts-mkdocs-theme-material",
+  "version": "0.1.0",
+  "description": "Material theme for ts-mkdocs",
+  "type": "module",
+  "main": "./index.js",
+  "types": "./index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./index.js",
+      "types": "./index.d.ts"
+    },
+    "./templates": "./templates",
+    "./assets": "./assets"
+  },
+  "files": ["index.js", "index.d.ts", "templates", "assets"]
+}

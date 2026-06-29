@@ -1,0 +1,22 @@
+{% macro render_tabs(items) %}
+<nav class="md-tabs" aria-label="Tabs">
+  <div class="md-tabs__inner md-grid">
+    <ul class="md-tabs__list">
+      {% for item in items %}
+        {% if item.type == 'page' %}
+        <li class="md-tabs__item{% if item.active %} md-tabs__item--active{% endif %}">
+          <a href="{{ base_url }}{{ item.url }}" class="md-tabs__link">{{ item.title }}</a>
+        </li>
+        {% elif item.type == 'section' %}
+        <li class="md-tabs__item{% if item.children | selectattr('active') | list | length > 0 %} md-tabs__item--active{% endif %}">
+          {% set first = item.children | selectattr('type', 'equalto', 'page') | first %}
+          <a href="{{ base_url }}{{ first.url if first else '#' }}" class="md-tabs__link">{{ item.title }}</a>
+        </li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+  </div>
+</nav>
+{% endmacro %}
+
+{{ render_tabs(tab_items) }}
