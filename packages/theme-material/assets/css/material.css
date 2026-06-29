@@ -22,6 +22,7 @@
   --md-shadow-z1: 0 0.1rem 0.3rem rgba(0,0,0,.04),0 0 0.04rem rgba(0,0,0,.08);
   --md-shadow-z2: 0 0.1rem 0.3rem rgba(0,0,0,.08),0 0 0.04rem rgba(0,0,0,.2);
   --md-header-height: 2.6rem;
+  --md-tabs-height: 1.9rem;
   --md-sidebar-width: 10rem;
   --md-content-width: 45rem;
   --md-admonition-icon--note: url("data:image/svg+xml;charset=utf-8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z'/></svg>");
@@ -1097,7 +1098,7 @@ label[for="__search"] svg { width: 1.2rem; height: 1.2rem; fill: currentColor; }
 .md-tabs {
   background: var(--md-primary-fg-color);
   color: #fff;
-  overflow: auto;
+  overflow: hidden;
 }
 .md-tabs__list {
   display: flex;
@@ -1105,21 +1106,73 @@ label[for="__search"] svg { width: 1.2rem; height: 1.2rem; fill: currentColor; }
   margin: 0;
   padding: 0;
 }
-.md-tabs__item { margin: 0; }
+.md-tabs__inner.md-grid {
+  padding-left: .6rem;
+  padding-right: .6rem;
+}
+.md-tabs__item {
+  margin: 0;
+  overflow: hidden;
+}
 .md-tabs__link {
   display: block;
-  padding: .6rem 1rem;
+  padding: .32rem .65rem;
   color: rgba(255,255,255,.7);
   text-decoration: none;
+  font-size: .64rem;
   font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: .01em;
   white-space: nowrap;
 }
 .md-tabs__item--active .md-tabs__link,
-.md-tabs__link:hover { color: #fff; border-bottom: 2px solid #fff; }
-.md-tabs--sticky { position: sticky; top: var(--md-header-height); z-index: 3; }
+.md-tabs__link:hover { color: #fff; border-bottom: 1.5px solid #fff; }
+
+/* Sticky tabs: stick below header, hide on scroll down, reveal with stagger on scroll up */
+.md-tabs--sticky {
+  position: sticky;
+  top: var(--md-header-height);
+  z-index: 3;
+  transition: transform 0.26s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+}
+
+.md-tabs--sticky.md-tabs--hidden {
+  transform: translateY(-100%);
+  pointer-events: none;
+}
+
+.md-tabs--sticky.md-tabs--reveal .md-tabs__item {
+  animation: md-tabs-item-in 0.26s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+
+@keyframes md-tabs-item-in {
+  from {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Sidebars follow tabs visibility */
+body:has(.md-tabs--sticky:not(.md-tabs--hidden)) .md-sidebar {
+  top: calc(var(--md-header-height) + var(--md-tabs-height));
+  height: calc(100vh - var(--md-header-height) - var(--md-tabs-height));
+  transition: top 0.26s cubic-bezier(0.4, 0, 0.2, 1),
+              height 0.26s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body:has(.md-tabs--sticky.md-tabs--hidden) .md-sidebar {
+  top: var(--md-header-height);
+  height: calc(100vh - var(--md-header-height));
+}
+
 .md-tabs--sticky,
 .md-tabs {
-  --md-scroll-offset: 2.4rem;
+  --md-scroll-offset: var(--md-tabs-height);
 }
 
 /* ============================================================
@@ -1136,10 +1189,19 @@ label[for="__search"] svg { width: 1.2rem; height: 1.2rem; fill: currentColor; }
     width: 14rem;
     height: calc(100vh - var(--md-header-height));
     transform: translateX(-100%);
-    transition: transform .25s;
+    transition: transform .25s, top 0.26s cubic-bezier(0.4, 0, 0.2, 1),
+                height 0.26s cubic-bezier(0.4, 0, 0.2, 1);
     z-index: 5;
     background: var(--md-default-bg-color);
     box-shadow: var(--md-shadow-z2);
+  }
+  body:has(.md-tabs--sticky:not(.md-tabs--hidden)) .md-sidebar--primary {
+    top: calc(var(--md-header-height) + var(--md-tabs-height));
+    height: calc(100vh - var(--md-header-height) - var(--md-tabs-height));
+  }
+  body:has(.md-tabs--sticky.md-tabs--hidden) .md-sidebar--primary {
+    top: var(--md-header-height);
+    height: calc(100vh - var(--md-header-height));
   }
   #__drawer:checked ~ .md-container .md-sidebar--primary {
     transform: translateX(0);
@@ -1179,10 +1241,15 @@ label[for="__search"] svg { width: 1.2rem; height: 1.2rem; fill: currentColor; }
 .md-top svg { width: 1.2rem; height: 1.2rem; fill: currentColor; }
 
 /* ============================================================
-   Header autohide
+   Header autohide (header only — tabs use navigation.tabs.sticky)
    ============================================================ */
-.md-header--autohide .md-header { transition: transform .25s; }
-.md-header--autohide.md-header--hidden .md-header { transform: translateY(-100%); }
+.md-header--autohide .md-header {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.md-header--autohide.md-header--hidden .md-header {
+  transform: translateY(-100%);
+}
 
 /* ============================================================
    Announce bar

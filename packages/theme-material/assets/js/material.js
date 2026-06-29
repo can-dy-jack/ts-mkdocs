@@ -234,7 +234,9 @@
     const header = document.querySelector('.md-header');
     const tabs = document.querySelector('.md-tabs');
     let offset = header ? header.offsetHeight : 48;
-    if (tabs) offset += tabs.offsetHeight;
+    if (tabs && !tabs.classList.contains('md-tabs--hidden')) {
+      offset += tabs.offsetHeight;
+    }
     return offset + 8;
   }
 
@@ -418,9 +420,72 @@
 
   function initHeaderAutohide() {
     let lastY = window.scrollY;
+    const minScroll = 80;
+    const delta = 10;
+
     window.addEventListener('scroll', function () {
       const cur = window.scrollY;
-      document.body.classList.toggle('md-header--hidden', cur > lastY && cur > 100);
+      const diff = cur - lastY;
+
+      if (cur <= minScroll) {
+        document.body.classList.remove('md-header--hidden');
+      } else if (diff > delta) {
+        document.body.classList.add('md-header--hidden');
+      } else if (diff < -delta) {
+        document.body.classList.remove('md-header--hidden');
+      }
+
+      lastY = cur;
+    }, { passive: true });
+  }
+
+  function initTabsAutohide(tabs) {
+    let hidden = false;
+    const topZone = 120;
+    const delta = 8;
+    let revealTimer = null;
+    let lastY = window.scrollY;
+
+    function playReveal() {
+      const items = tabs.querySelectorAll('.md-tabs__item');
+      items.forEach(function (item, i) {
+        item.style.animationDelay = (0.02 + i * 0.03) + 's';
+      });
+      tabs.classList.add('md-tabs--reveal');
+      clearTimeout(revealTimer);
+      revealTimer = setTimeout(function () {
+        tabs.classList.remove('md-tabs--reveal');
+        items.forEach(function (item) {
+          item.style.animationDelay = '';
+        });
+      }, 380 + items.length * 30);
+    }
+
+    function showTabs() {
+      if (!hidden) return;
+      hidden = false;
+      tabs.classList.remove('md-tabs--hidden');
+      playReveal();
+    }
+
+    function hideTabs() {
+      if (hidden) return;
+      hidden = true;
+      clearTimeout(revealTimer);
+      tabs.classList.remove('md-tabs--reveal');
+      tabs.classList.add('md-tabs--hidden');
+    }
+
+    window.addEventListener('scroll', function () {
+      const cur = window.scrollY;
+      const diff = cur - lastY;
+
+      if (cur <= topZone) {
+        showTabs();
+      } else if (diff > delta) {
+        hideTabs();
+      }
+
       lastY = cur;
     }, { passive: true });
   }
@@ -455,7 +520,9 @@
   function initStickyTabs() {
     if (!hasFeature('navigation.tabs.sticky')) return;
     const tabs = document.querySelector('.md-tabs');
-    if (tabs) tabs.classList.add('md-tabs--sticky');
+    if (!tabs) return;
+    tabs.classList.add('md-tabs--sticky');
+    initTabsAutohide(tabs);
   }
 
   const style = document.createElement('style');
