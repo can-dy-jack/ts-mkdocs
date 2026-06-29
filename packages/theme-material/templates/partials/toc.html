@@ -1,12 +1,18 @@
 {% macro render_toc(entries) %}
 <ul class="md-nav__list">
   {% for entry in entries %}
-  <li class="md-nav__item">
-    <a href="#{{ entry.id }}" class="md-nav__link">{{ entry.title }}</a>
     {% if entry.children | length > 0 %}
-    {{ render_toc(entry.children) }}
+    <li class="md-nav__item md-nav__item--nested">
+      <a href="#{{ entry.id }}" class="md-nav__link">{{ entry.title }}</a>
+      <nav class="md-nav" aria-label="{{ entry.title }}">
+        {{ render_toc(entry.children) }}
+      </nav>
+    </li>
+    {% else %}
+    <li class="md-nav__item">
+      <a href="#{{ entry.id }}" class="md-nav__link">{{ entry.title }}</a>
+    </li>
     {% endif %}
-  </li>
   {% endfor %}
 </ul>
 {% endmacro %}

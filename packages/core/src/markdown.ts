@@ -80,6 +80,11 @@ export function renderMarkdown(content: string): MarkdownResult {
     const titleText = inlineToken.children?.map((t) => t.content).join('') ?? ''
     const id = token.attrGet('id') ?? slugify(titleText)
 
+    if (level === 1) {
+      stack.length = 0
+      return originalRender ? originalRender(tokens, idx, options, _env, self) : self.renderToken(tokens, idx, options)
+    }
+
     const entry: TocEntry = { id, title: titleText, level, children: [] }
 
     while (stack.length > 0 && stack[stack.length - 1].level >= level) {

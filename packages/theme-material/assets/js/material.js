@@ -42,6 +42,7 @@
 
     initSearch();
     if (hasFeature('content.code.copy')) initCopyButtons();
+    initAnchorScrolling();
     if (hasFeature('toc.follow') || !FEATURES.size) initTocHighlight();
     initHeaderTopic();
     if (hasFeature('navigation.instant')) initInstantLoading();
@@ -227,7 +228,58 @@
     });
   }
 
+  let anchorScrollingInit = false;
+
+  function getScrollOffset() {
+    const header = document.querySelector('.md-header');
+    const tabs = document.querySelector('.md-tabs');
+    let offset = header ? header.offsetHeight : 48;
+    if (tabs) offset += tabs.offsetHeight;
+    return offset + 8;
+  }
+
+  function scrollToAnchor(id, updateHash) {
+    const target = document.getElementById(id);
+    if (!target) return false;
+    const top = target.getBoundingClientRect().top + window.scrollY - getScrollOffset();
+    window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+    if (updateHash !== false) {
+      history.pushState(null, '', '#' + id);
+    }
+    return true;
+  }
+
+  function initAnchorScrolling() {
+    function scrollFromLocation() {
+      const hash = window.location.hash;
+      if (!hash || hash === '#') return;
+      const id = decodeURIComponent(hash.slice(1));
+      scrollToAnchor(id, false);
+    }
+
+    if (anchorScrollingInit) {
+      scrollFromLocation();
+      return;
+    }
+    anchorScrollingInit = true;
+
+    document.addEventListener('click', function (e) {
+      const a = e.target.closest('a[href^="#"]');
+      if (!a || a.target === '_blank') return;
+      const href = a.getAttribute('href');
+      if (!href || href === '#') return;
+      const id = decodeURIComponent(href.slice(1));
+      if (!document.getElementById(id)) return;
+      e.preventDefault();
+      scrollToAnchor(id);
+    });
+
+    scrollFromLocation();
+    window.addEventListener('hashchange', scrollFromLocation);
+  }
+
   function initTocHighlight() {
+    const tocNav = document.querySelector('.md-nav--secondary, .md-nav--integrated');
     const tocLinks = document.querySelectorAll('.md-nav--secondary .md-nav__link, .md-nav--integrated .md-nav__link');
     if (!tocLinks.length) return;
     const headings = Array.from(document.querySelectorAll('.md-content h1, .md-content h2, .md-content h3, .md-content h4'));
@@ -235,12 +287,38 @@
 
     function onScroll() {
       let current = '';
-      headings.forEach(function (h) {
-        if (window.scrollY >= h.offsetTop - 80) current = h.id;
+      let currentIndex = -1;
+      const offset = getScrollOffset();
+      headings.forEach(function (h, i) {
+        if (h.getBoundingClientRect().top <= offset + 4) {
+          current = h.id;
+          currentIndex = i;
+        }
       });
       tocLinks.forEach(function (link) {
-        link.classList.toggle('md-nav__link--active', (link.getAttribute('href') || '') === '#' + current);
+        const href = link.getAttribute('href') || '';
+        const isActive = href === '#' + current;
+        link.classList.toggle('md-nav__link--active', isActive);
+        const linkId = href.slice(1);
+        const linkIndex = headings.findIndex(function (h) { return h.id === linkId; });
+        link.classList.toggle('md-nav__link--passed', linkIndex >= 0 && linkIndex < currentIndex);
       });
+
+      if (hasFeature('toc.follow') && tocNav) {
+        const active = tocNav.querySelector('.md-nav__link--active');
+        const sidebar = active && active.closest('.md-sidebar');
+        if (active && sidebar) {
+          const sidebarRect = sidebar.getBoundingClientRect();
+          const activeRect = active.getBoundingClientRect();
+          const relativeTop = activeRect.top - sidebarRect.top + sidebar.scrollTop;
+          const viewTop = sidebar.scrollTop;
+          const viewBottom = viewTop + sidebar.clientHeight;
+          const linkBottom = relativeTop + active.offsetHeight;
+          if (relativeTop < viewTop + 40 || linkBottom > viewBottom - 40) {
+            sidebar.scrollTo({ top: relativeTop - sidebar.clientHeight / 3, behavior: 'smooth' });
+          }
+        }
+      }
     }
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
@@ -314,6 +392,7 @@
         if (newTitle) document.title = newTitle.textContent;
         history.pushState({}, '', url);
         initCopyButtons();
+        initAnchorScrolling();
         initTocHighlight();
         initMermaid();
         window.scrollTo(0, 0);

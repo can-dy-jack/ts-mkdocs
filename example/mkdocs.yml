@@ -42,7 +42,7 @@ theme:
   # Light candidates: github-light, catppuccin-latte, solarized-light, min-light
   # Dark  candidates: github-dark, dracula, nord, one-dark-pro, catppuccin-mocha
   highlight:
-    theme_light: solarized-light
+    theme_light: catppuccin-latte
     theme_dark: dracula
   icons:
     default: material

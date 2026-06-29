@@ -304,6 +304,7 @@ body {
   line-height: 1.2;
   letter-spacing: -.03em;
   margin: 0 0 1rem;
+  scroll-margin-top: calc(var(--md-header-height) + var(--md-scroll-offset, 0px) + .6rem);
 }
 
 .md-typeset h2 {
@@ -314,11 +315,12 @@ body {
   letter-spacing: -.02em;
   padding-bottom: .3rem;
   border-bottom: 1px solid rgba(0,0,0,.08);
+  scroll-margin-top: calc(var(--md-header-height) + var(--md-scroll-offset, 0px) + .6rem);
 }
 [data-theme="dark"] .md-typeset h2 { border-bottom-color: rgba(255,255,255,.08); }
 
-.md-typeset h3 { font-size: .95rem; font-weight: 600; margin: 1.5rem 0 .4rem; letter-spacing: -.01em; }
-.md-typeset h4 { font-size: .85rem; font-weight: 600; margin: 1.2rem 0 .35rem; }
+.md-typeset h3 { font-size: .95rem; font-weight: 600; margin: 1.5rem 0 .4rem; letter-spacing: -.01em; scroll-margin-top: calc(var(--md-header-height) + var(--md-scroll-offset, 0px) + .6rem); }
+.md-typeset h4 { font-size: .85rem; font-weight: 600; margin: 1.2rem 0 .35rem; scroll-margin-top: calc(var(--md-header-height) + var(--md-scroll-offset, 0px) + .6rem); }
 .md-typeset h5, .md-typeset h6 { font-size: .82rem; font-weight: 600; margin: 1rem 0 .35rem; }
 
 .md-typeset h1 .headerlink,
@@ -1115,6 +1117,10 @@ label[for="__search"] svg { width: 1.2rem; height: 1.2rem; fill: currentColor; }
 .md-tabs__item--active .md-tabs__link,
 .md-tabs__link:hover { color: #fff; border-bottom: 2px solid #fff; }
 .md-tabs--sticky { position: sticky; top: var(--md-header-height); z-index: 3; }
+.md-tabs--sticky,
+.md-tabs {
+  --md-scroll-offset: 2.4rem;
+}
 
 /* ============================================================
    Mobile Drawer
@@ -1264,6 +1270,93 @@ label[for="__search"] svg { width: 1.2rem; height: 1.2rem; fill: currentColor; }
 }
 .md-nav--integrated { margin-top: 1rem; border-top: 1px solid var(--md-default-fg-color--lighter); padding-top: .5rem; }
 .md-nav--lifted > .md-nav__list > .md-nav__item--section > .md-nav__link { font-weight: 700; text-transform: uppercase; font-size: .7rem; }
+
+/* ============================================================
+   Table of contents (right sidebar)
+   ============================================================ */
+.md-nav--secondary .md-nav__title,
+.md-nav--integrated .md-nav__title {
+  margin-bottom: .2rem;
+}
+
+.md-nav--secondary .md-nav__item,
+.md-nav--integrated .md-nav__item {
+  padding: 0;
+}
+
+.md-nav--secondary .md-nav__link,
+.md-nav--integrated .md-nav__link {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin: 0;
+  padding: .2rem .6rem;
+  border-radius: .15rem;
+  transition: color .2s ease, background-color .2s ease;
+  position: relative;
+}
+
+.md-nav--secondary .md-nav__link:hover,
+.md-nav--integrated .md-nav__link:hover {
+  color: var(--md-typeset-a-color);
+  background-color: rgba(0, 0, 0, .06);
+}
+
+[data-theme="dark"] .md-nav--secondary .md-nav__link:hover,
+[data-theme="dark"] .md-nav--integrated .md-nav__link:hover {
+  background-color: rgba(255, 255, 255, .06);
+}
+
+.md-nav--secondary .md-nav__link--active,
+.md-nav--integrated .md-nav__link--active {
+  color: var(--md-typeset-a-color);
+  font-weight: 700;
+  background-color: rgba(63, 81, 181, .1);
+}
+
+[data-theme="dark"] .md-nav--secondary .md-nav__link--active,
+[data-theme="dark"] .md-nav--integrated .md-nav__link--active {
+  background-color: rgba(159, 168, 218, .12);
+}
+
+.md-nav--secondary .md-nav__link::before,
+.md-nav--integrated .md-nav__link::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 2px;
+  height: 0;
+  border-radius: 1px;
+  background: var(--md-typeset-a-color);
+  transform: translateY(-50%);
+  transition: height .2s ease, opacity .2s ease;
+  opacity: 0;
+}
+
+.md-nav--secondary .md-nav__link--active::before,
+.md-nav--integrated .md-nav__link--active::before {
+  height: 1.1rem;
+  opacity: 1;
+}
+
+.md-nav--secondary .md-nav__link--passed::before,
+.md-nav--integrated .md-nav__link--passed::before {
+  height: 1.1rem;
+  opacity: .35;
+}
+
+.md-nav--secondary .md-nav__item--nested > .md-nav,
+.md-nav--integrated .md-nav__item--nested > .md-nav {
+  padding-left: .35rem;
+  margin: 0;
+}
+
+.md-nav--secondary .md-nav__item--nested > .md-nav > .md-nav__list > .md-nav__item > .md-nav__link,
+.md-nav--integrated .md-nav__item--nested > .md-nav > .md-nav__list > .md-nav__item > .md-nav__link {
+  padding-left: .85rem;
+}
 
 /* ============================================================
    Search highlight
