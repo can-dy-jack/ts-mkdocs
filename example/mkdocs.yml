@@ -86,3 +86,14 @@ extra:
   version:
     provider: mike
     default: latest
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/can-dy-jack/ts-mkdocs
+    - icon: fontawesome/brands/x-twitter
+      link: https://x.com/
+    - icon: fontawesome/brands/discord
+      link: https://discord.com/
+    - icon: fontawesome/brands/youtube
+      link: https://youtube.com/
+    - icon: fontawesome/brands/linkedin
+      link: https://linkedin.com/

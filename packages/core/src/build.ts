@@ -13,7 +13,7 @@ import { buildSearchIndex, writeSearchIndex } from './search.js'
 import { ensureDir, walkDir, log, success } from './utils.js'
 import { buildFeatureContext, getTabItems, getSidebarNav } from './features.js'
 import { getI18n } from './i18n.js'
-import { getIconStylesheets } from './icons.js'
+import { getIconStylesheets, createIconService } from './icons.js'
 
 let nunjucksEnv: nunjucks.Environment | null = null
 
@@ -208,6 +208,27 @@ function renderPage(
   return nunjucksEnv!.render(template, ctx)
 }
 
+function buildSocialLinks(config: Config, baseUrl: string): Array<{ href: string; icon_html: string; label: string }> {
+  const social = config.extra?.social
+  if (!Array.isArray(social)) return []
+
+  const icons = createIconService(config)
+  return social
+    .filter((item): item is Record<string, string> => !!item && typeof item === 'object')
+    .map((item) => {
+      const rawUrl = item.link ?? item.url ?? ''
+      const href = rawUrl.includes('://') ? rawUrl : baseUrl + rawUrl.replace(/^\//, '')
+      const iconRef = item.icon ?? 'material/link'
+      const label =
+        item.name ??
+        item.label ??
+        iconRef.split('/').pop()?.replace(/-/g, ' ') ??
+        'Link'
+      return { href, icon_html: icons.renderRef(iconRef), label }
+    })
+    .filter((item) => item.href.length > 0)
+}
+
 function buildBaseContext(config: Config, baseUrl = './'): Record<string, unknown> {
   const feature = buildFeatureContext(config)
   const i18n = getI18n(config.theme.language)
@@ -218,6 +239,7 @@ function buildBaseContext(config: Config, baseUrl = './'): Record<string, unknow
     feature,
     i18n,
     icon_stylesheets: getIconStylesheets(config),
+    social_links: buildSocialLinks(config, baseUrl),
     versions: config.extra?.version?.provider ? config.extra.version : null,
   }
 }

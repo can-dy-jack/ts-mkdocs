@@ -410,9 +410,15 @@
   function initScrollTop() {
     const btn = document.getElementById('md-top');
     if (!btn) return;
-    window.addEventListener('scroll', function () {
-      btn.hidden = window.scrollY < 400;
-    }, { passive: true });
+    const showAt = 480;
+
+    function update() {
+      btn.classList.toggle('md-top--visible', window.scrollY >= showAt);
+    }
+
+    window.addEventListener('scroll', update, { passive: true });
+    update();
+
     btn.addEventListener('click', function () {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
