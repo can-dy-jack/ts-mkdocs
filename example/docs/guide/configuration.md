@@ -73,6 +73,8 @@ theme:
     - search.suggest
     - search.highlight
     - content.code.copy
+    - content.code.linenumbers
+    - content.code.lang
 
 # ── Plugins ─────────────────────────────────────────────────
 plugins:
@@ -128,3 +130,23 @@ Any of the standard Material colour names work for `primary` and `accent`:
 `red` · `pink` · `purple` · `deep-purple` · `indigo` · `blue` · `light-blue`
 `cyan` · `teal` · `green` · `light-green` · `lime` · `yellow` · `amber`
 `orange` · `deep-orange` · `brown` · `grey` · `blue-grey` · `white` · `black`
+
+## Code block features
+
+Enable optional code block UI via `theme.features`:
+
+| Feature | Description |
+|---------|-------------|
+| `content.code.copy` | Hover copy button on fenced code blocks |
+| `content.code.linenumbers` | Gutter line numbers on fenced code blocks |
+| `content.code.lang` | Language label badge on fenced code blocks |
+
+```yaml
+theme:
+  features:
+    - content.code.copy
+    - content.code.linenumbers
+    - content.code.lang
+```
+
+Syntax highlighting themes are configured separately under `theme.highlight.theme_light` / `theme_dark`.

@@ -223,7 +223,10 @@
     const copiedLabel = t('clipboard.copied', 'Copied!');
 
     document.querySelectorAll('.md-typeset pre:not(.mermaid)').forEach(function (block) {
-      if (block.querySelector('.md-clipboard')) return;
+      const wrapper = block.closest('.md-codeblock');
+      const head = wrapper ? wrapper.querySelector('.md-codeblock__head') : null;
+      const mount = head ?? block;
+      if (mount.querySelector('.md-clipboard')) return;
 
       const btn = document.createElement('button');
       btn.type = 'button';
@@ -242,10 +245,11 @@
         const code = block.querySelector('code') || block;
         const text = code.textContent || '';
         const tooltip = btn.querySelector('.md-clipboard__tooltip');
+        const flashTarget = wrapper ?? block;
 
         function showSuccess() {
           btn.classList.add('md-clipboard--success', 'md-clipboard--pop');
-          block.classList.add('md-codeblock--copied');
+          flashTarget.classList.add('md-codeblock--copied');
           btn.setAttribute('aria-label', copiedLabel);
           if (tooltip) tooltip.textContent = copiedLabel;
 
@@ -254,7 +258,7 @@
             btn.classList.remove('md-clipboard--success', 'md-clipboard--pop');
             btn.setAttribute('aria-label', copyLabel);
             if (tooltip) tooltip.textContent = copyLabel;
-            block.classList.remove('md-codeblock--copied');
+            flashTarget.classList.remove('md-codeblock--copied');
           }, 1800);
         }
 
@@ -267,7 +271,7 @@
         }
       });
 
-      block.appendChild(btn);
+      mount.appendChild(btn);
     });
   }
 

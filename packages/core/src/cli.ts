@@ -73,6 +73,8 @@ theme:
     - search.suggest
     - search.highlight
     - content.code.copy
+    - content.code.linenumbers
+    - content.code.lang
 
 plugins:
   - search

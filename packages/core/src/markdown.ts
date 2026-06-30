@@ -2,6 +2,12 @@ import MarkdownIt from 'markdown-it'
 import anchor from 'markdown-it-anchor'
 import type { Config } from './config.js'
 import { applyMarkdownExtensions } from './markdown-extensions.js'
+import {
+  hasLineNumbersFeature,
+  hasLangLabelFeature,
+  renderPlainCodeHtml,
+  renderShikiHtml,
+} from './md/code-highlight.js'
 
 export interface TocEntry {
   id: string
@@ -18,10 +24,16 @@ export interface MarkdownResult {
 let mdInstance: MarkdownIt | null = null
 let highlighter: any = null
 let activeThemes = { light: 'github-light', dark: 'github-dark' }
+let lineNumbersEnabled = false
+let langLabelEnabled = false
+let siteLocale = 'en'
 
 export async function initMarkdown(config: Config): Promise<void> {
   const hl = config.theme.highlight
   activeThemes = { light: hl.theme_light, dark: hl.theme_dark }
+  lineNumbersEnabled = hasLineNumbersFeature(config)
+  langLabelEnabled = hasLangLabelFeature(config)
+  siteLocale = config.theme.language
 
   const { createHighlighter } = await import('shiki')
   const themes = [...new Set([hl.theme_light, hl.theme_dark])]
@@ -41,19 +53,22 @@ export async function initMarkdown(config: Config): Promise<void> {
     linkify: true,
     typographer: true,
     highlight(code, lang) {
+      const renderOpts = {
+        lineNumbers: lineNumbersEnabled,
+        lang: langLabelEnabled ? (lang || 'text') : (lang || undefined),
+        langLabel: langLabelEnabled,
+        locale: siteLocale,
+      }
       if (!lang || !highlighter) {
-        return `<pre><code>${mdInstance!.utils.escapeHtml(code)}</code></pre>`
+        return renderPlainCodeHtml(code, mdInstance!.utils.escapeHtml, renderOpts)
       }
       try {
-        if (activeThemes.light === activeThemes.dark) {
-          return highlighter.codeToHtml(code, { lang, theme: activeThemes.light })
-        }
-        return highlighter.codeToHtml(code, {
-          lang,
-          themes: { light: activeThemes.light, dark: activeThemes.dark },
+        return renderShikiHtml(highlighter, code, lang, activeThemes, {
+          langLabel: langLabelEnabled,
+          locale: siteLocale,
         })
       } catch {
-        return `<pre><code>${mdInstance!.utils.escapeHtml(code)}</code></pre>`
+        return renderPlainCodeHtml(code, mdInstance!.utils.escapeHtml, renderOpts)
       }
     },
   })

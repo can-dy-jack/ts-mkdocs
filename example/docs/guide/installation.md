@@ -36,6 +36,15 @@ my-docs/
     └── index.md
 ```
 
+
+```
+纯文本纯文本纯文本纯文本
+
+纯文本
+```
+
+
+
 ## Start the dev server
 
 ```bash

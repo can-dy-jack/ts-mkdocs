@@ -12,6 +12,7 @@ import { markPlugin } from './md/mark.js'
 import { criticPlugin } from './md/critic.js'
 import { footnotesPlugin } from './md/footnotes.js'
 import { snippetsPlugin } from './md/snippets.js'
+import { hasLangLabelFeature, hasLineNumbersFeature } from './md/code-highlight.js'
 
 export type ExtensionEntry = string | Record<string, unknown>
 
@@ -74,7 +75,14 @@ export function applyMarkdownExtensions(
     md.use(contentTabsPlugin, options.get('pymdownx.tabbed') ?? { alternate_style: true })
   }
   if (enabled.has('pymdownx.superfences')) {
-    md.use(superfencesPlugin, { highlighter, themes, md })
+    md.use(superfencesPlugin, {
+      highlighter,
+      themes,
+      md,
+      lineNumbers: hasLineNumbersFeature(config),
+      langLabel: hasLangLabelFeature(config),
+      locale: config.theme.language,
+    })
   }
   if (enabled.has('pymdownx.tasklist')) md.use(tasklistPlugin)
   if (enabled.has('pymdownx.keys')) md.use(keysPlugin)
