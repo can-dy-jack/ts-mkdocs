@@ -3,7 +3,7 @@ site_description: A demo site built with ts-mkdocs to validate features during d
 site_url: https://example.com/
 repo_url: https://github.com/can-dy-jack/ts-mkdocs
 repo_name: can-dy-jack/ts-mkdocs
-copyright: Copyright &copy; 2024 ts-mkdocs contributors
+copyright: Copyright &copy; {year} ts-mkdocs contributors
 
 edit_uri: edit/main/docs/
 site_dir: site
@@ -13,6 +13,7 @@ nav:
   - Getting Started:
       - Installation: guide/installation.md
       - Configuration: guide/configuration.md
+      - Admonitions: guide/admonitions.md
   - Feature Showcase: showcase.md
   - Reference:
       - CLI: reference/cli.md
@@ -22,6 +23,8 @@ nav:
 theme:
   name: material
   language: en
+  logo: assets/logo.svg
+  favicon: assets/favicon.svg
   palette:
     - scheme: default
       primary: indigo
@@ -43,7 +46,7 @@ theme:
   # Dark  candidates: github-dark, dracula, nord, one-dark-pro, catppuccin-mocha
   highlight:
     theme_light: catppuccin-latte
-    theme_dark: dracula
+    theme_dark: github-dark
   icons:
     default: material
     libraries:
@@ -71,8 +74,10 @@ plugins:
   - social
 
 markdown_extensions:
-  - admonition
-  - pymdownx.details
+  - admonition:
+      default_collapsed: false
+  - pymdownx.details:
+      default_collapsed: true
   - pymdownx.tabbed:
       alternate_style: true
   - pymdownx.superfences

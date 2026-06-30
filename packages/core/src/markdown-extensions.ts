@@ -55,8 +55,20 @@ export function applyMarkdownExtensions(
 
   if (enabled.has('attr_list')) md.use(attrs)
   if (enabled.has('admonition') || enabled.has('pymdownx.details')) {
-    md.use(admonitionPlugin, icons)
-    if (enabled.has('pymdownx.details')) md.use(detailsPlugin, icons)
+    const admonitionOpts = options.get('admonition') ?? {}
+    const detailsOpts = options.get('pymdownx.details') ?? {}
+    md.use(admonitionPlugin, {
+      icons,
+      defaultCollapsed: Boolean(admonitionOpts.default_collapsed ?? admonitionOpts.collapse ?? false),
+    })
+    if (enabled.has('pymdownx.details')) {
+      md.use(detailsPlugin, {
+        icons,
+        defaultCollapsed: detailsOpts.default_collapsed !== undefined
+          ? Boolean(detailsOpts.default_collapsed)
+          : Boolean(detailsOpts.collapse ?? true),
+      })
+    }
   }
   if (enabled.has('pymdownx.tabbed')) {
     md.use(contentTabsPlugin, options.get('pymdownx.tabbed') ?? { alternate_style: true })

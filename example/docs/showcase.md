@@ -142,6 +142,12 @@ cd my-docs && ts-mkdocs serve
 !!! quote
     This is a **quote** admonition.
 
+??? note "Collapsible (default collapsed)"
+    Use `???` for admonitions that start collapsed. Add `+` after `???` to start expanded: `???+ note`.
+
+???+ tip "Collapsible (forced expanded)"
+    The `+` suffix overrides `default_collapsed` for a single block.
+
 ---
 
 ## Icons

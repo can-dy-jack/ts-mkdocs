@@ -18,6 +18,10 @@
   <link rel="canonical" href="{{ config.site_url }}{{ page.url }}">
   {% endif %}
 
+  {% if config.theme.favicon %}
+  <link rel="icon" href="{{ base_url }}{{ config.theme.favicon }}"{% if '.svg' in config.theme.favicon %} type="image/svg+xml"{% elif '.png' in config.theme.favicon %} type="image/png"{% elif '.ico' in config.theme.favicon %} type="image/x-icon"{% endif %}>
+  {% endif %}
+
   {% set font = config.theme.font %}
   {% if font !== false %}
     {% set text_font = (font.text if font and font.text else "Inter") | replace(" ", "+") %}
@@ -47,7 +51,7 @@
     {% endif %}
   {% endif %}
 </head>
-<body class="{% if feature.has['header.autohide'] %}md-header--autohide{% endif %}">
+<body class="{% if feature.has['header.autohide'] %}md-header--autohide{% endif %}{% if page and page.is_homepage %} home-page{% endif %}">
 
 <input class="md-toggle" type="checkbox" id="__drawer" autocomplete="off">
 
@@ -233,7 +237,7 @@
       <div class="md-footer-meta__inner md-grid">
         <div class="md-copyright">
           {% if config.copyright %}
-          <div class="md-copyright__highlight">{{ config.copyright }}</div>
+          <div class="md-copyright__highlight" data-copyright-template="{{ config.copyright | e }}"></div>
           {% endif %}
           Made with <a href="https://github.com/can-dy-jack/ts-mkdocs" rel="noopener">ts-mkdocs</a>
         </div>

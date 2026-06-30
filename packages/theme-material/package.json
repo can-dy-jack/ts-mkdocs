@@ -13,5 +13,5 @@
     "./templates": "./templates",
     "./assets": "./assets"
   },
-  "files": ["index.js", "index.d.ts", "templates", "assets"]
+  "files": ["index.js", "index.d.ts", "templates", "assets", "brand"]
 }

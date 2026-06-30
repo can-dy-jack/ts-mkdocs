@@ -11,7 +11,7 @@ A TypeScript implementation of [MkDocs](https://github.com/mkdocs/mkdocs) with a
 - **Navigation** — explicit `nav:` config or auto-inferred from the file tree, prev/next page links
 - **Table of contents** — per-page TOC extracted from headings, sticky sidebar on desktop
 - **Syntax highlighting** — powered by [Shiki](https://shiki.style/), dual light/dark themes, copy button on every code block
-- **Admonitions** — `!!! note/tip/warning/danger/…` blocks with colored borders and icons
+- **Admonitions** — `!!!` / `???` callout blocks with top border, tinted headers, icons, and collapse toggles ([syntax guide](example/docs/guide/admonitions.md))
 - **Icons** — Material / Font Awesome / Bootstrap icon shortcodes in Markdown and admonitions
 - **Client-side search** — [Lunr.js](https://lunrjs.com/) index built at compile time, instant in-browser search
 - **Live reload dev server** — file watcher + SSE push, browser auto-refreshes on change
@@ -156,18 +156,27 @@ search:
 
 ### Admonitions
 
+Callout blocks with a colored top border, tinted title bar, icon, and expand/collapse toggle. Full syntax: [Admonitions guide](example/docs/guide/admonitions.md).
+
 ```markdown
 !!! note
-    This is a note admonition.
+    Expanded by default.
 
-!!! tip "Custom title"
-    Tips use a teal left border.
+!!!- warning "Starts collapsed"
+    Use `-` after `!!!` to force closed; `+` forces open.
 
-!!! warning
-    Watch out!
+??? note "Details block"
+    Collapsed by default when `pymdownx.details` is enabled.
+```
 
-!!! danger "Be careful"
-    This is a danger block.
+Configure default open/closed state in `mkdocs.yml`:
+
+```yaml
+markdown_extensions:
+  - admonition:
+      default_collapsed: false
+  - pymdownx.details:
+      default_collapsed: true
 ```
 
 Supported types: `note` `abstract` `info` `tip` `success` `question` `warning` `failure` `danger` `bug` `example` `quote`

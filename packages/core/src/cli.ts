@@ -1,6 +1,6 @@
 import { Command } from 'commander'
-import { resolve } from 'path'
-import { writeFileSync, mkdirSync, existsSync } from 'fs'
+import { resolve, join } from 'path'
+import { writeFileSync, mkdirSync, existsSync, copyFileSync } from 'fs'
 import { loadConfig } from './config.js'
 import { build } from './build.js'
 import { serve } from './serve.js'
@@ -16,7 +16,7 @@ program
 program
   .command('new <directory>')
   .description('Create a new MkDocs project')
-  .action((directory: string) => {
+  .action(async (directory: string) => {
     const projectDir = resolve(directory)
 
     if (existsSync(projectDir)) {
@@ -24,7 +24,14 @@ program
       process.exit(1)
     }
 
-    mkdirSync(resolve(projectDir, 'docs'), { recursive: true })
+    const docsDir = resolve(projectDir, 'docs')
+    const assetsDir = resolve(docsDir, 'assets')
+    mkdirSync(assetsDir, { recursive: true })
+
+    const themeModule = await import('ts-mkdocs-theme-material')
+    for (const file of ['logo.svg', 'favicon.svg']) {
+      copyFileSync(join(themeModule.brandDir, file), join(assetsDir, file))
+    }
 
     writeFileSync(
       resolve(projectDir, 'mkdocs.yml'),
@@ -35,6 +42,8 @@ site_dir: site
 
 theme:
   name: material
+  logo: assets/logo.svg
+  favicon: assets/favicon.svg
   palette:
     - scheme: default
       primary: indigo

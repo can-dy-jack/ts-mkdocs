@@ -78,6 +78,19 @@ theme:
 plugins:
   - search           # built-in, enabled by default
 
+# ── Markdown extensions ─────────────────────────────────────
+markdown_extensions:
+  - admonition:
+      default_collapsed: false   # !!! blocks: false = expanded by default
+  - pymdownx.details:
+      default_collapsed: true    # ??? blocks: true = collapsed by default
+  - pymdownx.tabbed
+  - pymdownx.superfences
+  - attr_list
+  - tables
+
+# See guide/admonitions.md for syntax, types, and +/- overrides.
+
 # ── Extra assets ────────────────────────────────────────────
 extra_css:
   - assets/custom.css

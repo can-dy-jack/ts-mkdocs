@@ -21,6 +21,8 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     '404.message': 'The page you are looking for does not exist.',
     'edit': 'Edit this page',
     'view': 'View source',
+    'clipboard.copy': 'Copy to clipboard',
+    'clipboard.copied': 'Copied!',
   },
   zh: {
     'search.placeholder': '搜索',
@@ -44,6 +46,8 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     '404.message': '您访问的页面不存在。',
     'edit': '编辑此页',
     'view': '查看源码',
+    'clipboard.copy': '复制到剪贴板',
+    'clipboard.copied': '已复制！',
   },
 }
 
