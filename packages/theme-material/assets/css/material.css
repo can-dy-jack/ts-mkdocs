@@ -730,9 +730,9 @@ body {
   text-decoration: none;
 }
 
-.md-typeset a:hover {
+/* .md-typeset a:hover {
   text-decoration: underline;
-}
+} */
 
 .md-typeset p {
   margin: 0 0 .5rem;
@@ -2755,7 +2755,11 @@ body:has(.md-tabs--sticky.md-tabs--hidden) .md-sidebar {
    Content Tabs (pymdownx.tabbed)
    ============================================================ */
 .tabbed-set {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
   margin: 1em 0;
+  position: relative;
 }
 
 .tabbed-input {
@@ -2763,31 +2767,64 @@ body:has(.md-tabs--sticky.md-tabs--hidden) .md-sidebar {
 }
 
 .tabbed-label {
+  order: 1;
   display: inline-block;
   padding: .4em 1em;
   cursor: pointer;
   border: 1px solid var(--md-default-fg-color--lighter);
   border-bottom: none;
-  margin-right: .2em;
+  margin: 0 .2em 0 0;
   border-radius: .2rem .2rem 0 0;
   font-size: .8rem;
+  width: auto;
+  max-width: 100%;
 }
 
-.tabbed-input:checked+.tabbed-label {
+.tabbed-input:checked + .tabbed-label {
   background: var(--md-primary-fg-color);
   color: #fff;
   border-color: var(--md-primary-fg-color);
 }
 
 .tabbed-content {
+  order: 2;
   display: none;
+  width: 100%;
   padding: 1em;
   border: 1px solid var(--md-default-fg-color--lighter);
   border-radius: 0 .2rem .2rem .2rem;
+  box-sizing: border-box;
 }
 
-.tabbed-input:checked+.tabbed-label+.tabbed-content {
+.tabbed-input:checked + .tabbed-label + .tabbed-content {
   display: block;
+}
+
+.tabbed-alternate > .tabbed-label {
+  border: none;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  margin: 0 .6em 0 0;
+  background: transparent;
+  color: var(--md-default-fg-color--light);
+}
+
+.tabbed-alternate > .tabbed-input:checked + .tabbed-label {
+  background: transparent;
+  color: var(--md-primary-fg-color);
+  border-bottom-color: var(--md-primary-fg-color);
+}
+
+.tabbed-alternate > .tabbed-content {
+  border: none;
+  border-top: 1px solid var(--md-default-fg-color--lighter);
+  border-radius: 0;
+  padding: 1em 0 0;
+}
+
+.tabbed-label .md-icon {
+  vertical-align: middle;
+  margin-right: .2em;
 }
 
 /* ============================================================

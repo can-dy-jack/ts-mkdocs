@@ -72,7 +72,10 @@ export function applyMarkdownExtensions(
     }
   }
   if (enabled.has('pymdownx.tabbed')) {
-    md.use(contentTabsPlugin, options.get('pymdownx.tabbed') ?? { alternate_style: true })
+    md.use(contentTabsPlugin, {
+      ...(options.get('pymdownx.tabbed') ?? { alternate_style: true }),
+      icons,
+    })
   }
   if (enabled.has('pymdownx.superfences')) {
     md.use(superfencesPlugin, {

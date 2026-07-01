@@ -89,7 +89,7 @@ Each tab starts with `===` and a quoted label. Content follows until the next ta
 
 Tabs + tables + icons:
 
-=== ":material-code-braces: API"
+=== ":material-code: API"
 
     | Method | Path |
     |--------|------|
