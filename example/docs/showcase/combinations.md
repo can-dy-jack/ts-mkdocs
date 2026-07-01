@@ -66,7 +66,7 @@ Press ++Ctrl+F++ to search the docs[^search]. See [Code Blocks](code-blocks.md) 
 
 ## Icons + tabs + task lists
 
-=== ":material-code-braces: Dev"
+=== ":material-code: Dev"
 
     - [x] `pnpm dev`
     - [ ] Fix warnings
