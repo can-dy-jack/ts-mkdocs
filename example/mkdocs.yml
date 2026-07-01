@@ -1,8 +1,8 @@
 site_name: ts-mkdocs
 site_description: A demo site built with ts-mkdocs to validate features during development
 site_url: https://example.com/
-repo_url: https://github.com/can-dy-jack/hexo-theme-delicate # test
-repo_name: can-dy-jack/hexo-theme-delicate # test
+repo_url: https://github.com/can-dy-jack/ts-mkdocs# test
+repo_name: can-dy-jack/ts-mkdocs # test
 # repo_token: 
 copyright: Copyright &copy; {year} ts-mkdocs contributors
 
