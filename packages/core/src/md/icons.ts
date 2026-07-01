@@ -7,6 +7,8 @@ export function iconsPlugin(md: MarkdownIt, icons: IconService): void {
     const max = state.posMax
     if (state.src.charCodeAt(pos) !== 0x3a /* : */) return false
 
+    if (pos > 0 && state.src.charCodeAt(pos - 1) === 0x5b /* [ */) return false
+
     const rest = state.src.slice(pos + 1, max)
     const close = rest.indexOf(':')
     if (close <= 0) return false

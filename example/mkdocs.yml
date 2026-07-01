@@ -15,7 +15,22 @@ nav:
       - Installation: guide/installation.md
       - Configuration: guide/configuration.md
       - Admonitions: guide/admonitions.md
-  - Feature Showcase: showcase.md
+  - Feature Showcase:
+      - Overview: showcase/index.md
+      - Headings: showcase/headings.md
+      - Text & Links: showcase/text.md
+      - Blockquotes: showcase/blockquote.md
+      - Lists: showcase/lists.md
+      - Tables: showcase/tables.md
+      - Code Blocks: showcase/code-blocks.md
+      - Admonitions: showcase/admonitions.md
+      - Content Tabs: showcase/tabs.md
+      - Task Lists: showcase/tasklist.md
+      - Icons: showcase/icons.md
+      - Footnotes: showcase/footnotes.md
+      - Attributes: showcase/attributes.md
+      - Keyboard & Mark: showcase/keys-mark.md
+      - Combinations: showcase/combinations.md
   - Reference:
       - CLI: reference/cli.md
       - Plugin API: reference/plugins.md
@@ -83,6 +98,8 @@ markdown_extensions:
       alternate_style: true
   - pymdownx.superfences
   - pymdownx.tasklist
+  - pymdownx.keys
+  - pymdownx.mark
   - attr_list
   - tables
   - footnotes
