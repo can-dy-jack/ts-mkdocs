@@ -15,7 +15,7 @@ export type { Plugin, PluginEvents } from './plugins.js'
 export { buildSearchIndex, writeSearchIndex } from './search.js'
 export { buildFeatureContext, getFeatures, hasFeature } from './features.js'
 export { getI18n } from './i18n.js'
-export { resolveColor, buildPaletteCssVars } from './palette.js'
+export { resolveColor, shadeColor, buildPaletteStyles, buildPaletteCssVars } from './palette.js'
 export {
   createIconService,
   getIconsConfig,

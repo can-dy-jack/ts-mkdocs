@@ -1,5 +1,5 @@
 import type { Config } from './config.js'
-import { buildPaletteCssVars } from './palette.js'
+import { buildPaletteStyles } from './palette.js'
 
 export type FeatureSet = Set<string>
 
@@ -15,6 +15,7 @@ export interface FeatureContext {
   features: string[]
   has: Record<string, boolean>
   palette_css: string
+  has_palette: boolean
   navigation_footer: boolean
   toc_integrate: boolean
   instant_loading: boolean
@@ -29,15 +30,13 @@ export function buildFeatureContext(config: Config): FeatureContext {
   const has: Record<string, boolean> = {}
   for (const f of list) has[f] = true
 
-  const paletteVars = buildPaletteCssVars(config)
-  const paletteCss = Object.entries(paletteVars)
-    .map(([k, v]) => `${k}: ${v}`)
-    .join('; ')
+  const paletteCss = buildPaletteStyles(config)
 
   return {
     features: list,
     has,
     palette_css: paletteCss,
+    has_palette: paletteCss.length > 0,
     navigation_footer: features.has('navigation.footer'),
     toc_integrate: features.has('toc.integrate'),
     instant_loading: features.has('navigation.instant'),

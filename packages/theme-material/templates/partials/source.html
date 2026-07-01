@@ -1,0 +1,24 @@
+<div class="md-source" data-md-component="source">
+  <a href="{{ repo_source.url }}" class="md-source__repository" target="_blank" rel="noopener" title="{{ repo_source.name }}">
+    <div class="md-source__icon">
+      {{ repo_source_icons.repo | safe }}
+    </div>
+    <div class="md-source__repository-info">
+      <div class="md-source__name md-ellipsis">{{ repo_source.name }}</div>
+      <ul class="md-source__facts">
+        <li class="md-source__fact md-source__fact--version" data-md-source="version" hidden>
+          {{ repo_source_icons.version | safe }}
+          <span class="md-source__fact-value"></span>
+        </li>
+        <li class="md-source__fact md-source__fact--stars" data-md-source="stars" hidden>
+          {{ repo_source_icons.stars | safe }}
+          <span class="md-source__fact-value"></span>
+        </li>
+        <li class="md-source__fact md-source__fact--forks" data-md-source="forks" hidden>
+          {{ repo_source_icons.forks | safe }}
+          <span class="md-source__fact-value"></span>
+        </li>
+      </ul>
+    </div>
+  </a>
+</div>

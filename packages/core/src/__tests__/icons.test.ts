@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { parseIconRef, renderIconRef, createIconService } from '../icons'
+import { parseIconRef, renderIconRef, createIconService, buildThemeIcons } from '../icons'
 
 describe('icons', () => {
   it('parses material shortcode', () => {
@@ -50,5 +50,21 @@ describe('icons', () => {
     } as any)
     const html = icons.getAdmonitionIcon('note')
     expect(html).toContain('star')
+  })
+
+  it('builds theme toggle icons with defaults and overrides', () => {
+    const icons = createIconService({
+      theme: {
+        icons: { default: 'material', libraries: ['material'] },
+        icon: { theme: { light: 'material/star' } },
+      },
+    } as any)
+    const themeIcons = buildThemeIcons(
+      { theme: { icons: { default: 'material', libraries: ['material'] }, icon: { theme: { light: 'material/star' } } } } as any,
+      icons.renderRef.bind(icons),
+    )
+    expect(themeIcons.light).toContain('star')
+    expect(themeIcons.dark).toContain('dark_mode')
+    expect(themeIcons.system).toContain('brightness_auto')
   })
 })

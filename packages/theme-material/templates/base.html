@@ -1,4 +1,5 @@
 <!doctype html>
+{% from "partials/tooltip.html" import tooltip %}
 <html lang="{{ config.theme.language | default('en') }}" data-theme="light" data-features="{{ feature.features | join(',') }}">
 <head>
   <meta charset="utf-8">
@@ -23,7 +24,7 @@
   {% endif %}
 
   {% set font = config.theme.font %}
-  {% if font !== false %}
+  {% if font != false %}
     {% set text_font = (font.text if font and font.text else "Inter") | replace(" ", "+") %}
     {% set code_font = (font.code if font and font.code else "JetBrains+Mono") | replace(" ", "+") %}
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -32,8 +33,8 @@
   {% endif %}
 
   <link rel="stylesheet" href="{{ base_url }}assets/css/material.css">
-  {% if feature.palette_css %}
-  <style>:root { {{ feature.palette_css }} }</style>
+  {% if feature.has_palette %}
+  <link rel="stylesheet" href="{{ base_url }}assets/css/palette.css">
   {% endif %}
   {% for href in icon_stylesheets %}
   <link rel="stylesheet" href="{{ href }}">
@@ -94,25 +95,21 @@
     </div>
 
     <div class="md-header__option">
-      {% if extra.version %}
-      <div class="md-header__version" id="md-version">
-        <button class="md-header__button" id="version-toggle">{{ extra.version.default | default('latest') }}</button>
-      </div>
-      {% endif %}
-      <button class="md-header__button md-icon" id="theme-toggle" aria-label="{{ i18n['theme.toggle'] }}">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon-light"><path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58c-.39-.39-1.03-.39-1.41 0-.39.39-.39 1.02 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0 .38-.39.39-1.03 0-1.41L5.99 4.58zm12.37 12.37c-.39-.39-1.03-.39-1.41 0-.39.39-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0 .39-.38.39-1.02 0-1.41l-1.06-1.06zm1.06-12.37l-1.06 1.06c-.39.39-.39 1.03 0 1.41.39.38 1.03.39 1.41 0l1.06-1.06c.39-.39.39-1.02 0-1.41-.38-.39-1.02-.39-1.41 0zM7.05 18.36l-1.06 1.06c-.39.39-.39 1.03 0 1.41.39.39 1.02.39 1.41 0l1.06-1.06c.39-.39.39-1.03 0-1.41-.39-.38-1.03-.39-1.41 0z"/></svg>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon-dark" style="display:none"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-2.98 0-5.4-2.42-5.4-5.4 0-1.81.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z"/></svg>
+      {% call tooltip('theme-toggle', i18n['theme.system'], 'md-tooltip--header', 'bottom') %}
+      <button type="button" class="md-header__button md-header__button--theme" id="theme-toggle" aria-describedby="theme-toggle-tooltip" aria-label="{{ i18n['theme.system'] }}">
+        <span class="theme-icon theme-icon--light">{{ theme_icons.light | safe }}</span>
+        <span class="theme-icon theme-icon--dark">{{ theme_icons.dark | safe }}</span>
+        <span class="theme-icon theme-icon--system is-active">{{ theme_icons.system | safe }}</span>
       </button>
+      {% endcall %}
     </div>
 
     <label class="md-header__button md-icon" for="__search">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
     </label>
 
-    {% if config.repo_url %}
-    <a href="{{ config.repo_url }}" class="md-header__button md-icon" target="_blank" rel="noopener" aria-label="Repository">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2z"/></svg>
-    </a>
+    {% if repo_source %}
+    {% include "partials/source.html" %}
     {% endif %}
   </nav>
 </header>
@@ -264,13 +261,7 @@
 </button>
 {% endif %}
 
-<script>
-  window.__TS_MKDOCS__ = {
-    features: {{ feature.features | tojson | safe }},
-    i18n: {{ i18n | tojson | safe }},
-    baseUrl: {{ base_url | tojson | safe }}
-  };
-</script>
+<script src="{{ base_url }}assets/js/ts-mkdocs-config.js"></script>
 <script src="{{ base_url }}assets/js/material.js"></script>
 {% for js in config.extra_javascript %}
 <script src="{{ base_url }}{{ js }}"></script>

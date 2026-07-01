@@ -61,6 +61,9 @@ site_name: My Documentation
 site_description: Optional description shown in meta tags
 site_url: https://example.com/
 repo_url: https://github.com/you/repo
+# repo_token: ghp_xxx   # optional — or set GITHUB_TOKEN/GH_TOKEN env var.
+                        # Used server-side to fetch stars/forks/latest
+                        # release with a higher GitHub API rate limit.
 copyright: Copyright &copy; 2024 You
 
 docs_dir: docs       # default

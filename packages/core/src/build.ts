@@ -11,9 +11,12 @@ import type { Page } from './page.js'
 import { loadPlugins } from './plugins.js'
 import { buildSearchIndex, writeSearchIndex } from './search.js'
 import { ensureDir, walkDir, log, success } from './utils.js'
-import { buildFeatureContext, getTabItems, getSidebarNav } from './features.js'
+import { buildFeatureContext, getTabItems, getSidebarNav, getFeatures } from './features.js'
 import { getI18n } from './i18n.js'
-import { getIconStylesheets, createIconService } from './icons.js'
+import { getIconStylesheets, createIconService, buildThemeIcons } from './icons.js'
+import { parseRepoSource, buildRepoSourceIcons, fetchRepoStats } from './github.js'
+import type { RepoStats } from './github.js'
+import { buildPaletteStyles } from './palette.js'
 
 let nunjucksEnv: nunjucks.Environment | null = null
 
@@ -53,6 +56,11 @@ export async function build(config: Config): Promise<Page[]> {
 
   ensureDir(resolvedConfig.site_dir)
 
+  const repoSource = resolvedConfig.repo_url
+    ? parseRepoSource(resolvedConfig.repo_url, resolvedConfig.repo_name)
+    : undefined
+  const repoStats = await fetchRepoStats(repoSource, resolvedConfig.repo_token)
+
   let files = collectFiles(resolvedConfig)
   files = await plugins.runOnFiles(files, resolvedConfig)
 
@@ -86,21 +94,15 @@ export async function build(config: Config): Promise<Page[]> {
     const navPage = nav.pages.find((p) => p.file.srcUri === page.file.srcUri)
     if (navPage) setActivePage(nav, navPage)
 
-    const html = renderPage(resolvedConfig, page, nav, navPage)
+    const html = renderPage(resolvedConfig, page, nav, navPage, repoStats)
     ensureDir(dirname(page.file.destPath))
     writeFileSync(page.file.destPath, html, 'utf-8')
   }
 
   copyThemeAssets(assetsDir, resolvedConfig.site_dir)
+  writeSiteBootstrap(resolvedConfig, repoStats)
 
-  for (const cssPath of resolvedConfig.extra_css) {
-    const src = join(resolvedConfig.docs_dir, cssPath)
-    if (existsSync(src)) {
-      const dest = join(resolvedConfig.site_dir, cssPath)
-      ensureDir(dirname(dest))
-      copyFileSync(src, dest)
-    }
-  }
+  await syncStaticAssets(resolvedConfig)
 
   const searchEnabled = resolvedConfig.plugins.some((p) =>
     p === 'search' || (typeof p === 'object' && 'search' in p),
@@ -111,7 +113,7 @@ export async function build(config: Config): Promise<Page[]> {
   }
 
   try {
-    const html404 = nunjucksEnv!.render('404.html', buildBaseContext(resolvedConfig))
+    const html404 = nunjucksEnv!.render('404.html', buildBaseContext(resolvedConfig, './', repoStats))
     writeFileSync(join(resolvedConfig.site_dir, '404.html'), html404)
   } catch {}
 
@@ -119,6 +121,30 @@ export async function build(config: Config): Promise<Page[]> {
 
   success(`Site built to: ${resolvedConfig.site_dir}`)
   return pages
+}
+
+/** Copy theme and extra static assets without rebuilding pages. */
+export async function syncStaticAssets(config: Config): Promise<void> {
+  const themeModule = await import('ts-mkdocs-theme-material')
+  copyThemeAssets(themeModule.assetsDir, config.site_dir)
+
+  for (const cssPath of config.extra_css) {
+    const src = join(config.docs_dir, cssPath)
+    if (existsSync(src)) {
+      const dest = join(config.site_dir, cssPath)
+      ensureDir(dirname(dest))
+      copyFileSync(src, dest)
+    }
+  }
+
+  for (const jsPath of config.extra_javascript) {
+    const src = join(config.docs_dir, jsPath)
+    if (existsSync(src)) {
+      const dest = join(config.site_dir, jsPath)
+      ensureDir(dirname(dest))
+      copyFileSync(src, dest)
+    }
+  }
 }
 
 function computeBaseUrl(destUri: string): string {
@@ -168,6 +194,7 @@ function renderPage(
   page: Page,
   nav: { items: NavItem[] },
   navPage: NavPage | undefined,
+  repoStats?: RepoStats,
 ): string {
   const baseUrl = computeBaseUrl(page.file.destUri)
   const isHome = isHomePage(page)
@@ -180,7 +207,7 @@ function renderPage(
   const navToc = feature.toc_integrate ? page.toc : []
 
   const ctx = {
-    ...buildBaseContext(config, baseUrl),
+    ...buildBaseContext(config, baseUrl, repoStats),
     feature,
     i18n,
     page: {
@@ -229,9 +256,13 @@ function buildSocialLinks(config: Config, baseUrl: string): Array<{ href: string
     .filter((item) => item.href.length > 0)
 }
 
-function buildBaseContext(config: Config, baseUrl = './'): Record<string, unknown> {
+function buildBaseContext(config: Config, baseUrl = './', repoStats?: RepoStats): Record<string, unknown> {
   const feature = buildFeatureContext(config)
   const i18n = getI18n(config.theme.language)
+  const icons = createIconService(config)
+  const repo_source = config.repo_url
+    ? parseRepoSource(config.repo_url, config.repo_name)
+    : undefined
   return {
     config,
     base_url: baseUrl,
@@ -240,6 +271,10 @@ function buildBaseContext(config: Config, baseUrl = './'): Record<string, unknow
     i18n,
     icon_stylesheets: getIconStylesheets(config),
     social_links: buildSocialLinks(config, baseUrl),
+    repo_source,
+    repo_source_icons: buildRepoSourceIcons(icons.renderRef.bind(icons), repo_source),
+    repo_source_facts: repo_source ? repoStats : undefined,
+    theme_icons: buildThemeIcons(config, icons.renderRef.bind(icons)),
     versions: config.extra?.version?.provider ? config.extra.version : null,
   }
 }
@@ -255,4 +290,28 @@ function copyThemeAssets(assetsDir: string, siteDir: string): void {
     ensureDir(dirname(destFile))
     copyFileSync(src, destFile)
   }
+}
+
+function writeSiteBootstrap(config: Config, repoStats?: RepoStats): void {
+  const paletteCss = buildPaletteStyles(config)
+  if (paletteCss) {
+    const palettePath = join(config.site_dir, 'assets/css/palette.css')
+    ensureDir(dirname(palettePath))
+    writeFileSync(palettePath, paletteCss, 'utf-8')
+  }
+
+  const repoSource = config.repo_url
+    ? parseRepoSource(config.repo_url, config.repo_name)
+    : undefined
+
+  const payload = {
+    features: [...getFeatures(config)],
+    i18n: getI18n(config.theme.language),
+    repoSource: repoSource ?? null,
+    repoSourceFacts: repoSource ? (repoStats ?? null) : null,
+  }
+
+  const configPath = join(config.site_dir, 'assets/js/ts-mkdocs-config.js')
+  ensureDir(dirname(configPath))
+  writeFileSync(configPath, `window.__TS_MKDOCS__=${JSON.stringify(payload)};\n`, 'utf-8')
 }

@@ -7,36 +7,87 @@
   const I18N = CFG.i18n || {};
   const t = (key, fallback) => I18N[key] || fallback || key;
 
-  const THEME_KEY = 'ts-mkdocs-theme';
+  const THEME_MODE_KEY = 'ts-mkdocs-theme-mode';
+  const THEME_KEY_LEGACY = 'ts-mkdocs-theme';
   const html = document.documentElement;
+  const systemMedia = window.matchMedia('(prefers-color-scheme: dark)');
 
   function hasFeature(name) { return FEATURES.has(name); }
 
-  function applyTheme(theme) {
-    html.setAttribute('data-theme', theme);
-    localStorage.setItem(THEME_KEY, theme);
-    const lightIcon = document.querySelector('.icon-light');
-    const darkIcon = document.querySelector('.icon-dark');
-    if (lightIcon && darkIcon) {
-      lightIcon.style.display = theme === 'dark' ? 'none' : '';
-      darkIcon.style.display = theme === 'dark' ? '' : 'none';
-    }
+  function getSystemTheme() {
+    return systemMedia.matches ? 'dark' : 'light';
+  }
+
+  function resolveTheme(mode) {
+    return mode === 'system' ? getSystemTheme() : mode;
+  }
+
+  const THEME_CYCLE = ['light', 'dark', 'system'];
+
+  function setTooltipLabel(triggerId, label) {
+    const trigger = document.getElementById(triggerId);
+    if (!trigger) return;
+    const bubble = document.getElementById(triggerId + '-tooltip');
+    if (bubble) bubble.textContent = label;
+    trigger.setAttribute('aria-label', label);
+  }
+
+  function updateThemeToggle(mode) {
+    const toggle = document.getElementById('theme-toggle');
+    if (!toggle) return;
+    document.querySelectorAll('.theme-icon').forEach(function (el) {
+      el.classList.toggle('is-active', el.classList.contains('theme-icon--' + mode));
+    });
+    const labels = {
+      light: t('theme.light', 'Light mode'),
+      dark: t('theme.dark', 'Dark mode'),
+      system: t('theme.system', 'Follow system'),
+    };
+    const label = labels[mode] || t('theme.toggle', 'Toggle theme');
+    setTooltipLabel('theme-toggle', label);
+  }
+
+  function applyThemeMode(mode) {
+    html.setAttribute('data-theme', resolveTheme(mode));
+    localStorage.setItem(THEME_MODE_KEY, mode);
+    updateThemeToggle(mode);
+  }
+
+  function nextThemeMode(mode) {
+    const idx = THEME_CYCLE.indexOf(mode);
+    return THEME_CYCLE[(idx + 1) % THEME_CYCLE.length];
+  }
+
+  function loadThemeMode() {
+    const saved = localStorage.getItem(THEME_MODE_KEY);
+    if (saved === 'light' || saved === 'dark' || saved === 'system') return saved;
+    const legacy = localStorage.getItem(THEME_KEY_LEGACY);
+    if (legacy === 'light' || legacy === 'dark') return legacy;
+    return 'system';
   }
 
   function initTheme() {
-    const saved = localStorage.getItem(THEME_KEY);
-    const preferred = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-    applyTheme(saved || preferred);
+    const mode = loadThemeMode();
+    html.setAttribute('data-theme', resolveTheme(mode));
+    systemMedia.addEventListener('change', function () {
+      if (loadThemeMode() === 'system') {
+        html.setAttribute('data-theme', getSystemTheme());
+      }
+    });
   }
 
   initTheme();
+  if (document.getElementById('theme-toggle')) {
+    updateThemeToggle(loadThemeMode());
+  }
 
   document.addEventListener('DOMContentLoaded', function () {
-    const toggle = document.getElementById('theme-toggle');
-    if (toggle) {
-      toggle.addEventListener('click', function () {
-        const current = html.getAttribute('data-theme') || 'light';
-        applyTheme(current === 'dark' ? 'light' : 'dark');
+    updateThemeToggle(loadThemeMode());
+
+    const themeToggle = document.getElementById('theme-toggle');
+    if (themeToggle) {
+      themeToggle.addEventListener('click', function () {
+        applyThemeMode(nextThemeMode(loadThemeMode()));
       });
     }
 
@@ -53,6 +104,7 @@
     initStickyTabs();
     initHomeHero();
     initFooterCopyright();
+    initSourceRepo();
   });
 
   function getBaseUrl() {
@@ -602,6 +654,111 @@
     const template = el.dataset.copyrightTemplate;
     if (!template) return;
     el.textContent = formatCopyright(template);
+  }
+
+  function formatCount(value) {
+    const n = Number(value);
+    if (!Number.isFinite(n) || n < 0) return '';
+    if (n >= 1000000) {
+      const scaled = n / 1000000;
+      return (scaled % 1 === 0 ? scaled.toFixed(0) : scaled.toFixed(1).replace(/\.0$/, '')) + 'M';
+    }
+    if (n >= 1000) {
+      const scaled = n / 1000;
+      return (scaled % 1 === 0 ? scaled.toFixed(0) : scaled.toFixed(1).replace(/\.0$/, '')) + 'k';
+    }
+    return String(n);
+  }
+
+  function applySourceFacts(source, facts) {
+    if (!source || !facts) return;
+    if (facts.version) showSourceFact(source, 'version', facts.version);
+    if (facts.stars != null) showSourceFact(source, 'stars', formatCount(facts.stars));
+    if (facts.forks != null) showSourceFact(source, 'forks', formatCount(facts.forks));
+  }
+
+  function showSourceFact(source, type, value) {
+    const el = source.querySelector('[data-md-source="' + type + '"]');
+    if (!el || !value) return;
+    const valueEl = el.querySelector('.md-source__fact-value');
+    if (valueEl) valueEl.textContent = value;
+    el.hidden = false;
+  }
+
+  var SOURCE_CACHE_TTL = 1000 * 60 * 60; // 1 hour
+
+  function readSourceCache(cacheKey) {
+    try {
+      var raw = localStorage.getItem(cacheKey);
+      if (!raw) return null;
+      var entry = JSON.parse(raw);
+      if (!entry || typeof entry.ts !== 'number' || !entry.facts) return null;
+      if (Date.now() - entry.ts > SOURCE_CACHE_TTL) return null;
+      return entry.facts;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function writeSourceCache(cacheKey, facts) {
+    try {
+      localStorage.setItem(cacheKey, JSON.stringify({ ts: Date.now(), facts: facts }));
+    } catch (_) {}
+  }
+
+  function initSourceRepo() {
+    const source = document.querySelector('[data-md-component="source"]');
+    const cfg = CFG.repoSource;
+    if (!source || !cfg || cfg.provider !== 'github' || !cfg.owner || !cfg.repo) return;
+
+    // Facts fetched server-side at build time (optionally using a repo_token
+    // from mkdocs.yml) take priority: no client request, no exposed token.
+    if (CFG.repoSourceFacts) {
+      applySourceFacts(source, CFG.repoSourceFacts);
+      return;
+    }
+
+    const cacheKey = 'ts-mkdocs-source-v2-' + cfg.owner + '/' + cfg.repo;
+    const cached = readSourceCache(cacheKey);
+    if (cached) {
+      applySourceFacts(source, cached);
+      return;
+    }
+
+    const repoPath = cfg.owner + '/' + cfg.repo;
+    fetch('https://api.github.com/repos/' + repoPath, { headers: { Accept: 'application/vnd.github+json' } })
+      .then(function (res) { return res.ok ? res.json() : null; })
+      .then(function (data) {
+        if (!data) return;
+        const facts = {
+          stars: data.stargazers_count,
+          forks: data.forks_count,
+        };
+        return fetch('https://api.github.com/repos/' + repoPath + '/releases/latest', {
+          headers: { Accept: 'application/vnd.github+json' },
+        })
+          .then(function (res) { return res.ok ? res.json() : null; })
+          .then(function (release) {
+            if (release && release.tag_name) {
+              facts.version = String(release.tag_name).replace(/^v/, '');
+              writeSourceCache(cacheKey, facts);
+              applySourceFacts(source, facts);
+              return;
+            }
+            return fetch('https://api.github.com/repos/' + repoPath + '/tags', {
+              headers: { Accept: 'application/vnd.github+json' },
+            })
+              .then(function (res) { return res.ok ? res.json() : null; })
+              .then(function (tags) {
+                if (Array.isArray(tags) && tags[0] && tags[0].name) {
+                  facts.version = String(tags[0].name).replace(/^v/, '');
+                }
+                writeSourceCache(cacheKey, facts);
+                applySourceFacts(source, facts);
+              });
+          });
+      })
+      .catch(function () {});
   }
 
   function initHomeHero() {

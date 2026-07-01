@@ -27,6 +27,11 @@ site_author: Your Name
 # ── Repository link (shown in header) ───────────────────────
 repo_url: https://github.com/you/repo
 repo_name: you/repo
+# Optional GitHub token, used server-side at build time to fetch
+# stars/forks/latest release with a higher rate limit. Never shipped to
+# the browser. Avoid committing it here — set the TS_MKDOCS_GITHUB_TOKEN,
+# GITHUB_TOKEN, or GH_TOKEN env var instead and omit this field.
+# repo_token: ghp_xxx
 
 # ── Directories ─────────────────────────────────────────────
 docs_dir: docs     # default — where your .md files live
@@ -48,24 +53,21 @@ theme:
   logo: assets/logo.svg
   favicon: assets/favicon.png
   palette:
-    # Single colour scheme (no toggle button)
+    # Colour schemes (light + dark). Theme mode is switched via header icons.
     - scheme: default
       primary: indigo
       accent: indigo
-    # Two schemes — adds a light/dark toggle
-    - scheme: default
-      primary: indigo
-      toggle:
-        icon: material/brightness-7
-        name: Switch to dark mode
     - scheme: slate
       primary: indigo
-      toggle:
-        icon: material/brightness-4
-        name: Switch to light mode
+      accent: indigo
   font:
     text: Roboto
     code: Roboto Mono
+  icon:
+    theme:
+      light: material/wb_sunny      # sun — light mode
+      dark: material/dark_mode      # moon — dark mode
+      system: material/brightness_auto  # auto — follow OS
   features:
     - navigation.tabs
     - navigation.sections
@@ -125,11 +127,45 @@ When `nav:` is absent, ts-mkdocs walks the `docs_dir` alphabetically. Files star
 
 ## Palette colours
 
-Any of the standard Material colour names work for `primary` and `accent`:
+`theme.palette` controls the site chrome (header, footer, links, buttons). You can pass a single object or an array of two entries for light and dark mode.
+
+| Field | Purpose |
+|-------|---------|
+| `scheme` | Which colour mode this entry applies to. `default` = light mode (`:root`), `slate` = dark mode (`[data-theme="dark"]`). |
+| `primary` | Main brand colour — header background, footer background (via a darker shade), primary buttons, link colour. |
+| `accent` | Secondary highlight colour — scroll-to-top button, some badges and gradients. Defaults to `primary` when omitted. |
+
+```yaml
+theme:
+  palette:
+  - scheme: default      # light mode
+    primary: orange
+    accent: orange
+  - scheme: slate        # dark mode
+    primary: indigo
+    accent: indigo
+```
+
+Footer uses `--md-primary-fg-color--dark`, a shade derived automatically from `primary`, so changing `primary` updates the footer as well.
+
+Any of the standard Material colour names work for `primary` and `accent` (hex values like `#e65100` are also supported):
 
 `red` · `pink` · `purple` · `deep-purple` · `indigo` · `blue` · `light-blue`
 `cyan` · `teal` · `green` · `light-green` · `lime` · `yellow` · `amber`
 `orange` · `deep-orange` · `brown` · `grey` · `blue-grey` · `white` · `black`
+
+## Theme mode toggle
+
+The header shows a **single icon button** that cycles **light → dark → follow system**. Only the icon for the current mode is visible. Icons are configurable under `theme.icon.theme`:
+
+```yaml
+theme:
+  icon:
+    theme:
+      light: material/wb_sunny
+      dark: material/dark_mode
+      system: material/brightness_auto
+```
 
 ## Code block features
 

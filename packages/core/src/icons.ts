@@ -151,12 +151,43 @@ export function renderIconRef(ref: string, defaultLib: IconLibrary): string {
   return renderIconHtml(parseIconRef(ref, defaultLib))
 }
 
+export interface ThemeIcons {
+  light: string
+  dark: string
+  system: string
+}
+
+const DEFAULT_THEME_ICONS = {
+  light: 'material/wb_sunny',
+  dark: 'material/dark_mode',
+  system: 'material/brightness_auto',
+} as const
+
 export interface IconService {
   defaultLibrary: IconLibrary
   renderRef(ref: string): string
   renderShortcode(name: string): string
   getAdmonitionIcon(type: string): string
   replaceShortcodes(text: string): string
+}
+
+function getThemeIconOverrides(config: Config): Partial<Record<keyof typeof DEFAULT_THEME_ICONS, string>> {
+  const icon = config.theme.icon
+  if (!icon || typeof icon !== 'object') return {}
+  const theme = (icon as { theme?: Partial<Record<keyof typeof DEFAULT_THEME_ICONS, string>> }).theme
+  return theme ?? {}
+}
+
+export function buildThemeIcons(
+  config: Config,
+  renderIcon: (ref: string) => string,
+): ThemeIcons {
+  const overrides = getThemeIconOverrides(config)
+  return {
+    light: renderIcon(overrides.light ?? DEFAULT_THEME_ICONS.light),
+    dark: renderIcon(overrides.dark ?? DEFAULT_THEME_ICONS.dark),
+    system: renderIcon(overrides.system ?? DEFAULT_THEME_ICONS.system),
+  }
 }
 
 function getAdmonitionOverrides(config: Config): Record<string, string> {

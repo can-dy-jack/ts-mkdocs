@@ -1,0 +1,17 @@
+{#
+  Reusable tooltip wrapper.
+
+  Usage:
+    {% from "partials/tooltip.html" import tooltip %}
+    {% call tooltip('my-trigger', 'Tooltip text', 'md-tooltip--header', 'bottom') %}
+      <button id="my-trigger" aria-describedby="my-trigger-tooltip">...</button>
+    {% endcall %}
+
+  placement: top | bottom | left | right  (default: top)
+#}
+{% macro tooltip(id, label, class_name='', placement='top') %}
+<div class="md-tooltip md-tooltip--{{ placement }}{% if class_name %} {{ class_name }}{% endif %}" data-md-component="tooltip" data-md-tooltip-placement="{{ placement }}">
+  {{ caller() }}
+  <span class="md-tooltip__bubble" id="{{ id }}-tooltip" role="tooltip">{{ label }}</span>
+</div>
+{% endmacro %}

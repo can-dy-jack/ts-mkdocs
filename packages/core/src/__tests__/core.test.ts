@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { ConfigSchema } from '../config'
 import { buildFeatureContext, getTabItems, getSidebarNav } from '../features'
 import { getI18n } from '../i18n'
-import { resolveColor } from '../palette'
+import { resolveColor, buildPaletteStyles } from '../palette'
 import { buildNavigation } from '../nav'
 import { collectFiles } from '../files'
 import { writeFileSync, mkdirSync, rmSync } from 'fs'
@@ -69,6 +69,22 @@ describe('i18n', () => {
 describe('palette', () => {
   it('resolves indigo', () => {
     expect(resolveColor('indigo', '#000')).toBe('#3f51b5')
+  })
+
+  it('builds separate light and dark palette rules', () => {
+    const css = buildPaletteStyles({
+      theme: {
+        palette: [
+          { scheme: 'default', primary: 'orange', accent: 'orange' },
+          { scheme: 'slate', primary: 'indigo', accent: 'indigo' },
+        ],
+      },
+    })
+    expect(css).toContain(':root')
+    expect(css).toContain('[data-theme="dark"]')
+    expect(css).toContain('--md-primary-fg-color: #ff9800')
+    expect(css).toContain('--md-primary-fg-color--dark:')
+    expect(css).toContain('--md-primary-fg-color: #3f51b5')
   })
 })
 

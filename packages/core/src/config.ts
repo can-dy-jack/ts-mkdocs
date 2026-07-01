@@ -70,6 +70,7 @@ export const ConfigSchema = z.object({
   site_author: z.string().optional(),
   repo_url: z.string().optional(),
   repo_name: z.string().optional(),
+  repo_token: z.string().optional(),
   edit_uri: z.string().optional(),
   dev_addr: z.string().default('127.0.0.1:8000'),
   watch: z.array(z.string()).optional(),
@@ -112,6 +113,13 @@ export function loadConfig(configPath: string): Config {
 
   config.docs_dir = resolve(configDir, config.docs_dir)
   config.site_dir = resolve(configDir, config.site_dir)
+
+  // Prefer an explicit repo_token, but fall back to an env var so the
+  // token never has to be committed to mkdocs.yml.
+  if (!config.repo_token) {
+    config.repo_token =
+      process.env.TS_MKDOCS_GITHUB_TOKEN || process.env.GITHUB_TOKEN || process.env.GH_TOKEN || undefined
+  }
 
   return config
 }

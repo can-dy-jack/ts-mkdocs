@@ -24,16 +24,25 @@ const MIME_TYPES: Record<string, string> = {
   '.eot': 'application/vnd.ms-fontobject',
 }
 
-const SSE_CLIENTS: Set<ServerResponse> = new Set()
+interface SseClient {
+  res: ServerResponse
+  heartbeat: ReturnType<typeof setInterval>
+}
+
+const SSE_CLIENTS: Set<SseClient> = new Set()
+const SSE_HEARTBEAT_MS = 30_000
 
 const LIVE_RELOAD_SCRIPT = `
 <script>
 (function() {
   const es = new EventSource('/__livereload');
   es.onmessage = function(e) {
-    if (e.data === 'reload') window.location.reload();
+    if (e.data === 'reload') {
+      es.close();
+      window.location.reload();
+    }
   };
-  es.onerror = function() { es.close(); };
+  window.addEventListener('beforeunload', function() { es.close(); });
 })();
 </script>
 `
@@ -60,19 +69,39 @@ export async function serve(
     if (url === '/__livereload') {
       res.writeHead(200, {
         'Content-Type': 'text/event-stream',
-        'Cache-Control': 'no-cache',
+        'Cache-Control': 'no-cache, no-transform',
         'Connection': 'keep-alive',
         'Access-Control-Allow-Origin': '*',
       })
       res.write('data: connected\n\n')
-      SSE_CLIENTS.add(res)
-      req.on('close', () => SSE_CLIENTS.delete(res))
+
+      let client: SseClient
+      const cleanup = () => {
+        clearInterval(client.heartbeat)
+        SSE_CLIENTS.delete(client)
+      }
+
+      const heartbeat = setInterval(() => {
+        if (res.writableEnded) return
+        try {
+          res.write(': ping\n\n')
+        } catch {
+          cleanup()
+        }
+      }, SSE_HEARTBEAT_MS)
+
+      client = { res, heartbeat }
+      SSE_CLIENTS.add(client)
+
+      req.on('close', cleanup)
+      res.on('close', cleanup)
       return
     }
 
     serveStatic(url, activeConfig.site_dir, res)
   })
 
+  server.requestTimeout = 0
   server.listen(port, host, () => {
     log(`Serving at http://${host}:${port}/`)
     log('Press Ctrl+C to stop')
@@ -125,6 +154,11 @@ export async function serve(
   })
 
   process.on('SIGINT', () => {
+    for (const client of SSE_CLIENTS) {
+      clearInterval(client.heartbeat)
+      if (!client.res.writableEnded) client.res.end()
+    }
+    SSE_CLIENTS.clear()
     server.close()
     watcher.close()
     process.exit(0)
@@ -193,6 +227,16 @@ function injectLiveReload(html: string): string {
 
 function notifyReload(): void {
   for (const client of SSE_CLIENTS) {
-    client.write('data: reload\n\n')
+    if (client.res.writableEnded) {
+      clearInterval(client.heartbeat)
+      SSE_CLIENTS.delete(client)
+      continue
+    }
+    try {
+      client.res.write('data: reload\n\n')
+    } catch {
+      clearInterval(client.heartbeat)
+      SSE_CLIENTS.delete(client)
+    }
   }
 }
