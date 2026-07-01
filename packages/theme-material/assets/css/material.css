@@ -833,6 +833,52 @@ body {
   border-radius: 0 .15rem .15rem 0;
 }
 
+/* Footnotes (markdown_extensions: footnotes) */
+.md-typeset .footnote-ref {
+  font-size: .75em;
+  font-weight: 700;
+}
+
+.md-typeset .footnote-ref a {
+  color: var(--md-typeset-a-color);
+  text-decoration: none;
+}
+
+.md-typeset .footnote-ref a:hover {
+  text-decoration: underline;
+}
+
+.md-typeset .footnotes-sep {
+  margin: 1.4em 0;
+  border: none;
+  border-top: 1px solid var(--md-default-fg-color--lighter);
+}
+
+.md-typeset .footnotes {
+  font-size: .64rem;
+  color: var(--md-default-fg-color--light);
+}
+
+.md-typeset .footnotes-list {
+  margin: 0;
+  padding-left: 1.1rem;
+}
+
+.md-typeset .footnote-item p {
+  margin: .25em 0;
+}
+
+.md-typeset .footnote-backref {
+  color: var(--md-typeset-a-color);
+  text-decoration: none;
+  font-weight: 700;
+  margin-left: .15rem;
+}
+
+.md-typeset .footnote-backref:hover {
+  text-decoration: underline;
+}
+
 .md-typeset hr {
   border: none;
   border-top: .05rem solid rgba(0, 0, 0, .12);
@@ -1552,7 +1598,7 @@ mark {
 .md-footer__inner {
   display: flex;
   flex-wrap: wrap;
-  padding: .3rem 10rem;
+  max-width: var(--md-grid-max-width);
 }
 
 .md-footer__link {
@@ -1599,7 +1645,6 @@ mark {
   background: rgba(0, 0, 0, .22);
   color: rgba(255, 255, 255, .88);
   border-top: 1px solid rgba(255, 255, 255, .08);
-  padding: 0 10rem;
 }
 
 .md-footer-meta.md-typeset {
@@ -1613,6 +1658,7 @@ mark {
   align-items: center;
   padding: .55rem 0;
   gap: .6rem 1rem;
+  max-width: var(--md-grid-max-width);
 }
 
 .md-copyright {

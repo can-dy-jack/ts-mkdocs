@@ -38,6 +38,9 @@ importers:
       markdown-it-attrs:
         specifier: ^4.2.0
         version: 4.5.0(markdown-it@14.2.0)
+      markdown-it-footnote:
+        specifier: ^4.0.0
+        version: 4.0.0
       nunjucks:
         specifier: ^3.2.4
         version: 3.2.4(chokidar@3.6.0)
@@ -858,6 +861,9 @@ packages:
     engines: {node: '>=6'}
     peerDependencies:
       markdown-it: '>= 9.0.0'
+
+  markdown-it-footnote@4.0.0:
+    resolution: {integrity: sha512-WYJ7urf+khJYl3DqofQpYfEYkZKbmXmwxQV8c8mO/hGIhgZ1wOe7R4HLFNwqx7TjILbnC98fuyeSsin19JdFcQ==}
 
   markdown-it@14.2.0:
     resolution: {integrity: sha512-1TGiQiJVRQ3NPmZH6sx5Cfnmg6GQm9jvC1ch4TK511NjSJvjzKLzn5pPfZRNZkRPZP0HqCioSndqH8v2nRaWVQ==}
@@ -1823,6 +1829,8 @@ snapshots:
   markdown-it-attrs@4.5.0(markdown-it@14.2.0):
     dependencies:
       markdown-it: 14.2.0
+
+  markdown-it-footnote@4.0.0: {}
 
   markdown-it@14.2.0:
     dependencies:

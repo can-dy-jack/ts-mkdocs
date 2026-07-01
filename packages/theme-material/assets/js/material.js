@@ -504,10 +504,15 @@
       const doc = parser.parseFromString(html, 'text/html');
       const newContent = doc.querySelector('.md-content');
       const newTitle = doc.querySelector('title');
+      const newFooter = doc.querySelector('.md-footer');
       const curContent = document.querySelector('.md-content');
+      const curFooter = document.querySelector('.md-footer');
       if (newContent && curContent) {
         curContent.innerHTML = newContent.innerHTML;
         if (newTitle) document.title = newTitle.textContent;
+        if (newFooter && curFooter) {
+          curFooter.replaceWith(newFooter.cloneNode(true));
+        }
         history.pushState({}, '', url);
         initCopyButtons();
         initAnchorScrolling();

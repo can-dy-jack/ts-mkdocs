@@ -34,6 +34,19 @@ export function titleFromFilename(name: string): string {
     .replace(/\b\w/g, (c) => c.toUpperCase())
 }
 
+/** Join a page-relative base URL (e.g. `../../`) with a site-relative path (e.g. `./` or `guide/`). */
+export function joinUrl(base: string, path: string): string {
+  if (!path) return base || './'
+  if (/^(?:https?:)?\/\//.test(path) || path.startsWith('/')) return path
+  if (path === './') return base || './'
+  return (base || './') + path.replace(/^\.\//, '')
+}
+
+export function formatCopyright(template: string): string {
+  const year = String(new Date().getFullYear())
+  return template.replace(/\{year\}/gi, year)
+}
+
 export function log(message: string): void {
   console.log(pc.cyan('INFO') + ' - ' + message)
 }

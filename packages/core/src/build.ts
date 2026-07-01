@@ -10,8 +10,9 @@ import { loadPage } from './page.js'
 import type { Page } from './page.js'
 import { loadPlugins } from './plugins.js'
 import { buildSearchIndex, writeSearchIndex } from './search.js'
-import { ensureDir, walkDir, log, success } from './utils.js'
+import { ensureDir, walkDir, log, success, joinUrl, formatCopyright } from './utils.js'
 import { buildFeatureContext, getTabItems, getSidebarNav, getFeatures } from './features.js'
+import type { FeatureContext } from './features.js'
 import { getI18n } from './i18n.js'
 import { getIconStylesheets, createIconService, buildThemeIcons } from './icons.js'
 import { parseRepoSource, buildRepoSourceIcons, fetchRepoStats } from './github.js'
@@ -189,6 +190,20 @@ function buildEditUrl(config: Config, srcUri: string): string | undefined {
   return `${config.repo_url}/${editPath.replace(/^\//, '')}${srcUri}`
 }
 
+function shouldShowFooterNav(feature: FeatureContext, page: Page): boolean {
+  if (feature.features.length > 0 && !feature.has['navigation.footer']) return false
+  const hide = page.meta.hide
+  return !(Array.isArray(hide) && hide.includes('footer'))
+}
+
+function buildFooterPageRef(
+  navPage: NavPage | undefined,
+  baseUrl: string,
+): { title: string; url: string } | undefined {
+  if (!navPage) return undefined
+  return { title: navPage.title, url: joinUrl(baseUrl, navPage.url) }
+}
+
 function renderPage(
   config: Config,
   page: Page,
@@ -200,7 +215,7 @@ function renderPage(
   const isHome = isHomePage(page)
   const feature = buildFeatureContext(config)
   const i18n = getI18n(config.theme.language)
-  const showFooter = feature.features.length === 0 || feature.has['navigation.footer']
+  const showFooterNav = shouldShowFooterNav(feature, page)
 
   const rewrittenContent = rewriteDocLinks(page.content, config.use_directory_urls)
   const toc = feature.toc_integrate ? [] : page.toc
@@ -215,8 +230,8 @@ function renderPage(
       content: rewrittenContent,
       url: page.file.url,
       edit_url: buildEditUrl(config, page.file.srcUri),
-      prev_page: showFooter ? navPage?.prev : undefined,
-      next_page: showFooter ? navPage?.next : undefined,
+      prev_page: showFooterNav ? buildFooterPageRef(navPage?.prev, baseUrl) : undefined,
+      next_page: showFooterNav ? buildFooterPageRef(navPage?.next, baseUrl) : undefined,
       is_homepage: isHome,
     },
     nav: nav.items,
@@ -271,6 +286,7 @@ function buildBaseContext(config: Config, baseUrl = './', repoStats?: RepoStats)
     i18n,
     icon_stylesheets: getIconStylesheets(config),
     social_links: buildSocialLinks(config, baseUrl),
+    copyright_html: config.copyright ? formatCopyright(config.copyright) : undefined,
     repo_source,
     repo_source_icons: buildRepoSourceIcons(icons.renderRef.bind(icons), repo_source),
     repo_source_facts: repo_source ? repoStats : undefined,

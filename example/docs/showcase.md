@@ -173,6 +173,21 @@ Custom admonition title with icon shortcode:
 
 ---
 
+## Footnotes
+
+Footnotes add supplemental detail without breaking the reading flow[^demo].
+
+[^demo]: Enable with `markdown_extensions: [footnotes]`. References use `[^id]`; definitions use `[^id]: text`.
+
+Multi-paragraph footnotes are supported[^long]:
+
+[^long]:
+    First paragraph of a longer note.
+
+    Second paragraph, indented with four spaces.
+
+---
+
 ## Horizontal rule
 
 ---

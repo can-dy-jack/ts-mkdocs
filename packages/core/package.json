@@ -14,7 +14,9 @@
       "types": "./dist/index.d.ts"
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
@@ -31,6 +33,7 @@
     "markdown-it": "^14.1.0",
     "markdown-it-anchor": "^9.1.0",
     "markdown-it-attrs": "^4.2.0",
+    "markdown-it-footnote": "^4.0.0",
     "nunjucks": "^3.2.4",
     "picocolors": "^1.1.1",
     "shiki": "^1.22.0",

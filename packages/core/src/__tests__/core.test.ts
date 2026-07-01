@@ -5,6 +5,7 @@ import { getI18n } from '../i18n'
 import { resolveColor, buildPaletteStyles } from '../palette'
 import { buildNavigation } from '../nav'
 import { collectFiles } from '../files'
+import { joinUrl, formatCopyright } from '../utils.js'
 import { writeFileSync, mkdirSync, rmSync } from 'fs'
 import { join } from 'path'
 import { tmpdir } from 'os'
@@ -63,6 +64,19 @@ describe('i18n', () => {
   it('returns Chinese strings', () => {
     const i18n = getI18n('zh')
     expect(i18n['search.placeholder']).toBe('搜索')
+  })
+})
+
+describe('utils', () => {
+  it('joins base URL with site-relative paths', () => {
+    expect(joinUrl('../../', './')).toBe('../../')
+    expect(joinUrl('../../', 'guide/configuration/')).toBe('../../guide/configuration/')
+    expect(joinUrl('./', 'guide/installation/')).toBe('./guide/installation/')
+  })
+
+  it('expands copyright year placeholder', () => {
+    const year = String(new Date().getFullYear())
+    expect(formatCopyright('Copyright {year} Example')).toBe(`Copyright ${year} Example`)
   })
 })
 

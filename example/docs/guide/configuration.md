@@ -167,6 +167,71 @@ theme:
       system: material/brightness_auto
 ```
 
+## Footer
+
+The site footer shows copyright text, social links, and optional previous/next page navigation.
+
+### Copyright
+
+Set `copyright` in `mkdocs.yml`. Use `{year}` as a placeholder for the current year:
+
+```yaml
+copyright: Copyright &copy; {year} Your Name
+```
+
+### Social links
+
+Add icons under `extra.social` (see the example `mkdocs.yml` in this repo).
+
+### Previous / next navigation
+
+Enable footer page links with `navigation.footer`:
+
+```yaml
+theme:
+  features:
+    - navigation.footer
+```
+
+Hide them on a specific page via front matter:
+
+```yaml
+---
+hide:
+  - footer
+---
+```
+
+---
+
+## Footnotes
+
+Markdown footnotes let you add supplemental information without interrupting the main text. Enable the extension in `mkdocs.yml`:
+
+```yaml
+markdown_extensions:
+  - footnotes
+```
+
+Reference a footnote inline with `[^identifier]` and define it anywhere in the document:
+
+```markdown
+Here is a footnote[^1].
+
+[^1]: This is the first footnote.
+```
+
+Multi-paragraph footnotes use four-space indentation:
+
+```markdown
+[^note]:
+    First paragraph.
+
+    Second paragraph.
+```
+
+Footnotes are rendered at the bottom of the page with backlinks to the reference.
+
 ## Code block features
 
 Enable optional code block UI via `theme.features`:
