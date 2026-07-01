@@ -6,8 +6,8 @@ const ADMONITION_TYPES = new Set([
   'warning', 'failure', 'danger', 'bug', 'example', 'quote',
 ])
 
-const ADMONITION_RE = /^(!{3})([+-])?\s+(\w+)(?:\s+"([^"]*)")?\s*$/
-const DETAILS_RE = /^(\?{3})([+-])?\s+(\w+)(?:\s+"([^"]*)")?\s*$/
+const ADMONITION_RE = /^(!{3})([+-])?\s+(\w+)(?:\s+(annotate))?(?:\s+"([^"]*)")?\s*$/
+const DETAILS_RE = /^(\?{3})([+-])?\s+(\w+)(?:\s+(annotate))?(?:\s+"([^"]*)")?\s*$/
 
 const TOGGLE_SVG =
   '<svg class="admonition-toggle__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>'
@@ -62,7 +62,8 @@ function registerAdmonitionBlock(
       const modifier = match[2]
       const type = match[3].toLowerCase()
       if (validateType && !ADMONITION_TYPES.has(type)) return false
-      const title = match[4] ?? type.charAt(0).toUpperCase() + type.slice(1)
+      const annotate = Boolean(match[4])
+      const title = match[5] ?? type.charAt(0).toUpperCase() + type.slice(1)
       const collapsed = resolveCollapsed(modifier, defaultCollapsed)
 
       let nextLine = startLine + 1
@@ -82,7 +83,7 @@ function registerAdmonitionBlock(
       }
 
       const tokenOpen = state.push(`${name}_open`, 'details', 1)
-      tokenOpen.attrSet('class', `admonition ${type}`)
+      tokenOpen.attrSet('class', annotate ? `admonition ${type} annotate` : `admonition ${type}`)
       tokenOpen.meta = { type, collapsed }
       tokenOpen.map = [startLine, nextLine]
 

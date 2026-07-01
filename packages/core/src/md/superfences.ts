@@ -1,5 +1,11 @@
 import type MarkdownIt from 'markdown-it'
 import { renderPlainCodeHtml, renderShikiHtml } from './code-highlight.js'
+import {
+  ensureCodeAnnotateWrapper,
+  extractCodeAnnotations,
+  injectCodeAnnotationMarkers,
+  parseAnnotateFenceInfo,
+} from './annotations.js'
 
 interface SuperfencesOptions {
   highlighter: any
@@ -8,39 +14,78 @@ interface SuperfencesOptions {
   lineNumbers?: boolean
   langLabel?: boolean
   locale?: string
+  codeAnnotate?: boolean
 }
 
+/** Languages without a comment syntax; excluded from the *global* content.code.annotate feature. */
+const NO_COMMENT_LANGS = new Set(['', 'markdown', 'md', 'text', 'plaintext', 'plain', 'txt'])
+
 export function superfencesPlugin(md: MarkdownIt, opts: SuperfencesOptions): void {
-  const { highlighter, themes, md: mdInst, lineNumbers = false, langLabel = false, locale = 'en' } = opts
+  const {
+    highlighter,
+    themes,
+    md: mdInst,
+    lineNumbers = false,
+    langLabel = false,
+    locale = 'en',
+    codeAnnotate = false,
+  } = opts
   const defaultFence = md.renderer.rules.fence!
 
   md.renderer.rules.fence = (tokens, idx, options, env, self) => {
     const token = tokens[idx]
-    const infoLang = (token.info || '').trim().split(/\s+/)[0]
+    const attrClass = token.attrGet('class')
+    const { lang: fenceLang, annotate: blockAnnotate } = parseAnnotateFenceInfo(token.info || '', attrClass)
+    const infoLang = fenceLang || (token.info || '').trim().split(/\s+/)[0]
     const displayLang = langLabel ? (infoLang || 'text') : infoLang
+    const shouldAnnotate =
+      blockAnnotate || (codeAnnotate && !NO_COMMENT_LANGS.has((infoLang || '').toLowerCase()))
 
     if (infoLang === 'mermaid') {
       return `<pre class="mermaid">${mdInst.utils.escapeHtml(token.content)}</pre>\n`
     }
 
-    const renderOpts = { lineNumbers, lang: displayLang || undefined, langLabel, locale }
+    let codeContent = token.content
+    let markers: ReturnType<typeof extractCodeAnnotations>['markers'] = []
+    if (shouldAnnotate) {
+      const extracted = extractCodeAnnotations(token.content)
+      codeContent = extracted.code
+      markers = extracted.markers
+    }
+
+    const renderOpts = {
+      lineNumbers: lineNumbers || markers.length > 0,
+      lang: displayLang || undefined,
+      langLabel,
+      locale,
+    }
+
+    let html: string | null = null
 
     if (infoLang && highlighter) {
       try {
-        return renderShikiHtml(highlighter, token.content, infoLang, themes, {
+        html = renderShikiHtml(highlighter, codeContent, infoLang, themes, {
           langLabel,
           escape: mdInst.utils.escapeHtml,
           locale,
         })
       } catch {
-        // fall through
+        html = null
       }
     }
 
-    if (lineNumbers || langLabel) {
-      return renderPlainCodeHtml(token.content, mdInst.utils.escapeHtml, renderOpts)
+    if (html === null) {
+      if (lineNumbers || langLabel || markers.length > 0) {
+        html = renderPlainCodeHtml(codeContent, mdInst.utils.escapeHtml, renderOpts)
+      } else {
+        return defaultFence(tokens, idx, options, env, self)
+      }
     }
 
-    return defaultFence(tokens, idx, options, env, self)
+    if (markers.length > 0) {
+      html = ensureCodeAnnotateWrapper(injectCodeAnnotationMarkers(html, markers))
+    }
+
+    return html
   }
 }

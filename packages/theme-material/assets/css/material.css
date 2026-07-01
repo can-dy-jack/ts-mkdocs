@@ -38,6 +38,8 @@
   --md-code-inline-radius: .15rem;
   --md-code-inline-padding: .08em .3em;
   --md-code-inline-font-size: .8em;
+  --md-annotation-marker-size: 1rem;
+  --md-annotation-marker-size-code: .92rem;
 }
 
 [data-theme="dark"] {
@@ -947,7 +949,8 @@ body {
 .md-typeset pre {
   margin: .5rem 0;
   border-radius: var(--md-code-block-radius);
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
   line-height: var(--md-code-block-line-height);
 }
 
@@ -1047,6 +1050,13 @@ html[data-theme="dark"][data-features*="content.code.linenumbers"] .md-typeset p
   border-radius: var(--md-code-block-radius);
   overflow: hidden;
   box-shadow: none;
+}
+
+.md-codeblock.annotate > pre,
+.md-typeset .md-codeblock.annotate > pre,
+.md-typeset .md-codeblock.annotate > pre.shiki {
+  position: relative;
+  z-index: 1;
 }
 
 .md-codeblock__head {
@@ -1443,6 +1453,16 @@ body:has(.md-tabs--sticky.md-tabs--hidden) .admonition[open]>.admonition-title {
 .admonition-content {
   padding: .6rem .8rem .7rem;
   overflow: hidden;
+}
+
+.admonition.annotate .admonition-content,
+.admonition.annotate .admonition-title,
+.admonition.annotate .admonition-title__text {
+  overflow: visible;
+}
+
+.admonition.annotate .admonition-title__text {
+  white-space: normal;
 }
 
 .admonition-content>*:first-child {
@@ -3032,4 +3052,298 @@ pre.mermaid {
   width: 1.2rem;
   height: 1.2rem;
   fill: currentColor;
+}
+
+/* ============================================================
+   Annotations
+   ============================================================ */
+.md-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+.md-annotation {
+  position: relative;
+  display: inline-flex;
+  vertical-align: text-bottom;
+  overflow: visible;
+}
+
+.md-annotation__index {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--md-annotation-marker-size);
+  height: var(--md-annotation-marker-size);
+  margin: 0 .1em;
+  border-radius: 100%;
+  color: #fff;
+  background: #00000052;
+  cursor: pointer;
+  vertical-align: middle;
+  user-select: none;
+  -webkit-user-select: none;
+  transition: background-color .15s;
+}
+
+.md-annotation__index .md-icon {
+  margin: 0;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.md-annotation__index .material-symbols-outlined {
+  font-size: .75rem;
+  color: #fff;
+  transition: transform .15s ease;
+}
+
+.md-annotation__index:hover,
+.md-annotation__index:focus-visible {
+  background: #0000006b;
+}
+
+.md-annotation__index[aria-expanded="true"] {
+  background: var(--md-primary-fg-color);
+}
+
+.md-annotation__index[aria-expanded="true"]:hover,
+.md-annotation__index[aria-expanded="true"]:focus-visible {
+  background: var(--md-primary-fg-color);
+}
+
+.md-annotation__index[aria-expanded="true"] .material-symbols-outlined {
+  transform: rotate(45deg);
+}
+
+.md-typeset pre .md-annotation,
+.md-typeset code .md-annotation {
+  vertical-align: baseline;
+  position: relative;
+  z-index: 1;
+}
+
+.md-typeset pre .md-annotation--active,
+.md-typeset code .md-annotation--active {
+  z-index: 2;
+}
+
+.md-typeset pre .md-annotation__index,
+.md-typeset code .md-annotation__index {
+  width: var(--md-annotation-marker-size-code);
+  height: var(--md-annotation-marker-size-code);
+  margin: 0 0 0 .3em;
+}
+
+.md-annotation__tooltip {
+  position: absolute;
+  z-index: 320;
+  bottom: calc(100% + .5rem);
+  left: 50%;
+  width: max-content;
+  max-width: min(22rem, 80vw);
+  transform: translateX(-50%) translateY(4px);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  overflow: visible;
+  transition: opacity .15s ease, transform .15s ease, visibility .15s;
+}
+
+.md-annotation .md-annotation__tooltip {
+  z-index: 330;
+}
+
+.md-annotation__tooltip--fixed {
+  position: fixed;
+  top: var(--md-annotation-fixed-top, 0);
+  left: var(--md-annotation-fixed-left, 0);
+  bottom: auto;
+  transform: translateX(-50%) translateY(0);
+}
+
+.md-annotation__tooltip--fixed.md-annotation__tooltip--flip-y {
+  transform: translateX(-50%) translateY(0);
+}
+
+.md-annotation__tooltip--fixed.md-annotation__tooltip--flip-x {
+  transform: translateY(0);
+}
+
+.md-annotation__tooltip--fixed.md-annotation__tooltip--flip-x.md-annotation__tooltip--flip-y {
+  transform: translateY(0);
+}
+
+.md-annotation--active > .md-annotation__tooltip--fixed,
+.md-annotation__index:focus-visible + .md-annotation__tooltip--fixed {
+  transform: translateX(-50%) translateY(0);
+}
+
+.md-annotation--active > .md-annotation__tooltip--fixed.md-annotation__tooltip--flip-x,
+.md-annotation__index:focus-visible + .md-annotation__tooltip--fixed.md-annotation__tooltip--flip-x {
+  transform: translateY(0);
+}
+
+.md-annotation__tooltip-inner {
+  position: relative;
+  display: block;
+  overflow: visible;
+  padding: .5rem .7rem;
+  border-radius: .3rem;
+  font-size: .68rem;
+  font-weight: 400;
+  line-height: 1.5;
+  text-align: left;
+  white-space: normal;
+  color: var(--md-default-fg-color);
+  background: var(--md-default-bg-color);
+  border: 1px solid rgba(0, 0, 0, .08);
+  box-shadow: var(--md-shadow-z2);
+}
+
+.md-annotation__tooltip-inner::before,
+.md-annotation__tooltip-inner::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  border: 5px solid transparent;
+  pointer-events: none;
+}
+
+/* Arrow pointing down to the marker (tooltip above) */
+.md-annotation__tooltip-inner::before {
+  top: 100%;
+  margin-left: -6px;
+  border-width: 6px;
+  border-top-color: rgba(0, 0, 0, .08);
+}
+
+.md-annotation__tooltip-inner::after {
+  top: calc(100% - 1px);
+  margin-left: -5px;
+  border-top-color: var(--md-default-bg-color);
+}
+
+.md-annotation__tooltip-inner>:first-child {
+  margin-top: 0;
+}
+
+.md-annotation__tooltip-inner>:last-child {
+  margin-bottom: 0;
+}
+
+.md-annotation__tooltip-inner code {
+  display: inline;
+  font-family: "JetBrains Mono", "Fira Code", "SFMono-Regular", Consolas, monospace;
+  font-size: var(--md-code-inline-font-size);
+  padding: var(--md-code-inline-padding);
+  background: var(--md-code-bg-color);
+  color: var(--md-code-fg-color);
+  border-radius: var(--md-code-inline-radius);
+  line-height: inherit;
+  vertical-align: baseline;
+}
+
+/* pre/line-number code-block rules leak into annotation tooltips nested in Shiki output */
+html[data-features*="content.code.linenumbers"] .md-typeset pre code .md-annotation__tooltip-inner {
+  font-size: .68rem;
+  line-height: 1.5;
+}
+
+.md-typeset pre code .md-annotation__tooltip-inner code {
+  display: inline;
+  font-size: var(--md-code-inline-font-size);
+  padding: var(--md-code-inline-padding);
+  background: var(--md-code-bg-color);
+  color: var(--md-code-fg-color);
+  border-radius: var(--md-code-inline-radius);
+}
+
+[data-theme="dark"] .md-annotation__tooltip-inner {
+  border-color: rgba(255, 255, 255, .1);
+}
+
+[data-theme="dark"] .md-annotation__tooltip-inner::before {
+  border-top-color: rgba(255, 255, 255, .1);
+}
+
+/* Arrow pointing up to the marker (tooltip below) */
+.md-annotation__tooltip--flip-y .md-annotation__tooltip-inner::before {
+  top: auto;
+  bottom: 100%;
+  border-top-color: transparent;
+  border-bottom-color: rgba(0, 0, 0, .08);
+}
+
+.md-annotation__tooltip--flip-y .md-annotation__tooltip-inner::after {
+  top: auto;
+  bottom: calc(100% - 1px);
+  border-top-color: transparent;
+  border-bottom-color: var(--md-default-bg-color);
+}
+
+[data-theme="dark"] .md-annotation__tooltip--flip-y .md-annotation__tooltip-inner::before {
+  border-bottom-color: rgba(255, 255, 255, .1);
+}
+
+.md-annotation--active > .md-annotation__tooltip,
+.md-annotation__index:focus-visible + .md-annotation__tooltip {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateX(-50%) translateY(0);
+}
+
+.md-annotation__tooltip--flip-y {
+  bottom: auto;
+  top: calc(100% + .5rem);
+  transform: translateX(-50%) translateY(-4px);
+}
+
+.md-annotation--active > .md-annotation__tooltip.md-annotation__tooltip--flip-y,
+.md-annotation__index:focus-visible + .md-annotation__tooltip.md-annotation__tooltip--flip-y {
+  transform: translateX(-50%) translateY(0);
+}
+
+.md-annotation__tooltip--flip-x {
+  left: auto;
+  right: 0;
+  transform: translateY(4px);
+}
+
+.md-annotation--active > .md-annotation__tooltip.md-annotation__tooltip--flip-x,
+.md-annotation__index:focus-visible + .md-annotation__tooltip.md-annotation__tooltip--flip-x {
+  transform: translateY(0);
+}
+
+.md-annotation__tooltip--flip-x.md-annotation__tooltip--flip-y {
+  transform: translateY(-4px);
+}
+
+.md-annotation--active > .md-annotation__tooltip.md-annotation__tooltip--flip-x.md-annotation__tooltip--flip-y,
+.md-annotation__index:focus-visible + .md-annotation__tooltip.md-annotation__tooltip--flip-x.md-annotation__tooltip--flip-y {
+  transform: translateY(0);
+}
+
+.md-annotation-list[hidden] {
+  display: none;
+}
+
+@media print {
+  .md-annotation__index {
+    display: none;
+  }
+
+  .md-annotation__tooltip {
+    display: none;
+  }
+
+  .md-annotation-list[hidden] {
+    display: block;
+    margin-top: .5rem;
+  }
 }

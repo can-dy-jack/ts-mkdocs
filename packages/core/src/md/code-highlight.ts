@@ -67,6 +67,10 @@ export function hasLangLabelFeature(config: Config): boolean {
   return config.theme.features?.includes('content.code.lang') ?? false
 }
 
+export function hasCodeAnnotateFeature(config: Config): boolean {
+  return config.theme.features?.includes('content.code.annotate') ?? false
+}
+
 export function formatLangLabel(lang: string, locale = 'en'): string {
   const key = lang.toLowerCase()
   if (!key || key === 'text' || key === 'plaintext' || key === 'plain') {

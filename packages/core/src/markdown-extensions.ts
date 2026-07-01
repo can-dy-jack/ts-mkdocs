@@ -12,7 +12,7 @@ import { markPlugin } from './md/mark.js'
 import { criticPlugin } from './md/critic.js'
 import { footnotesPlugin } from './md/footnotes.js'
 import { snippetsPlugin } from './md/snippets.js'
-import { hasLangLabelFeature, hasLineNumbersFeature } from './md/code-highlight.js'
+import { hasCodeAnnotateFeature, hasLangLabelFeature, hasLineNumbersFeature } from './md/code-highlight.js'
 
 export type ExtensionEntry = string | Record<string, unknown>
 
@@ -85,6 +85,7 @@ export function applyMarkdownExtensions(
       lineNumbers: hasLineNumbersFeature(config),
       langLabel: hasLangLabelFeature(config),
       locale: config.theme.language,
+      codeAnnotate: hasCodeAnnotateFeature(config),
     })
   }
   if (enabled.has('pymdownx.tasklist')) md.use(tasklistPlugin)

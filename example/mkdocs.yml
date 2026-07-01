@@ -25,6 +25,7 @@ nav:
     - Code Blocks: showcase/code-blocks.md
     - Admonitions: showcase/admonitions.md
     - Content Tabs: showcase/tabs.md
+    - Annotations: showcase/annotations.md
     - Task Lists: showcase/tasklist.md
     - Icons: showcase/icons.md
     - Footnotes: showcase/footnotes.md
@@ -43,8 +44,8 @@ theme:
   favicon: assets/favicon.svg
   palette:
     - scheme: default
-      primary: teal
-      accent: teal
+      primary: blue
+      accent: blue
     - scheme: slate
       primary: indigo
       accent: indigo
@@ -83,6 +84,7 @@ theme:
     - content.code.copy
     - content.code.linenumbers
     - content.code.lang
+    - content.code.annotate
 
 plugins:
   - search

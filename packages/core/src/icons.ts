@@ -19,6 +19,8 @@ export const ICON_LIBRARY_STYLES: Record<IconLibrary, string> = {
   octicons: 'https://cdn.jsdelivr.net/npm/@primer/octicons@19.8.0/build/build.css',
 }
 
+export const DEFAULT_ANNOTATION_ICON = 'material/add'
+
 export const DEFAULT_ADMONITION_ICONS: Record<string, string> = {
   note: 'material/note',
   abstract: 'material/lightbulb',
@@ -168,6 +170,7 @@ export interface IconService {
   renderRef(ref: string): string
   renderShortcode(name: string): string
   getAdmonitionIcon(type: string): string
+  getAnnotationIcon(): string
   replaceShortcodes(text: string): string
 }
 
@@ -207,11 +210,19 @@ function getAdmonitionOverrides(config: Config): Record<string, string> {
   return flat
 }
 
+function getAnnotationIconOverride(config: Config): string | undefined {
+  const icon = config.theme.icon
+  if (!icon || typeof icon !== 'object') return undefined
+  const value = (icon as Record<string, unknown>).annotation
+  return typeof value === 'string' ? value : undefined
+}
+
 const SHORTCODE_RE = /:([a-z][a-z0-9-]*):/gi
 
 export function createIconService(config: Config): IconService {
   const { default: defaultLibrary } = getIconsConfig(config)
   const admonitionOverrides = getAdmonitionOverrides(config)
+  const annotationOverride = getAnnotationIconOverride(config)
 
   const service: IconService = {
     defaultLibrary,
@@ -227,6 +238,10 @@ export function createIconService(config: Config): IconService {
     getAdmonitionIcon(type: string) {
       const ref = admonitionOverrides[type] ?? DEFAULT_ADMONITION_ICONS[type] ?? `material/${type}`
       return service.renderRef(ref)
+    },
+
+    getAnnotationIcon() {
+      return service.renderRef(annotationOverride ?? DEFAULT_ANNOTATION_ICON)
     },
 
     replaceShortcodes(text: string) {

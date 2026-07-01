@@ -101,6 +101,7 @@
     if (hasFeature('header.autohide')) initHeaderAutohide();
     initAnnounce();
     initMermaid();
+    initAnnotations();
     initStickyTabs();
     initHomeHero();
     initFooterCopyright();
@@ -344,6 +345,153 @@
     document.body.removeChild(textarea);
   }
 
+  let annotationsDocBound = false;
+
+  function annotationTrigger(wrapper) {
+    return wrapper.querySelector(':scope > .md-annotation__index');
+  }
+
+  function annotationTooltip(wrapper) {
+    return wrapper.querySelector(':scope > .md-annotation__tooltip');
+  }
+
+  function clearAnnotationTooltipPosition(tooltip) {
+    if (!tooltip) return;
+    tooltip.classList.remove('md-annotation__tooltip--flip-x', 'md-annotation__tooltip--flip-y', 'md-annotation__tooltip--fixed');
+    tooltip.style.removeProperty('--md-annotation-fixed-top');
+    tooltip.style.removeProperty('--md-annotation-fixed-left');
+  }
+
+  function closeAnnotation(wrapper) {
+    if (!wrapper) return;
+    wrapper.querySelectorAll('.md-annotation--active').forEach(function (nested) {
+      if (nested !== wrapper) closeAnnotation(nested);
+    });
+    wrapper.classList.remove('md-annotation--active');
+    const trigger = annotationTrigger(wrapper);
+    if (trigger) trigger.setAttribute('aria-expanded', 'false');
+    // Keep flip/fixed classes through the fade-out so the tooltip does not jump position.
+    // positionAnnotationTooltip() clears them on the next open.
+  }
+
+  function closeAllAnnotations(except) {
+    document.querySelectorAll('.md-annotation--active').forEach(function (wrapper) {
+      if (wrapper === except) return;
+      // Keep ancestor annotations open so nested markers inside a tooltip stay clickable.
+      if (except && wrapper.contains(except)) return;
+      closeAnnotation(wrapper);
+    });
+  }
+
+  function positionAnnotationTooltip(wrapper) {
+    const tooltip = annotationTooltip(wrapper);
+    const trigger = annotationTrigger(wrapper);
+    if (!tooltip || !trigger) return;
+    clearAnnotationTooltipPosition(tooltip);
+
+    // Nested markers live inside a parent tooltip – open downward to avoid clipping.
+    if (wrapper.closest('.md-annotation__tooltip-inner')) {
+      tooltip.classList.add('md-annotation__tooltip--flip-y');
+      return;
+    }
+
+    const triggerRect = trigger.getBoundingClientRect();
+    const gap = 8;
+
+    // Code blocks scroll on <pre>; escape the clipping box with fixed positioning.
+    if (wrapper.closest('pre')) {
+      tooltip.classList.add('md-annotation__tooltip--fixed');
+      const tooltipRect = tooltip.getBoundingClientRect();
+      let flipY = false;
+      let top = triggerRect.top - tooltipRect.height - gap;
+      if (top < gap) {
+        top = triggerRect.bottom + gap;
+        flipY = true;
+      }
+      tooltip.style.setProperty('--md-annotation-fixed-top', top + 'px');
+      tooltip.style.setProperty('--md-annotation-fixed-left', (triggerRect.left + triggerRect.width / 2) + 'px');
+      if (flipY) tooltip.classList.add('md-annotation__tooltip--flip-y');
+
+      const updated = tooltip.getBoundingClientRect();
+      if (updated.left < gap || updated.right > window.innerWidth - gap) {
+        tooltip.classList.add('md-annotation__tooltip--flip-x');
+        const anchorX = updated.right > window.innerWidth - gap ? triggerRect.right : triggerRect.left;
+        tooltip.style.setProperty('--md-annotation-fixed-left', anchorX + 'px');
+      }
+      return;
+    }
+
+    const wrapperRect = wrapper.getBoundingClientRect();
+    const tooltipRect = tooltip.getBoundingClientRect();
+
+    if (wrapperRect.top - tooltipRect.height < gap) {
+      tooltip.classList.add('md-annotation__tooltip--flip-y');
+    }
+
+    const updated = tooltip.getBoundingClientRect();
+    if (updated.left < gap || updated.right > window.innerWidth - gap) {
+      tooltip.classList.add('md-annotation__tooltip--flip-x');
+    }
+  }
+
+  function repositionActiveAnnotations() {
+    document.querySelectorAll('.md-annotation--active').forEach(positionAnnotationTooltip);
+  }
+
+  function toggleAnnotation(wrapper) {
+    const willOpen = !wrapper.classList.contains('md-annotation--active');
+    closeAllAnnotations(wrapper);
+    if (willOpen) {
+      wrapper.classList.add('md-annotation--active');
+      const trigger = annotationTrigger(wrapper);
+      if (trigger) trigger.setAttribute('aria-expanded', 'true');
+      positionAnnotationTooltip(wrapper);
+    } else {
+      closeAnnotation(wrapper);
+    }
+  }
+
+  function initAnnotations() {
+    document.querySelectorAll('.md-annotation__index').forEach(function (trigger) {
+      if (trigger.dataset.mdAnnotationBound) return;
+      trigger.dataset.mdAnnotationBound = '1';
+
+      trigger.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        const wrapper = trigger.closest('.md-annotation');
+        if (wrapper) toggleAnnotation(wrapper);
+      });
+
+      trigger.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          const wrapper = trigger.closest('.md-annotation');
+          if (wrapper) toggleAnnotation(wrapper);
+        }
+      });
+    });
+
+    if (annotationsDocBound) return;
+    annotationsDocBound = true;
+
+    document.addEventListener('click', function (e) {
+      if (e.target.closest('.md-annotation')) return;
+      closeAllAnnotations();
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') closeAllAnnotations();
+    });
+
+    window.addEventListener('scroll', repositionActiveAnnotations, { passive: true });
+    window.addEventListener('resize', repositionActiveAnnotations);
+
+    document.querySelectorAll('pre').forEach(function (pre) {
+      pre.addEventListener('scroll', repositionActiveAnnotations, { passive: true });
+    });
+  }
+
   let anchorScrollingInit = false;
 
   function getScrollOffset() {
@@ -518,6 +666,7 @@
         initAnchorScrolling();
         initTocHighlight();
         initMermaid();
+        initAnnotations();
         window.scrollTo(0, 0);
       } else {
         location.href = url;

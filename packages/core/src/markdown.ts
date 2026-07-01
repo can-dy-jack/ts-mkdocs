@@ -3,6 +3,8 @@ import type Token from 'markdown-it/lib/token.mjs'
 import anchor from 'markdown-it-anchor'
 import type { Config } from './config.js'
 import { applyMarkdownExtensions } from './markdown-extensions.js'
+import { createIconService, type IconService } from './icons.js'
+import { processTextAnnotations } from './md/annotations.js'
 import {
   hasLineNumbersFeature,
   hasLangLabelFeature,
@@ -30,6 +32,7 @@ let lineNumbersEnabled = false
 let langLabelEnabled = false
 let siteLocale = 'en'
 let tocDepth = 3
+let iconService: IconService | null = null
 
 /** Resolve TOC options from markdown_extensions (MkDocs-compatible). */
 export function resolveTocOptions(config: Config): { depth: number } {
@@ -57,6 +60,7 @@ export async function initMarkdown(config: Config): Promise<void> {
   langLabelEnabled = hasLangLabelFeature(config)
   siteLocale = config.theme.language
   tocDepth = resolveTocOptions(config).depth
+  iconService = createIconService(config)
 
   const { createHighlighter } = await import('shiki')
   const themes = [...new Set([hl.theme_light, hl.theme_dark])]
@@ -146,8 +150,10 @@ export function renderMarkdown(content: string): MarkdownResult {
     return originalRender ? originalRender(tokens, idx, options, env, self) : self.renderToken(tokens, idx, options)
   }
 
-  const html = mdInstance.render(content)
+  let html = mdInstance.render(content)
   mdInstance.renderer.rules.heading_open = originalRender
+
+  if (iconService) html = processTextAnnotations(html, iconService)
 
   return { html, toc }
 }
