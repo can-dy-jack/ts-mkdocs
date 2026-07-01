@@ -919,6 +919,8 @@ html[data-features*="content.code.linenumbers"] .md-typeset pre code .line {
   padding-left: 3.1rem;
   font-size: var(--md-code-block-font-size);
   line-height: var(--md-code-block-line-height);
+  /* Empty Shiki lines have no content; parent line-height:0 would collapse them */
+  min-height: calc(var(--md-code-block-font-size) * var(--md-code-block-line-height));
 }
 
 html[data-features*="content.code.linenumbers"] .md-typeset pre code .line::before {

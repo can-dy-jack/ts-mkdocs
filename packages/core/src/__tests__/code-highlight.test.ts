@@ -6,6 +6,7 @@ import {
   wrapCodeblockWithHead,
   renderPlainCodeHtml,
   stripTrailingEmptyLineSpans,
+  ensureNonemptyLineSpans,
 } from '../md/code-highlight.js'
 
 const esc = (s: string) => s
@@ -74,6 +75,14 @@ describe('code-highlight', () => {
       '<pre><code><span class="line">a</span><span class="line"></span></code></pre>',
     )
     expect(html).toBe('<pre><code><span class="line">a</span></code></pre>')
+  })
+
+  it('fills empty shiki line spans with a space', () => {
+    const html = ensureNonemptyLineSpans(
+      '<pre><code><span class="line">a</span><span class="line"></span><span class="line">b</span></code></pre>',
+    )
+    expect(html).toContain('<span class="line"> </span>')
+    expect(html).not.toMatch(/<span class="line"><\/span>/)
   })
 
   it('wraps shiki html with language head', () => {

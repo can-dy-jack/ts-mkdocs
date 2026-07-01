@@ -86,6 +86,11 @@ export function stripTrailingEmptyLineSpans(html: string): string {
   return html.replace(/(?:\s*<span class="line"><\/span>)+\s*(?=<\/code>)/, '')
 }
 
+/** Ensure empty line spans keep height (matches plain-code `|| ' '` behavior). */
+export function ensureNonemptyLineSpans(html: string): string {
+  return html.replace(/<span class="line"><\/span>/g, '<span class="line"> </span>')
+}
+
 export function wrapCodeblockWithHead(
   html: string,
   lang: string,
@@ -139,6 +144,7 @@ export function renderShikiHtml(
     })
   }
   html = stripTrailingEmptyLineSpans(html)
+  html = ensureNonemptyLineSpans(html)
   if (options.langLabel) {
     const escape = options.escape ?? ((value: string) => value)
     html = wrapCodeblockWithHead(html, lang, escape, options.locale)
