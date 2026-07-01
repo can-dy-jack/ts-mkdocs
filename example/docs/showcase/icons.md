@@ -54,9 +54,7 @@ When multiple libraries define the same name, use the full prefix:
 
 :material-lightbulb: Material &nbsp; :fontawesome-solid-lightbulb: Font Awesome
 
-### Icons in headings
-
-## :material-rocket: Launch checklist
+### Icons in headings :material-rocket:
 
 ## Advanced usage
 
