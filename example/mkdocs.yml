@@ -105,6 +105,7 @@ markdown_extensions:
   - footnotes
   - toc:
       permalink: true
+      toc_depth: 3   # include h2–h3 in page TOC (default: 3)
 
 extra:
   version:

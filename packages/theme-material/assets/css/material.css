@@ -2967,6 +2967,7 @@ body:has(.md-tabs--sticky.md-tabs--hidden) .md-sidebar {
 
 .md-nav--secondary .md-nav__item--nested>.md-nav,
 .md-nav--integrated .md-nav__item--nested>.md-nav {
+  display: block;
   padding-left: .35rem;
   margin: 0;
 }
@@ -2974,6 +2975,12 @@ body:has(.md-tabs--sticky.md-tabs--hidden) .md-sidebar {
 .md-nav--secondary .md-nav__item--nested>.md-nav>.md-nav__list>.md-nav__item>.md-nav__link,
 .md-nav--integrated .md-nav__item--nested>.md-nav>.md-nav__list>.md-nav__item>.md-nav__link {
   padding-left: .85rem;
+}
+
+.md-nav--secondary .md-nav__link .md-icon,
+.md-nav--integrated .md-nav__link .md-icon {
+  margin: 0 .15em;
+  vertical-align: middle;
 }
 
 /* ============================================================

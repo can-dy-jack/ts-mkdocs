@@ -35,7 +35,10 @@ Prefix a line with one to six `#` characters. A space after `#` is required.
 markdown_extensions:
   - toc:
       permalink: true   # hover link icon on headings
+      toc_depth: 3      # max heading level in TOC (default: 3 → h2 and h3)
 ```
+
+`toc_depth` controls which heading levels appear in the page table of contents. Level 1 (`#`) is always excluded. The default is `3`, so only **h2** and **h3** are listed unless you raise the limit (e.g. `toc_depth: 4` to include h4).
 
 ## Advanced usage
 
