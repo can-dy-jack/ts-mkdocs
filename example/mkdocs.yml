@@ -12,28 +12,28 @@ site_dir: site
 nav:
   - Home: index.md
   - Getting Started:
-      - Installation: guide/installation.md
-      - Configuration: guide/configuration.md
-      - Admonitions: guide/admonitions.md
+    - Installation: guide/installation.md
+    - Configuration: guide/configuration.md
+    - Admonitions: guide/admonitions.md
   - Feature Showcase:
-      - Overview: showcase/index.md
-      - Headings: showcase/headings.md
-      - Text & Links: showcase/text.md
-      - Blockquotes: showcase/blockquote.md
-      - Lists: showcase/lists.md
-      - Tables: showcase/tables.md
-      - Code Blocks: showcase/code-blocks.md
-      - Admonitions: showcase/admonitions.md
-      - Content Tabs: showcase/tabs.md
-      - Task Lists: showcase/tasklist.md
-      - Icons: showcase/icons.md
-      - Footnotes: showcase/footnotes.md
-      - Attributes: showcase/attributes.md
-      - Keyboard & Mark: showcase/keys-mark.md
-      - Combinations: showcase/combinations.md
+    - Overview: showcase/index.md
+    - Headings: showcase/headings.md
+    - Text & Links: showcase/text.md
+    - Blockquotes: showcase/blockquote.md
+    - Lists: showcase/lists.md
+    - Tables: showcase/tables.md
+    - Code Blocks: showcase/code-blocks.md
+    - Admonitions: showcase/admonitions.md
+    - Content Tabs: showcase/tabs.md
+    - Task Lists: showcase/tasklist.md
+    - Icons: showcase/icons.md
+    - Footnotes: showcase/footnotes.md
+    - Attributes: showcase/attributes.md
+    - Keyboard & Mark: showcase/keys-mark.md
+    - Combinations: showcase/combinations.md
   - Reference:
-      - CLI: reference/cli.md
-      - Plugin API: reference/plugins.md
+    - CLI: reference/cli.md
+    - Plugin API: reference/plugins.md
   - Changelog: changelog.md
 
 theme:

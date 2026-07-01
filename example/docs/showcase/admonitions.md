@@ -42,7 +42,7 @@ Three exclamation marks, type name, indented body (four spaces):
 !!! success
     **success** — positive outcome.
 
-!!! warning
+!!! warning "中文测试"
     **warning** — needs attention.
 
 !!! danger "Danger zone"
