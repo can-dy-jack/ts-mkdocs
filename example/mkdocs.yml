@@ -84,6 +84,7 @@ theme:
     - content.code.copy
     - content.code.linenumbers
     - content.code.lang
+    - content.code.wrap
     - content.code.annotate
 
 plugins:

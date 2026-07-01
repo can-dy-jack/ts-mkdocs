@@ -21,6 +21,7 @@ theme:
     - content.code.copy
     - content.code.linenumbers
     - content.code.lang
+    - content.code.wrap
 ```
 
 ## Basic syntax
@@ -111,6 +112,7 @@ When the example theme features are on, each block above should show:
 |---------|----------------|
 | `content.code.lang` | Language label in the top bar |
 | `content.code.copy` | Copy button on hover |
+| `content.code.wrap` | Line wrap toggle in the top bar |
 | `content.code.linenumbers` | Gutter line numbers |
 
 ## Combining with other syntax

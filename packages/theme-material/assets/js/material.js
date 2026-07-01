@@ -93,6 +93,7 @@
 
     initSearch();
     if (hasFeature('content.code.copy')) initCopyButtons();
+    if (hasFeature('content.code.wrap')) initWrapButtons();
     initAnchorScrolling();
     if (hasFeature('toc.follow') || !FEATURES.size) initTocHighlight();
     initHeaderTopic();
@@ -267,6 +268,46 @@
     }
   }
 
+  function getCodeblockToolbar(wrapper, block) {
+    const head = wrapper ? wrapper.querySelector('.md-codeblock__head') : null;
+    if (!head) return block;
+    let actions = head.querySelector('.md-codeblock__actions');
+    if (!actions) {
+      actions = document.createElement('div');
+      actions.className = 'md-codeblock__actions';
+      const existing = head.querySelector('.md-clipboard');
+      head.appendChild(actions);
+      if (existing) actions.appendChild(existing);
+    }
+    return actions;
+  }
+
+  function getCodeblockTarget(block) {
+    return block.closest('.md-codeblock') || block;
+  }
+
+  const CODE_WRAP_KEY = 'ts-mkdocs-code-wrap';
+
+  function loadCodeWrapPreference() {
+    try {
+      return localStorage.getItem(CODE_WRAP_KEY) === '1';
+    } catch (_err) {
+      return false;
+    }
+  }
+
+  function saveCodeWrapPreference(enabled) {
+    try {
+      localStorage.setItem(CODE_WRAP_KEY, enabled ? '1' : '0');
+    } catch (_err) {
+      /* ignore */
+    }
+  }
+
+  function applyCodeWrap(target, enabled) {
+    target.classList.toggle('md-codeblock--wrap', enabled);
+  }
+
   function initCopyButtons() {
     const COPY_ICON =
       '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 21H8V7h11m0-2H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2m-3-4H4a2 2 0 0 0-2 2v14h2V3h12V1z"/></svg>';
@@ -277,8 +318,7 @@
 
     document.querySelectorAll('.md-typeset pre:not(.mermaid)').forEach(function (block) {
       const wrapper = block.closest('.md-codeblock');
-      const head = wrapper ? wrapper.querySelector('.md-codeblock__head') : null;
-      const mount = head ?? block;
+      const mount = getCodeblockToolbar(wrapper, block);
       if (mount.querySelector('.md-clipboard')) return;
 
       const btn = document.createElement('button');
@@ -325,6 +365,55 @@
       });
 
       mount.appendChild(btn);
+    });
+  }
+
+  function initWrapButtons() {
+    const wrapLabel = t('code.wrap.enable', 'Enable line wrap');
+    const unwrapLabel = t('code.wrap.disable', 'Disable line wrap');
+    const wrapEnabled = loadCodeWrapPreference();
+
+    document.querySelectorAll('.md-typeset pre:not(.mermaid)').forEach(function (block) {
+      const wrapper = block.closest('.md-codeblock');
+      const mount = getCodeblockToolbar(wrapper, block);
+      if (mount.querySelector('.md-code-wrap')) return;
+
+      const target = getCodeblockTarget(block);
+      applyCodeWrap(target, wrapEnabled);
+
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'md-code-wrap';
+      btn.setAttribute('aria-pressed', wrapEnabled ? 'true' : 'false');
+      btn.setAttribute('aria-label', wrapEnabled ? unwrapLabel : wrapLabel);
+      btn.innerHTML =
+        '<span class="md-code-wrap__tooltip" data-wrap-label="' + wrapLabel + '" data-unwrap-label="' + unwrapLabel + '">' +
+        (wrapEnabled ? unwrapLabel : wrapLabel) +
+        '</span>' +
+        '<span class="md-code-wrap__icon" aria-hidden="true">' +
+        '<span class="material-symbols-outlined">wrap_text</span></span>';
+
+      btn.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        const next = btn.getAttribute('aria-pressed') !== 'true';
+        btn.setAttribute('aria-pressed', next ? 'true' : 'false');
+        btn.setAttribute('aria-label', next ? unwrapLabel : wrapLabel);
+        const tooltip = btn.querySelector('.md-code-wrap__tooltip');
+        if (tooltip) tooltip.textContent = next ? unwrapLabel : wrapLabel;
+        applyCodeWrap(target, next);
+        saveCodeWrapPreference(next);
+        if (typeof repositionActiveAnnotations === 'function') {
+          repositionActiveAnnotations();
+        }
+      });
+
+      const existingClipboard = mount.querySelector('.md-clipboard');
+      if (existingClipboard) {
+        mount.insertBefore(btn, existingClipboard);
+      } else {
+        mount.appendChild(btn);
+      }
     });
   }
 
@@ -663,6 +752,7 @@
         }
         history.pushState({}, '', url);
         initCopyButtons();
+        if (hasFeature('content.code.wrap')) initWrapButtons();
         initAnchorScrolling();
         initTocHighlight();
         initMermaid();

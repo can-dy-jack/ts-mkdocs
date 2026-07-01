@@ -75,6 +75,7 @@ theme:
     - content.code.copy
     - content.code.linenumbers
     - content.code.lang
+    - content.code.wrap
 
 plugins:
   - search

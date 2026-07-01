@@ -26,6 +26,8 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     'view': 'View source',
     'clipboard.copy': 'Copy to clipboard',
     'clipboard.copied': 'Copied!',
+    'code.wrap.enable': 'Enable line wrap',
+    'code.wrap.disable': 'Disable line wrap',
   },
   zh: {
     'search.placeholder': '搜索',
@@ -54,6 +56,8 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     'view': '查看源码',
     'clipboard.copy': '复制到剪贴板',
     'clipboard.copied': '已复制！',
+    'code.wrap.enable': '启用自动换行',
+    'code.wrap.disable': '禁用自动换行',
   },
 }
 

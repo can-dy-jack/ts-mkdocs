@@ -239,6 +239,7 @@ Enable optional code block UI via `theme.features`:
 | Feature | Description |
 |---------|-------------|
 | `content.code.copy` | Hover copy button on fenced code blocks |
+| `content.code.wrap` | Toggle line wrap on fenced code blocks |
 | `content.code.linenumbers` | Gutter line numbers on fenced code blocks |
 | `content.code.lang` | Language label badge on fenced code blocks |
 
@@ -246,6 +247,7 @@ Enable optional code block UI via `theme.features`:
 theme:
   features:
     - content.code.copy
+    - content.code.wrap
     - content.code.linenumbers
     - content.code.lang
 ```
