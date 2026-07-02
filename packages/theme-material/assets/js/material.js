@@ -272,12 +272,13 @@
   function getCodeblockToolbar(wrapper, block) {
     const head = wrapper ? wrapper.querySelector('.md-codeblock__head') : null;
     if (!head) return block;
-    let actions = head.querySelector('.md-codeblock__actions');
+    const mount = head.querySelector('.md-codeblock__head-end') || head;
+    let actions = mount.querySelector('.md-codeblock__actions');
     if (!actions) {
       actions = document.createElement('div');
       actions.className = 'md-codeblock__actions';
-      const existing = head.querySelector('.md-clipboard');
-      head.appendChild(actions);
+      const existing = mount.querySelector('.md-clipboard');
+      mount.appendChild(actions);
       if (existing) actions.appendChild(existing);
     }
     return actions;

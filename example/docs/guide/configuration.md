@@ -243,6 +243,8 @@ Enable optional code block UI via `theme.features`:
 | `content.code.linenumbers` | Gutter line numbers on fenced code blocks |
 | `content.code.lang` | Language label badge on fenced code blocks |
 
+Fenced code blocks also support an optional `title="..."` attribute on the fence info line (or via `attr_list`) to show a centered title in the code block head.
+
 ```yaml
 theme:
   features:
@@ -251,5 +253,11 @@ theme:
     - content.code.linenumbers
     - content.code.lang
 ```
+
+````markdown
+```typescript title="src/build.ts"
+export function build(): void {}
+```
+````
 
 Syntax highlighting themes are configured separately under `theme.highlight.theme_light` / `theme_dark`.

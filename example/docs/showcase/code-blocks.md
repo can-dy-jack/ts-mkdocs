@@ -79,6 +79,37 @@ pnpm example:serve
 No highlighting when the language is omitted or unknown.
 ```
 
+### Code block title
+
+Add a centered title in the code block head with `title="..."` on the fence info line:
+
+````markdown
+```typescript title="src/build.ts"
+async function buildPage(file: DocFile): Promise<string> {
+  return renderMarkdown(markdown)
+}
+```
+````
+
+Rendered output:
+
+```typescript title="src/build.ts"
+async function buildPage(file: DocFile): Promise<string> {
+  const markdown = await fs.readFile(file.srcPath, 'utf-8')
+  return renderMarkdown(markdown)
+}
+```
+
+With `content.code.lang` enabled, the title appears centered and the language label stays on the left.
+
+You can also set the title with `attr_list` on the opening fence:
+
+````markdown
+``` { .typescript title="greeting.ts" }
+const greeting = 'hello'
+```
+````
+
 ## Advanced usage
 
 ### Blank lines inside blocks
@@ -111,6 +142,7 @@ When the example theme features are on, each block above should show:
 | Feature | What you see |
 |---------|----------------|
 | `content.code.lang` | Language label in the top bar |
+| Code block `title="..."` | Centered title in the top bar |
 | `content.code.copy` | Copy button on hover |
 | `content.code.wrap` | Line wrap toggle in the top bar |
 | `content.code.linenumbers` | Gutter line numbers |

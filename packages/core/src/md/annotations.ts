@@ -20,6 +20,22 @@ export interface FenceInfo {
 }
 
 const BRACE_FENCE_RE = /^\{([^}]*)\}$/
+const FENCE_TITLE_RE = /\btitle\s*=\s*(?:"([^"]*)"|'([^']*)')/
+
+/** Extract `title="..."` from a fence info string or attr_list `title` attribute. */
+export function parseFenceTitle(info: string, attrTitle?: string | null): string | undefined {
+  const fromAttr = attrTitle?.trim()
+  if (fromAttr) return fromAttr
+  const match = FENCE_TITLE_RE.exec(info)
+  if (!match) return undefined
+  const value = match[1] ?? match[2]
+  return value || undefined
+}
+
+/** Remove `title="..."` tokens from fence info before language parsing. */
+export function stripFenceTitle(info: string): string {
+  return info.replace(FENCE_TITLE_RE, '').replace(/\s+/g, ' ').trim()
+}
 
 function parseClassTokens(raw: string): FenceInfo {
   const tokens = raw.trim().split(/\s+/).filter(Boolean)

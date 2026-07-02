@@ -92,8 +92,31 @@ describe('code-highlight', () => {
     const html = wrapCodeblockWithHead('<pre class="shiki"><code>x</code></pre>', 'typescript', esc)
     expect(html).toContain('class="md-codeblock" data-md-lang="typescript"')
     expect(html).toContain('class="md-codeblock__head"')
+    expect(html).toContain('md-codeblock__head-start')
+    expect(html).toContain('md-codeblock__head-end')
     expect(html).toContain('md-codeblock__traffic-dot--close')
     expect(html).toContain('class="md-codeblock__lang">TypeScript</span>')
     expect(html).toContain('<pre class="shiki">')
+  })
+
+  it('renders a centered title in the code block head', () => {
+    const html = wrapCodeblockWithHead(
+      '<pre><code>x</code></pre>',
+      'typescript',
+      esc,
+      'en',
+      'src/build.ts',
+      true,
+    )
+    expect(html).toContain('md-codeblock__head--titled')
+    expect(html).toContain('class="md-codeblock__title">src/build.ts</span>')
+    expect(html).toContain('class="md-codeblock__lang">TypeScript</span>')
+  })
+
+  it('shows title-only head without language label', () => {
+    const html = renderPlainCodeHtml('x', esc, { title: 'config.yml', lang: 'yaml' })
+    expect(html).toContain('md-codeblock__head--titled')
+    expect(html).toContain('class="md-codeblock__title">config.yml</span>')
+    expect(html).not.toContain('md-codeblock__lang')
   })
 })

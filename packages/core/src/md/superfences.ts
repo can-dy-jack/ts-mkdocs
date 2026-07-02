@@ -5,6 +5,8 @@ import {
   extractCodeAnnotations,
   injectCodeAnnotationMarkers,
   parseAnnotateFenceInfo,
+  parseFenceTitle,
+  stripFenceTitle,
 } from './annotations.js'
 
 interface SuperfencesOptions {
@@ -35,9 +37,12 @@ export function superfencesPlugin(md: MarkdownIt, opts: SuperfencesOptions): voi
   md.renderer.rules.fence = (tokens, idx, options, env, self) => {
     const token = tokens[idx]
     const attrClass = token.attrGet('class')
-    const { lang: fenceLang, annotate: blockAnnotate } = parseAnnotateFenceInfo(token.info || '', attrClass)
-    const infoLang = fenceLang || (token.info || '').trim().split(/\s+/)[0]
+    const title = parseFenceTitle(token.info || '', token.attrGet('title'))
+    const infoRaw = stripFenceTitle(token.info || '')
+    const { lang: fenceLang, annotate: blockAnnotate } = parseAnnotateFenceInfo(infoRaw, attrClass)
+    const infoLang = fenceLang || infoRaw.trim().split(/\s+/).filter(Boolean)[0] || ''
     const displayLang = langLabel ? (infoLang || 'text') : infoLang
+    const showHead = langLabel || Boolean(title)
     const shouldAnnotate =
       blockAnnotate || (codeAnnotate && !NO_COMMENT_LANGS.has((infoLang || '').toLowerCase()))
 
@@ -57,6 +62,7 @@ export function superfencesPlugin(md: MarkdownIt, opts: SuperfencesOptions): voi
       lineNumbers: lineNumbers || markers.length > 0,
       lang: displayLang || undefined,
       langLabel,
+      title,
       locale,
     }
 
@@ -66,6 +72,7 @@ export function superfencesPlugin(md: MarkdownIt, opts: SuperfencesOptions): voi
       try {
         html = renderShikiHtml(highlighter, codeContent, infoLang, themes, {
           langLabel,
+          title,
           escape: mdInst.utils.escapeHtml,
           locale,
         })
@@ -75,7 +82,7 @@ export function superfencesPlugin(md: MarkdownIt, opts: SuperfencesOptions): voi
     }
 
     if (html === null) {
-      if (lineNumbers || langLabel || markers.length > 0) {
+      if (lineNumbers || showHead || markers.length > 0) {
         html = renderPlainCodeHtml(codeContent, mdInst.utils.escapeHtml, renderOpts)
       } else {
         return defaultFence(tokens, idx, options, env, self)

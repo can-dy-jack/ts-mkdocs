@@ -4,7 +4,7 @@ import attrs from 'markdown-it-attrs'
 import { admonitionPlugin } from '../md/admonition.js'
 import { contentTabsPlugin } from '../md/tabs.js'
 import { superfencesPlugin } from '../md/superfences.js'
-import { processTextAnnotations, extractCodeAnnotations, parseAnnotateFenceInfo } from '../md/annotations.js'
+import { processTextAnnotations, extractCodeAnnotations, parseAnnotateFenceInfo, parseFenceTitle, stripFenceTitle } from '../md/annotations.js'
 import { createIconService } from '../icons.js'
 
 const TEST_CONFIG = { theme: { icons: { default: 'material', libraries: ['material'] } } } as any
@@ -197,5 +197,33 @@ describe('superfencesPlugin code annotations', () => {
       true,
     )
     expect(html).not.toMatch(/[\uE000\uE001]/)
+  })
+
+  it('renders a centered title from fence info', () => {
+    const html = renderFence('```typescript title="src/build.ts"\nconst x = 1\n```\n', false)
+    expect(html).toContain('md-codeblock__head--titled')
+    expect(html).toContain('class="md-codeblock__title">src/build.ts</span>')
+  })
+
+  it('renders a title from attr_list on the opening fence', () => {
+    const html = renderFence('``` { .typescript title="src/build.ts" }\nconst x = 1\n```\n', false)
+    expect(html).toContain('class="md-codeblock__title">src/build.ts</span>')
+  })
+})
+
+describe('fence title parsing', () => {
+  it('extracts title from fence info', () => {
+    expect(parseFenceTitle('typescript title="src/build.ts"')).toBe('src/build.ts')
+    expect(parseFenceTitle("python title='app.py'")).toBe('app.py')
+    expect(stripFenceTitle('typescript title="src/build.ts"')).toBe('typescript')
+  })
+
+  it('prefers attr_list title over fence info', () => {
+    expect(parseFenceTitle('typescript title="ignored"', 'src/build.ts')).toBe('src/build.ts')
+  })
+
+  it('strips title from brace fence info before language parsing', () => {
+    const info = stripFenceTitle('{ .yaml .annotate title="values.yaml" }')
+    expect(parseAnnotateFenceInfo(info)).toEqual({ lang: 'yaml', annotate: true })
   })
 })

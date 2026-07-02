@@ -9,6 +9,7 @@ export interface CodeRenderOptions {
   lineNumbers?: boolean
   lang?: string
   langLabel?: boolean
+  title?: string
   locale?: string
 }
 
@@ -110,13 +111,27 @@ export function wrapCodeblockWithHead(
   lang: string,
   escape: (value: string) => string,
   locale = 'en',
+  title?: string,
+  langLabel = true,
 ): string {
   const codeLang = resolveCodeLang(lang)
-  const label = escape(formatLangLabel(codeLang, locale))
   const pre = html.trimEnd()
+  const headClass = title ? 'md-codeblock__head md-codeblock__head--titled' : 'md-codeblock__head'
+  let head =
+    `<div class="${headClass}">` +
+    `<div class="md-codeblock__head-start">${CODEBLOCK_TRAFFIC_HTML}`
+  if (langLabel) {
+    const label = escape(formatLangLabel(codeLang, locale))
+    head += `<span class="md-codeblock__lang">${label}</span>`
+  }
+  head += '</div>'
+  if (title) {
+    head += `<span class="md-codeblock__title">${escape(title)}</span>`
+  }
+  head += '<div class="md-codeblock__head-end"></div></div>'
   return (
     `<div class="md-codeblock" data-md-lang="${escape(codeLang)}">` +
-    `<div class="md-codeblock__head">${CODEBLOCK_TRAFFIC_HTML}<span class="md-codeblock__lang">${label}</span></div>` +
+    head +
     `<div class="md-codeblock__body">${pre}</div></div>\n`
   )
 }
@@ -126,16 +141,16 @@ export function renderPlainCodeHtml(
   escape: (value: string) => string,
   options: CodeRenderOptions = {},
 ): string {
-  const { lineNumbers = false, lang, langLabel = false, locale = 'en' } = options
+  const { lineNumbers = false, lang, langLabel = false, title, locale = 'en' } = options
   const normalized = normalizeCodeContent(code)
   const body = lineNumbers
     ? normalized.split('\n').map((line) => `<span class="line">${escape(line) || ' '}</span>`).join('\n')
     : escape(normalized)
-  const codeLang = langLabel ? resolveCodeLang(lang) : lang
+  const codeLang = langLabel || title ? resolveCodeLang(lang) : lang
   const langAttr = codeLang ? ` data-md-lang="${escape(codeLang)}"` : ''
   const preHtml = `<pre${langAttr}><code>${body}</code></pre>`
-  if (langLabel) {
-    return wrapCodeblockWithHead(preHtml, codeLang!, escape, locale)
+  if (langLabel || title) {
+    return wrapCodeblockWithHead(preHtml, codeLang!, escape, locale, title, langLabel)
   }
   return `${preHtml}\n`
 }
@@ -145,7 +160,12 @@ export function renderShikiHtml(
   code: string,
   lang: string,
   themes: CodeHighlightThemes,
-  options: { langLabel?: boolean; escape?: (value: string) => string; locale?: string } = {},
+  options: {
+    langLabel?: boolean
+    title?: string
+    escape?: (value: string) => string
+    locale?: string
+  } = {},
 ): string {
   const normalized = normalizeCodeContent(code)
   let html: string
@@ -159,9 +179,9 @@ export function renderShikiHtml(
   }
   html = stripTrailingEmptyLineSpans(html)
   html = ensureNonemptyLineSpans(html)
-  if (options.langLabel) {
+  if (options.langLabel || options.title) {
     const escape = options.escape ?? ((value: string) => value)
-    html = wrapCodeblockWithHead(html, lang, escape, options.locale)
+    html = wrapCodeblockWithHead(html, lang, escape, options.locale, options.title, options.langLabel)
   }
   return html
 }
