@@ -1,6 +1,17 @@
 ---
 title: Math
 description: Inline and block LaTeX math with KaTeX or MathJax
+tags:
+  - Math
+  - LaTeX
+  - KaTeX
+  - Showcase
+groups:
+  - Showcase
+date: 2026-07-01
+updated: 2026-07-02
+authors:
+  - kartjim
 ---
 
 # Math

@@ -1,6 +1,16 @@
 ---
 title: Attributes
 description: Add CSS classes and IDs to block elements with attr_list
+tags:
+  - Attributes
+  - CSS
+  - Showcase
+groups:
+  - Showcase
+date: 2026-07-01
+updated: 2026-07-02
+authors:
+  - kartjim
 ---
 
 # Attributes

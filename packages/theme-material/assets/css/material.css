@@ -3388,13 +3388,13 @@ a.md-page-author__link:hover {
 
 .md-page-license__watermark {
   position: absolute;
-  top: 50%;
-  right: .35rem;
-  width: 5.5rem;
-  height: 5.5rem;
-  transform: translateY(-50%);
+  top: -2.5rem;
+  right: -2.5rem;
+  width: 12rem;
+  height: 12rem;
+  z-index: 0;
   color: var(--md-default-fg-color);
-  opacity: .14;
+  opacity: .05;
   pointer-events: none;
   user-select: none;
 }
@@ -3488,8 +3488,8 @@ a.md-page-author__link:hover {
   }
 
   .md-page-license__watermark {
-    width: 4.25rem;
-    height: 4.25rem;
+    width: 10rem;
+    height: 10rem;
   }
 
   .md-page-license__meta {

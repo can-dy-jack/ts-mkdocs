@@ -1,6 +1,16 @@
 ---
 title: Headings
 description: ATX heading syntax, anchor permalinks, and table of contents
+tags:
+  - Markdown
+  - Headings
+  - Showcase
+groups:
+  - Showcase
+date: 2026-07-01
+updated: 2026-07-02
+authors:
+  - kartjim
 ---
 
 # Headings

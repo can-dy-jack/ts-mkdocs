@@ -1,6 +1,15 @@
 ---
 title: Content Tabs
 description: Tabbed content blocks with pymdownx.tabbed
+tags:
+  - Tabs
+  - Showcase
+groups:
+  - Showcase
+date: 2026-07-01
+updated: 2026-07-02
+authors:
+  - kartjim
 ---
 
 # Content Tabs

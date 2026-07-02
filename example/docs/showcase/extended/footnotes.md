@@ -1,6 +1,16 @@
 ---
 title: Footnotes
 description: Inline references with definitions rendered at page bottom
+tags:
+  - Footnotes
+  - Markdown
+  - Showcase
+groups:
+  - Showcase
+date: 2026-07-01
+updated: 2026-07-02
+authors:
+  - kartjim
 ---
 
 # Footnotes

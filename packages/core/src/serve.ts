@@ -102,10 +102,29 @@ export async function serve(
   })
 
   server.requestTimeout = 0
-  server.listen(port, host, () => {
-    log(`Serving at http://${host}:${port}/`)
+
+  const MAX_PORT_RETRIES = 10
+  let currentPort = port
+
+  server.once('listening', () => {
+    log(`Serving at http://${host}:${currentPort}/`)
     log('Press Ctrl+C to stop')
   })
+
+  server.on('error', (err: NodeJS.ErrnoException) => {
+    if (err.code === 'EADDRINUSE' && currentPort - port < MAX_PORT_RETRIES) {
+      warn(`Port ${currentPort} is already in use, trying ${currentPort + 1}...`)
+      currentPort++
+      server.listen(currentPort, host)
+    } else {
+      if (err.code === 'EADDRINUSE') {
+        warn(`Ports ${port}–${currentPort} are all in use. Free a port or specify a different one with -a.`)
+      }
+      process.exit(1)
+    }
+  })
+
+  server.listen(currentPort, host)
 
   let rebuilding = false
   let pendingRebuild = false

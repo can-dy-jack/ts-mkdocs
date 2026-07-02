@@ -1,6 +1,15 @@
 ---
 title: Combinations
 description: Real-world layouts mixing multiple Markdown extensions
+tags:
+  - Showcase
+  - Nesting
+groups:
+  - Showcase
+date: 2026-07-01
+updated: 2026-07-02
+authors:
+  - kartjim
 ---
 
 # Combinations

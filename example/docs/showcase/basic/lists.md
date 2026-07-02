@@ -1,6 +1,16 @@
 ---
 title: Lists
 description: Unordered, ordered, and nested lists
+tags:
+  - Markdown
+  - Lists
+  - Showcase
+groups:
+  - Showcase
+date: 2026-07-01
+updated: 2026-07-02
+authors:
+  - kartjim
 ---
 
 # Lists

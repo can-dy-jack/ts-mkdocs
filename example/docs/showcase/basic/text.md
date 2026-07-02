@@ -1,6 +1,17 @@
 ---
 title: Text & Links
 description: Inline emphasis, code, strikethrough, and hyperlinks
+tags:
+  - Markdown
+  - Text
+  - Links
+  - Showcase
+groups:
+  - Showcase
+date: 2026-07-01
+updated: 2026-07-02
+authors:
+  - kartjim
 ---
 
 # Text & Links

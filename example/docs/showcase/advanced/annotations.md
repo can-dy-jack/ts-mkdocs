@@ -1,6 +1,15 @@
 ---
 title: Annotations
 description: Clickable numbered markers that expand a Markdown tooltip — in text, admonitions, tabs and code blocks
+tags:
+  - Annotations
+  - Showcase
+groups:
+  - Showcase
+date: 2026-07-01
+updated: 2026-07-02
+authors:
+  - kartjim
 ---
 
 # Annotations

@@ -1,6 +1,16 @@
 ---
 title: Keyboard & Mark
 description: Keyboard shortcuts and highlighted text extensions
+tags:
+  - Keyboard
+  - Highlight
+  - Showcase
+groups:
+  - Showcase
+date: 2026-07-01
+updated: 2026-07-02
+authors:
+  - kartjim
 ---
 
 # Keyboard & Mark

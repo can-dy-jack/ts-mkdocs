@@ -1,6 +1,16 @@
 ---
 title: Blockquotes
 description: Quoted passages with optional attribution
+tags:
+  - Markdown
+  - Blockquotes
+  - Showcase
+groups:
+  - Showcase
+date: 2026-07-01
+updated: 2026-07-02
+authors:
+  - kartjim
 ---
 
 # Blockquotes

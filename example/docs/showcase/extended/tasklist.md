@@ -1,6 +1,16 @@
 ---
 title: Task Lists
 description: GitHub-style checkbox lists with pymdownx.tasklist
+tags:
+  - Task List
+  - Markdown
+  - Showcase
+groups:
+  - Showcase
+date: 2026-07-01
+updated: 2026-07-02
+authors:
+  - kartjim
 ---
 
 # Task Lists

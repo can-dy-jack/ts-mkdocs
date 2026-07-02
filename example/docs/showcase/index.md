@@ -4,6 +4,12 @@ description: Visual reference for every supported Markdown and theme element
 tags:
   - Showcase
   - Reference
+groups:
+  - Showcase
+date: 2026-07-01
+updated: 2026-07-02
+authors:
+  - kartjim
 ---
 
 # Feature Showcase

@@ -4,6 +4,10 @@ description: A TypeScript static-site generator with Material design
 hero:
   title: Build beautiful docs in TypeScript
   tagline: Static-site generator with Material design, plugins, search, and a full-featured theme — no Python required.
+hide:
+  - tags
+  - dates
+  - readtime
 ---
 
 ## What's inside
