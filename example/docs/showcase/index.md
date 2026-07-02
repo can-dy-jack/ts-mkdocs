@@ -9,26 +9,49 @@ Each page in this section documents **one syntax family**: how to write it, what
 
 Use these pages as a visual regression checklist while developing ts-mkdocs.
 
-## Pages
+## Basic Syntax
+
+Standard Markdown and GFM building blocks — no extra extensions required beyond `tables` and `toc`.
 
 | Page | What it covers |
 |------|----------------|
-| [Headings](headings.md) | `#` heading levels, anchor links, TOC |
-| [Text & Links](text.md) | Bold, italic, strikethrough, inline code, links |
-| [Blockquotes](blockquote.md) | `>` quoted blocks, nesting |
-| [Lists](lists.md) | Unordered, ordered, nested lists |
-| [Tables](tables.md) | GFM pipe tables, alignment |
-| [Code Blocks](code-blocks.md) | Fenced code, Shiki highlighting, copy / line numbers / language label |
-| [Admonitions](admonitions.md) | `!!!` / `???` callouts, all types, collapse |
-| [Content Tabs](tabs.md) | `===` tabbed content (`pymdownx.tabbed`) |
-| [Annotations](annotations.md) | Code and text annotations (`content.code.annotate`) |
-| [Math](math.md) | LaTeX math with KaTeX or MathJax (`pymdownx.arithmatex`) |
-| [Task Lists](tasklist.md) | `- [ ]` checkboxes (`pymdownx.tasklist`) |
-| [Icons](icons.md) | `:material-home:` shortcodes |
-| [Footnotes](footnotes.md) | `[^1]` references and definitions |
-| [Attributes](attributes.md) | `{: .class #id}` on block elements (`attr_list`) |
-| [Keyboard & Mark](keys-mark.md) | `++key++` and `==highlight==` (`pymdownx.keys` / `pymdownx.mark`) |
-| [Combinations](combinations.md) | Mixing syntaxes in real-world layouts |
+| [Headings](basic/headings.md) | `#` heading levels, anchor links, TOC |
+| [Text & Links](basic/text.md) | Bold, italic, strikethrough, inline code, links |
+| [Blockquotes](basic/blockquote.md) | `>` quoted blocks, nesting |
+| [Lists](basic/lists.md) | Unordered, ordered, nested lists |
+| [Tables](basic/tables.md) | GFM pipe tables, alignment |
+
+## Extended Syntax
+
+Markdown extensions that add inline or block elements on top of standard syntax.
+
+| Page | What it covers | Extension |
+|------|----------------|-----------|
+| [Code Blocks](extended/code-blocks.md) | Fenced code, Shiki highlighting, copy / line numbers / language label | `pymdownx.superfences` + theme features |
+| [Task Lists](extended/tasklist.md) | `- [ ]` checkboxes | `pymdownx.tasklist` |
+| [Footnotes](extended/footnotes.md) | `[^1]` references and definitions | `footnotes` |
+| [Icons](extended/icons.md) | `:material-home:` shortcodes | built-in icon service |
+| [Keyboard & Mark](extended/keys-mark.md) | `++key++` and `==highlight==` | `pymdownx.keys` / `pymdownx.mark` |
+| [Attributes](extended/attributes.md) | `{: .class #id}` on block elements | `attr_list` |
+
+## Advanced Components
+
+Self-contained UI components and richer content blocks.
+
+| Page | What it covers | Extension |
+|------|----------------|-----------|
+| [Admonitions](advanced/admonitions.md) | `!!!` / `???` callouts, all types, collapse | `admonition` / `pymdownx.details` |
+| [Content Tabs](advanced/tabs.md) | `===` tabbed content | `pymdownx.tabbed` |
+| [Annotations](advanced/annotations.md) | Code and text annotations | `content.code.annotate` |
+| [Math](advanced/math.md) | LaTeX math with KaTeX or MathJax | `pymdownx.arithmatex` |
+
+## Nesting & Combinations
+
+How syntaxes interact when nested inside admonitions, tabs, lists, and other containers.
+
+| Page | What it covers |
+|------|----------------|
+| [Combinations](nesting/combinations.md) | Mixing syntaxes in real-world layouts |
 
 ## Configuration baseline
 

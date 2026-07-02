@@ -149,7 +149,7 @@ When the example theme features are on, each block above should show:
 
 ## Combining with other syntax
 
-Code inside tabs — see [Content Tabs](tabs.md):
+Code inside tabs — see [Content Tabs](../advanced/tabs.md):
 
 === "TypeScript"
 
@@ -171,4 +171,4 @@ Code inside admonitions:
     site_name: My Docs
     ```
 
-Inline `` `code` `` in prose is separate from fenced blocks — see [Text & Links](text.md).
+Inline `` `code` `` in prose is separate from fenced blocks — see [Text & Links](../basic/text.md).

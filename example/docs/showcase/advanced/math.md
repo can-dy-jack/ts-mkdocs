@@ -80,7 +80,7 @@ MathJax only needs a single `cdn.javascript` URL. When omitted, the default is `
 | `cdn.javascript` | jsDelivr KaTeX / MathJax JS | Full main script URL override |
 | `cdn.auto_render` | jsDelivr KaTeX auto-render | Full auto-render script URL override (KaTeX only) |
 
-See also the [Configuration](../guide/configuration.md#math) reference page.
+See also the [Configuration](../../guide/configuration.md#math) reference page.
 
 ## Writing math
 

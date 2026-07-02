@@ -101,4 +101,4 @@ Tabs + tables + icons:
     ts-mkdocs serve -f mkdocs.yml
     ```
 
-See also [Code Blocks](code-blocks.md) and [Combinations](combinations.md).
+See also [Code Blocks](../extended/code-blocks.md) and [Combinations](../nesting/combinations.md).

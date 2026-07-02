@@ -75,7 +75,7 @@ Custom title:
 | `example` | Sample usage |
 | `quote` | Citations, quotations |
 
-See all types rendered in the [Admonitions showcase](../showcase/admonitions.md).
+See all types rendered in the [Admonitions showcase](../showcase/advanced/admonitions.md).
 
 ## Collapsible blocks
 

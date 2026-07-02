@@ -75,4 +75,4 @@ Keys + icons in prose:
 
 Press ++Ctrl+C++ after selecting :material-content-copy: from the toolbar (if shown).
 
-See [Text & Links](text.md) for standard bold/italic and [Combinations](combinations.md) for larger layouts.
+See [Text & Links](../basic/text.md) for standard bold/italic and [Combinations](../nesting/combinations.md) for larger layouts.

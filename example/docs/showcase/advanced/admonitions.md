@@ -7,7 +7,7 @@ description: Callout blocks — note, tip, warning, collapsible details
 
 Callout blocks with colored headers, icons, and optional collapse. Requires `admonition` and optionally `pymdownx.details`.
 
-Full reference: [Admonitions guide](../guide/admonitions.md).
+Full reference: [Admonitions guide](../../guide/admonitions.md).
 
 ## Configuration
 
@@ -120,6 +120,6 @@ Three exclamation marks, type name, indented body (four spaces):
 
 ## Combining with other syntax
 
-Admonitions inside tab panels — see [Combinations](combinations.md).
+Admonitions inside tab panels — see [Combinations](../nesting/combinations.md).
 
-Use `quote` admonition vs plain blockquote — see [Blockquotes](blockquote.md).
+Use `quote` admonition vs plain blockquote — see [Blockquotes](../basic/blockquote.md).

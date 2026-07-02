@@ -58,7 +58,7 @@ echo "Attributes attach to the pre element"
 
 ## Advanced usage
 
-Combine with [Headings](headings.md) TOC anchors:
+Combine with [Headings](../basic/headings.md) TOC anchors:
 
 ```markdown
 ## Section title {: #section-title .premium }

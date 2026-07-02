@@ -102,10 +102,10 @@ Indent continuation lines by four spaces:
 ## Combining with other syntax
 
 - **Bold** and `code` inline
-- Links: [Configuration](../guide/configuration.md)
+- Links: [Configuration](../../guide/configuration.md)
 - Nested admonition:
 
     !!! note
         Lists can contain admonitions when indented as part of the item.
 
-See also [Task Lists](tasklist.md) for checkbox lists.
+See also [Task Lists](../extended/tasklist.md) for checkbox lists.

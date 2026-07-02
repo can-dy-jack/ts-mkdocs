@@ -34,7 +34,7 @@ Individual syntax pages show each feature in isolation. This page demonstrates *
 ## Admonition + task list + icons
 
 !!! example ":material-checklist: Release checklist"
-    - [x] Update [Changelog](../changelog.md)
+    - [x] Update [Changelog](../../changelog.md)
     - [x] Run `pnpm test`
     - [ ] Build example site
     - [ ] Tag version on GitHub
@@ -53,7 +53,7 @@ Individual syntax pages show each feature in isolation. This page demonstrates *
 
 ### ==Quick== reference {: #quick-ref }
 
-Press ++Ctrl+F++ to search the docs[^search]. See [Code Blocks](code-blocks.md) for theme features.
+Press ++Ctrl+F++ to search the docs[^search]. See [Code Blocks](../extended/code-blocks.md) for theme features.
 
 [^search]: Requires the `search` plugin in `mkdocs.yml`.
 
@@ -62,7 +62,7 @@ Press ++Ctrl+F++ to search the docs[^search]. See [Code Blocks](code-blocks.md) 
 !!! quote "From the project README"
     > Build beautiful docs in TypeScript — no Python required.
 
-    — tagline on the [home page](../index.md)
+    — tagline on the [home page](../../index.md)
 
 ## Icons + tabs + task lists
 
@@ -83,6 +83,6 @@ This page lives under **Feature Showcase / Combinations**. Verify:
 - Sidebar shows the nested section and active item
 - Prev/next footer links work (`navigation.footer`)
 - CSS, JS, and fonts load correctly at this depth
-- Relative links like [Overview](index.md) resolve
+- Relative links like [Overview](../index.md) resolve
 
 If all of the above pass, path resolution and theme assets are working end-to-end.

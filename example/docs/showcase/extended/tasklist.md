@@ -53,7 +53,7 @@ markdown_extensions:
 Task list items support inline formatting:
 
 - [ ] Edit **`mkdocs.yml`** and run `ts-mkdocs build`
-- [x] Read the [Configuration guide](../guide/configuration.md)
+- [x] Read the [Configuration guide](../../guide/configuration.md)
 
 ## Combining with other syntax
 

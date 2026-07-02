@@ -22,7 +22,7 @@ Normal text.
 
 `inline code`
 
-[Relative link](index.md)
+[Relative link](../index.md)
 
 [External link](https://github.com/can-dy-jack/ts-mkdocs)
 ```
@@ -41,7 +41,7 @@ Normal text.
 
 `inline code`
 
-A [relative link](../index.md) and an [external link](https://github.com/can-dy-jack/ts-mkdocs).
+A [relative link](../../index.md) and an [external link](https://github.com/can-dy-jack/ts-mkdocs).
 
 ## Extended syntax
 
@@ -94,7 +94,7 @@ Inline elements work inside tables, admonitions, and footnotes:
 | Style | Example |
 |-------|---------|
 | Bold in table | **Important** |
-| Link in table | [Configuration](../guide/configuration.md) |
+| Link in table | [Configuration](../../guide/configuration.md) |
 
 !!! tip
     Use **bold** for UI labels and `code` for file names inside callouts.

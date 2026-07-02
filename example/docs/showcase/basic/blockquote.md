@@ -57,11 +57,11 @@ Only the first line needs `>` if paragraphs are separated by `>` on blank lines:
 
 ```markdown
 > Use **`ts-mkdocs build`** for production output.
-> See the [CLI reference](../reference/cli.md) for flags.
+> See the [CLI reference](../../reference/cli.md) for flags.
 ```
 
 > Use **`ts-mkdocs build`** for production output.
-> See the [CLI reference](../reference/cli.md) for flags.
+> See the [CLI reference](../../reference/cli.md) for flags.
 
 ## Combining with other syntax
 

@@ -345,4 +345,4 @@ $$
 $$
 ````
 
-See [showcase/math](../showcase/math.md) for live examples and more detail.
+See [showcase/math](../showcase/advanced/math.md) for live examples and more detail.

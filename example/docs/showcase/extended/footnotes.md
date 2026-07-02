@@ -80,7 +80,7 @@ One definition can be referenced multiple times[^reuse][^reuse].
 
 ## Combining with other syntax
 
-Footnotes in tables — see [Tables](tables.md).
+Footnotes in tables — see [Tables](../basic/tables.md).
 
 Footnotes inside admonitions:
 

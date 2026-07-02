@@ -19,7 +19,7 @@ theme:
     - content.code.annotate # enables annotations in every code block globally enables annotations in every code block globally enables annotations in every code block globally
 ```
 
-- [Attributes](attributes.md) — required for text/block annotations (the `{ .annotate }` marker)
+- [Attributes](../extended/attributes.md) — required for text/block annotations (the `{ .annotate }` marker)
 - `content.code.annotate` — optional; enables annotations in **every** code block without needing `{ .annotate }` on each fence
 
 ## Usage
@@ -196,4 +196,4 @@ Changes the marker icon site-wide; falls back to a filled plus-circle icon by de
 
 ## Combining with other syntax
 
-Annotations inside tabs — see [Content Tabs](tabs.md). Annotations inside admonitions — see [Admonitions](admonitions.md). More combinations: [Combinations](combinations.md).
+Annotations inside tabs — see [Content Tabs](tabs.md). Annotations inside admonitions — see [Admonitions](admonitions.md). More combinations: [Combinations](../nesting/combinations.md).

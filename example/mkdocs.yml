@@ -17,22 +17,26 @@ nav:
     - Admonitions: guide/admonitions.md
   - Feature Showcase:
     - Overview: showcase/index.md
-    - Headings: showcase/headings.md
-    - Text & Links: showcase/text.md
-    - Blockquotes: showcase/blockquote.md
-    - Lists: showcase/lists.md
-    - Tables: showcase/tables.md
-    - Code Blocks: showcase/code-blocks.md
-    - Admonitions: showcase/admonitions.md
-    - Content Tabs: showcase/tabs.md
-    - Annotations: showcase/annotations.md
-    - Math: showcase/math.md
-    - Task Lists: showcase/tasklist.md
-    - Icons: showcase/icons.md
-    - Footnotes: showcase/footnotes.md
-    - Attributes: showcase/attributes.md
-    - Keyboard & Mark: showcase/keys-mark.md
-    - Combinations: showcase/combinations.md
+    - Basic Syntax:
+      - Headings: showcase/basic/headings.md
+      - Text & Links: showcase/basic/text.md
+      - Blockquotes: showcase/basic/blockquote.md
+      - Lists: showcase/basic/lists.md
+      - Tables: showcase/basic/tables.md
+    - Extended Syntax:
+      - Code Blocks: showcase/extended/code-blocks.md
+      - Task Lists: showcase/extended/tasklist.md
+      - Footnotes: showcase/extended/footnotes.md
+      - Icons: showcase/extended/icons.md
+      - Keyboard & Mark: showcase/extended/keys-mark.md
+      - Attributes: showcase/extended/attributes.md
+    - Advanced Components:
+      - Admonitions: showcase/advanced/admonitions.md
+      - Content Tabs: showcase/advanced/tabs.md
+      - Annotations: showcase/advanced/annotations.md
+      - Math: showcase/advanced/math.md
+    - Nesting & Combinations:
+      - Combinations: showcase/nesting/combinations.md
   - Reference:
     - CLI: reference/cli.md
     - Plugin API: reference/plugins.md
