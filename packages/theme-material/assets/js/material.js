@@ -109,6 +109,7 @@
     initFooterCopyright();
     initSourceRepo();
     initTagsFilter();
+    initLightbox();
   });
 
   function getBaseUrl() {
@@ -826,6 +827,7 @@
         initTocHighlight();
         initMermaid();
         initAnnotations();
+        initLightbox();
         window.scrollTo(0, 0);
       } else {
         location.href = url;
@@ -1176,6 +1178,26 @@
 
     window.addEventListener('hashchange', highlightFromHash);
     highlightFromHash();
+  }
+
+  let lightboxInstance = null;
+
+  function initLightbox() {
+    if (!hasFeature('content.image.lightbox')) return;
+    if (typeof GLightbox !== 'function') return;
+
+    if (lightboxInstance && typeof lightboxInstance.destroy === 'function') {
+      lightboxInstance.destroy();
+      lightboxInstance = null;
+    }
+
+    lightboxInstance = GLightbox({
+      selector: '.md-content .glightbox',
+      touchNavigation: true,
+      loop: true,
+      zoomable: true,
+      draggable: true,
+    });
   }
 
   const style = document.createElement('style');

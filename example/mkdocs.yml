@@ -31,6 +31,7 @@ nav:
       - Icons: showcase/extended/icons.md
       - Keyboard & Mark: showcase/extended/keys-mark.md
       - Superscript & Subscript: showcase/extended/sup-sub.md
+      - Images: showcase/extended/images.md
       - Attributes: showcase/extended/attributes.md
     - Advanced Components:
       - Admonitions: showcase/advanced/admonitions.md
@@ -93,6 +94,7 @@ theme:
     - content.code.lang
     - content.code.wrap
     - content.code.annotate
+    - content.image.lightbox
 
 plugins:
   - search

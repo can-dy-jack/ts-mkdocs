@@ -37,6 +37,10 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family={{ text_font }}:wght@300;400;500;600;700&family={{ code_font }}:wght@400;500&display=swap">
   {% endif %}
 
+  {% if feature.has['content.image.lightbox'] %}
+  <link rel="stylesheet" href="{{ base_url }}assets/css/glightbox.min.css">
+  {% endif %}
+
   <link rel="stylesheet" href="{{ base_url }}assets/css/material.css">
   {% if feature.has_palette %}
   <link rel="stylesheet" href="{{ base_url }}assets/css/palette.css">
@@ -272,6 +276,9 @@
 
 {% block pre_scripts %}{% endblock %}
 <script src="{{ base_url }}assets/js/ts-mkdocs-config.js"></script>
+{% if feature.has['content.image.lightbox'] %}
+<script src="{{ base_url }}assets/js/glightbox.min.js"></script>
+{% endif %}
 <script src="{{ base_url }}assets/js/material.js"></script>
 {% if math and math.enabled %}
 {% include "partials/math.html" %}

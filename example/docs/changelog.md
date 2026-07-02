@@ -18,6 +18,7 @@ authors:
 
 - `pymdownx.caret` — superscript (`^text^`) and insert (`^^text^^`)
 - `pymdownx.tilde` — subscript (`~text~`) and delete (`~~text~~`)
+- Markdown images with docs-relative path rewriting and optional `content.image.lightbox` (GLightbox gallery)
 
 ## 0.1.0 — 2024-06-25
 

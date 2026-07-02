@@ -15,5 +15,8 @@
   },
   "devDependencies": {
     "typescript": "^5.5.0"
+  },
+  "dependencies": {
+    "glightbox": "^3.3.1"
   }
 }

@@ -661,6 +661,121 @@ body {
   word-break: break-word;
 }
 
+.md-typeset img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 1em auto;
+  border-radius: .2rem;
+}
+
+/* Block + max-content avoids inline-block/img max-width circular sizing (0×0). */
+.md-typeset a.glightbox {
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  margin: 1em auto;
+  cursor: zoom-in;
+}
+
+.md-typeset a.glightbox img {
+  display: block;
+  margin: 0;
+  max-width: 100%;
+  height: auto;
+}
+
+/* ============================================================
+   GLightbox — caption bar fixed at viewport bottom
+   ============================================================ */
+.glightbox-container .gslide-description {
+  background: transparent;
+  pointer-events: none;
+}
+
+.glightbox-clean .gdesc-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.25rem calc(0.85rem + env(safe-area-inset-bottom, 0px));
+  background: transparent;
+  border: none;
+  text-align: center;
+}
+
+.glightbox-clean .gslide-title {
+  margin: 0 0 0.15rem;
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 500;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.92);
+  text-align: center;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.55);
+}
+
+.glightbox-clean .gslide-desc {
+  margin: 0;
+  font-family: inherit;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.72);
+  text-align: center;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.55);
+}
+
+.glightbox-mobile .glightbox-container .gslide-description {
+  position: fixed;
+  bottom: 0;
+  height: auto !important;
+  max-height: none;
+  overflow: visible;
+  padding: 0;
+  padding-bottom: 0;
+  background: transparent;
+}
+
+.glightbox-mobile .glightbox-container .gdesc-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.25rem calc(0.85rem + env(safe-area-inset-bottom, 0px));
+  background: transparent;
+  text-align: center;
+}
+
+.glightbox-mobile .glightbox-container .gslide-title {
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 0.88rem;
+  text-align: center;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.55);
+}
+
+.glightbox-mobile .glightbox-container .gslide-desc {
+  color: rgba(255, 255, 255, 0.72);
+  text-align: center;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.55);
+}
+
+/* Keep image above the bottom caption */
+.glightbox-container .gslide-image img {
+  max-height: calc(100vh - 3.25rem) !important;
+}
+
+.glightbox-container .ginner-container:not(:has(.gslide-description)) .gslide-image img {
+  max-height: 97vh !important;
+}
+
+.glightbox-clean .gslide-image img {
+  background: transparent;
+}
+
+.md-typeset figure img {
+  margin: 0 auto;
+}
+
 .md-typeset .arithmatex {
   overflow-x: auto;
   overflow-y: hidden;
@@ -1282,7 +1397,8 @@ html[data-theme="dark"][data-features*="content.code.linenumbers"] .md-typeset p
   margin: 0;
   border-radius: 0;
   box-shadow: none;
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
   min-height: 0;
   opacity: 1;
   transition: opacity .22s ease, padding .32s cubic-bezier(.4, 0, .2, 1);
@@ -1293,6 +1409,7 @@ html[data-theme="dark"][data-features*="content.code.linenumbers"] .md-typeset p
   padding: 0;
   opacity: 0;
   pointer-events: none;
+  overflow: hidden;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -3483,6 +3600,11 @@ a.md-page-author__link:active {
   margin-top: .85rem;
   padding-top: 0;
   border-top: 0;
+}
+
+.md-content img {
+  min-height: 10px;
+  min-width: 10px;
 }
 
 @media (max-width: 640px) {

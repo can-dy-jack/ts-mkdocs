@@ -33,6 +33,7 @@ import { buildSearchIndex, writeSearchIndex } from './search.js'
 import { ensureDir, walkDir, log, success, joinUrl, formatCopyright } from './utils.js'
 import { buildFeatureContext, getTabItems, getSidebarNav, getFeatures } from './features.js'
 import type { FeatureContext } from './features.js'
+import { rewriteContentImages } from './content-images.js'
 import { getI18n } from './i18n.js'
 import { getIconStylesheets, createIconService, buildThemeIcons } from './icons.js'
 import { parseRepoSource, buildRepoSourceIcons, fetchRepoStats } from './github.js'
@@ -262,7 +263,12 @@ function renderPage(
   const i18n = getI18n(config.theme.language)
   const showFooterNav = shouldShowFooterNav(feature, page)
 
-  const rewrittenContent = rewriteDocLinks(page.content, config.use_directory_urls)
+  const rewrittenContent = rewriteContentImages(
+    rewriteDocLinks(page.content, config.use_directory_urls),
+    page.file.srcUri,
+    page.file.destUri,
+    { lightbox: feature.has['content.image.lightbox'] },
+  )
   const toc = feature.toc_integrate ? [] : page.toc
   const navToc = feature.toc_integrate ? page.toc : []
 

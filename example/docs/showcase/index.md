@@ -42,6 +42,7 @@ Markdown extensions that add inline or block elements on top of standard syntax.
 | [Icons](extended/icons.md) | `:material-home:` shortcodes | built-in icon service |
 | [Keyboard & Mark](extended/keys-mark.md) | `++key++` and `==highlight==` | `pymdownx.keys` / `pymdownx.mark` |
 | [Superscript & Subscript](extended/sup-sub.md) | `^sup^`, `~sub~`, `^^ins^^`, `~~del~~` | `pymdownx.caret` / `pymdownx.tilde` |
+| [Images](extended/images.md) | `![alt](path)`, lightbox zoom | `content.image.lightbox` |
 | [Attributes](extended/attributes.md) | `{: .class #id}` on block elements | `attr_list` |
 
 ## Advanced Components
@@ -94,6 +95,7 @@ theme:
     - content.code.copy
     - content.code.linenumbers
     - content.code.lang
+    - content.image.lightbox
 ```
 
 Individual pages call out when an extension or theme feature is required.
