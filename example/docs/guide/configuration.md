@@ -1,6 +1,16 @@
 ---
 title: Configuration
 description: Full reference for mkdocs.yml configuration options
+tags:
+  - Configuration
+  - Setup
+  - Guide
+groups:
+  - Guide
+date: 2026-07-01
+updated: 2026-07-02
+authors:
+  - kartjim
 ---
 
 # Configuration

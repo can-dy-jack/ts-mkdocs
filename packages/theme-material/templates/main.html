@@ -10,7 +10,7 @@
   </a>
   {% endif %}
   {{ page.content | safe }}
-  {{ page_tags(page) }}
+  {{ page_tags(page, i18n) }}
   {% endif %}
 </article>
 {% endblock %}

@@ -1,6 +1,17 @@
 ---
 title: Plugin API
 description: How to write a custom ts-mkdocs plugin
+tags:
+  - Plugins
+  - API
+  - Reference
+  - TypeScript
+groups:
+  - Reference
+date: 2026-07-01
+updated: 2026-07-02
+authors:
+  - kartjim
 ---
 
 # Plugin API

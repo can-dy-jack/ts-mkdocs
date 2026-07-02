@@ -1,0 +1,15 @@
+{% if tag_cloud_tags and tag_cloud_tags | length > 0 %}
+<div class="md-tags-cloud" role="list" aria-label="{{ i18n['tags.title'] }}">
+  {% for tag in tag_cloud_tags %}
+  <a
+    class="md-tags-cloud__tag"
+    href="{{ base_url }}tags/{{ tag.slug }}/"
+    data-tag-slug="{{ tag.slug }}"
+    data-tag-name="{{ tag.name | lower }}"
+    style="--tag-weight: {{ tag.weight }}"
+    role="listitem"
+    title="{{ tag.count }} {{ i18n['tags.pages'] | replace('{n}', '') | trim }}"
+  >{{ tag.name }}</a>
+  {% endfor %}
+</div>
+{% endif %}

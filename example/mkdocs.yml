@@ -96,7 +96,8 @@ theme:
 plugins:
   - search
   - meta
-  - tags
+  - tags:
+      sort_by: count
   - social
 
 markdown_extensions:

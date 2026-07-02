@@ -10,6 +10,16 @@ import { parseAuthorRegistry, resolvePageAuthors, shouldShowPageAuthors } from '
 import { resolveEditUrl } from './frontmatter.js'
 import { buildMetaBarItems } from './page-meta.js'
 import {
+  aggregateTags,
+  buildTagCloudData,
+  getTagsPluginConfig,
+  hasTagsPlugin,
+  resolvePageTags,
+  shouldShowPageTags,
+  type TagEntry,
+  type TagIndex,
+} from './tags.js'
+import {
   computeReadingTime,
   injectAfterFirstH1,
   isReadingTimeEnabled,
@@ -105,13 +115,23 @@ export async function build(config: Config): Promise<Page[]> {
     pages.push(page)
   }
 
+  const tagsEnabled = hasTagsPlugin(resolvedConfig)
+  const tagsConfig = getTagsPluginConfig(resolvedConfig)
+  const tagIndex = tagsEnabled
+    ? aggregateTags(pages, './', { sort_by: tagsConfig.sort_by })
+    : null
+
   for (const page of pages) {
     const navPage = nav.pages.find((p) => p.file.srcUri === page.file.srcUri)
     if (navPage) setActivePage(nav, navPage)
 
-    const html = renderPage(resolvedConfig, page, nav, navPage, repoStats)
+    const html = renderPage(resolvedConfig, page, nav, navPage, repoStats, tagsEnabled)
     ensureDir(dirname(page.file.destPath))
     writeFileSync(page.file.destPath, html, 'utf-8')
+  }
+
+  if (tagsEnabled && tagIndex) {
+    generateTagPages(resolvedConfig, tagIndex, nav, repoStats)
   }
 
   copyThemeAssets(assetsDir, resolvedConfig.site_dir)
@@ -233,6 +253,7 @@ function renderPage(
   nav: { items: NavItem[] },
   navPage: NavPage | undefined,
   repoStats?: RepoStats,
+  tagsEnabled = false,
 ): string {
   const baseUrl = computeBaseUrl(page.file.destUri)
   const isHome = isHomePage(page)
@@ -299,6 +320,11 @@ function renderPage(
     }
   }
 
+  const resolvedTags =
+    tagsEnabled && shouldShowPageTags(page.meta)
+      ? resolvePageTags(page.meta.tags, baseUrl)
+      : []
+
   const ctx = {
     ...buildBaseContext(config, baseUrl, repoStats),
     feature,
@@ -311,6 +337,8 @@ function renderPage(
       prev_page: showFooterNav ? buildFooterPageRef(navPage?.prev, baseUrl) : undefined,
       next_page: showFooterNav ? buildFooterPageRef(navPage?.next, baseUrl) : undefined,
       is_homepage: isHome,
+      resolved_tags: resolvedTags,
+      tags_enabled: tagsEnabled,
     },
     nav: nav.items,
     sidebar_nav: getSidebarNav(
@@ -409,4 +437,76 @@ function writeSiteBootstrap(config: Config, repoStats?: RepoStats): void {
   const configPath = join(config.site_dir, 'assets/js/ts-mkdocs-config.js')
   ensureDir(dirname(configPath))
   writeFileSync(configPath, `window.__TS_MKDOCS__=${JSON.stringify(payload)};\n`, 'utf-8')
+}
+
+function generateTagPages(
+  config: Config,
+  tagIndex: TagIndex,
+  nav: { items: NavItem[] },
+  repoStats?: RepoStats,
+): void {
+  const feature = buildFeatureContext(config)
+  const i18n = getI18n(config.theme.language)
+
+  const indexBaseUrl = '../'
+  const indexCtx = {
+    ...buildBaseContext(config, indexBaseUrl, repoStats),
+    feature,
+    i18n,
+    page: {
+      title: i18n['tags.title'],
+      meta: { description: i18n['tags.description'] },
+      url: 'tags/',
+      is_homepage: false,
+      is_tags_index: true,
+    },
+    tag_index: tagIndex,
+    tag_cloud_tags: buildTagCloudData(tagIndex),
+    nav: nav.items,
+    sidebar_nav: [],
+    nav_toc: [],
+    toc: [],
+    tab_items: getTabItems(nav.items),
+  }
+
+  const indexPath = join(config.site_dir, 'tags', 'index.html')
+  ensureDir(dirname(indexPath))
+  writeFileSync(indexPath, nunjucksEnv!.render('tags-index.html', indexCtx), 'utf-8')
+
+  for (const tag of tagIndex.tags) {
+    renderTagArchivePage(config, tag, nav, repoStats, feature, i18n)
+  }
+}
+
+function renderTagArchivePage(
+  config: Config,
+  tag: TagEntry,
+  nav: { items: NavItem[] },
+  repoStats: RepoStats | undefined,
+  feature: FeatureContext,
+  i18n: ReturnType<typeof getI18n>,
+): void {
+  const baseUrl = '../../'
+  const ctx = {
+    ...buildBaseContext(config, baseUrl, repoStats),
+    feature,
+    i18n,
+    page: {
+      title: tag.name,
+      meta: {},
+      url: `tags/${tag.slug}/`,
+      is_homepage: false,
+      is_tags_archive: true,
+    },
+    tag,
+    nav: nav.items,
+    sidebar_nav: [],
+    nav_toc: [],
+    toc: [],
+    tab_items: getTabItems(nav.items),
+  }
+
+  const archivePath = join(config.site_dir, 'tags', tag.slug, 'index.html')
+  ensureDir(dirname(archivePath))
+  writeFileSync(archivePath, nunjucksEnv!.render('tags-archive.html', ctx), 'utf-8')
 }

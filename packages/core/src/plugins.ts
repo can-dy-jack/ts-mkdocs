@@ -18,6 +18,7 @@ export interface PluginEvents {
 
 export interface Plugin extends PluginEvents {
   name: string
+  configure?: (options: Record<string, unknown>) => void
 }
 
 const BUILTIN_PLUGINS: Record<string, Plugin> = {
@@ -118,7 +119,9 @@ export async function loadPlugins(config: Config): Promise<PluginManager> {
     const options = typeof pluginEntry === 'object' ? (pluginEntry[name] as Record<string, unknown>) ?? {} : {}
 
     if (BUILTIN_PLUGINS[name]) {
-      manager.register(BUILTIN_PLUGINS[name])
+      const plugin = BUILTIN_PLUGINS[name]
+      plugin.configure?.(options)
+      manager.register(plugin)
       continue
     }
 

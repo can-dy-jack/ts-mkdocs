@@ -2,8 +2,9 @@
 title: Frontmatter
 description: Per-page metadata via YAML frontmatter and inherited .meta.yml files
 tags:
-  - Configuration
   - Frontmatter
+  - Configuration
+  - Guide
 groups:
   - Guide
 date: 2026-07-01
@@ -26,7 +27,7 @@ Each Markdown page can declare metadata in YAML frontmatter at the top of the fi
 | `template` | string | Custom template name (e.g. `home`) |
 | `icon` | string | Icon shortcode for navigation |
 | `status` | string | Page status identifier |
-| `tags` | list | Tags shown at the bottom of the page (`#tag` style) and indexed for search |
+| `tags` | list | Tags shown at the bottom of the page; when the `tags` plugin is enabled, tags link to `/tags/{slug}/` archive pages |
 | `groups` | list | Logical groups shown below the title with a folder icon |
 | `authors` | list | Author identifiers defined in `extra.authors` (see below) |
 | `readtime` | number | Override reading time in minutes |
@@ -109,6 +110,35 @@ hide:
 ```
 
 Available values: `tags`, `groups`, `dates`, `authors`, `readtime`, `meta`.
+
+## Tags system
+
+Enable the built-in `tags` plugin to activate the full tag system:
+
+```yaml
+plugins:
+  - tags
+```
+
+With the plugin enabled, ts-mkdocs automatically:
+
+- Aggregates all page tags during the build
+- Generates a **tag index** at `/tags/` with a tag cloud and grouped listings
+- Generates a **per-tag archive page** at `/tags/{slug}/` for each tag
+- Makes page tags clickable links to their archive pages
+- Supports client-side filtering on the tag index page
+
+Optional plugin configuration:
+
+```yaml
+plugins:
+  - tags:
+      sort_by: count   # count (default) or name
+```
+
+Tags are also merged into the Lunr search index, so searching for a tag name finds related pages.
+
+Browse all tags at [Tags](/tags/).
 
 ## Authors
 

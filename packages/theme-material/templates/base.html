@@ -61,7 +61,7 @@
     {% endif %}
   {% endif %}
 </head>
-<body class="{% if feature.has['header.autohide'] %}md-header--autohide{% endif %}{% if page and page.is_homepage %} home-page{% endif %}">
+<body class="{% if feature.has['header.autohide'] %}md-header--autohide{% endif %}{% if page and page.is_homepage %} home-page{% endif %}{% if page and (page.is_tags_index or page.is_tags_archive) %} tags-page{% endif %}">
 
 <input class="md-toggle" type="checkbox" id="__drawer" autocomplete="off">
 
@@ -270,6 +270,7 @@
 </button>
 {% endif %}
 
+{% block pre_scripts %}{% endblock %}
 <script src="{{ base_url }}assets/js/ts-mkdocs-config.js"></script>
 <script src="{{ base_url }}assets/js/material.js"></script>
 {% if math and math.enabled %}

@@ -11,6 +11,7 @@ import {
   renderPlainCodeHtml,
   renderShikiHtml,
 } from './md/code-highlight.js'
+import { slugify } from './utils.js'
 
 export interface TocEntry {
   id: string
@@ -183,11 +184,3 @@ function tocInlineChildren(children: Token[]): Token[] {
   return children
 }
 
-function slugify(text: string): string {
-  return text
-    .toLowerCase()
-    .replace(/[^\w\s-]/g, '')
-    .replace(/\s+/g, '-')
-    .replace(/-+/g, '-')
-    .trim()
-}

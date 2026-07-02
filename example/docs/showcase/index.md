@@ -1,6 +1,9 @@
 ---
 title: Overview
 description: Visual reference for every supported Markdown and theme element
+tags:
+  - Showcase
+  - Reference
 ---
 
 # Feature Showcase

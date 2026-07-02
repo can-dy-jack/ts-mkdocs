@@ -1,5 +1,8 @@
 import type { PageMeta } from './frontmatter.js'
 import type { I18nStrings } from './i18n.js'
+import { shouldShowPageTags } from './tags.js'
+
+export { shouldShowPageTags }
 
 export interface PageMetaBarItem {
   type: 'date' | 'updated' | 'groups' | 'readtime'
@@ -66,7 +69,3 @@ export function buildMetaBarItems(
   return items
 }
 
-export function shouldShowPageTags(meta: PageMeta): boolean {
-  const hide = meta.hide ?? []
-  return !!(meta.tags?.length && !hide.includes('tags'))
-}

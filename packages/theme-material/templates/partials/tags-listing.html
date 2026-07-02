@@ -1,0 +1,27 @@
+{% if tags and tags | length > 0 %}
+<div class="md-tags-listing">
+  {% for tag in tags %}
+  <section class="md-tags-listing__section" id="{{ tag.slug }}" data-tag-slug="{{ tag.slug }}" data-tag-name="{{ tag.name | lower }}">
+    <h2 class="md-tags-listing__heading">
+      <a href="{{ base_url }}tags/{{ tag.slug }}/">{{ tag.name }}</a>
+      <span class="md-tags-listing__count">{{ tag.count }}</span>
+    </h2>
+    <ul class="md-tags-archive">
+      {% for item in tag.pages %}
+      <li class="md-tags-archive__item">
+        <a class="md-tags-archive__link" href="{{ base_url }}{{ item.url }}">
+          <span class="md-tags-archive__title">{{ item.title }}</span>
+          {% if item.description %}
+          <span class="md-tags-archive__description">{{ item.description }}</span>
+          {% endif %}
+          {% if item.date %}
+          <span class="md-tags-archive__date">{{ item.date }}</span>
+          {% endif %}
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+  </section>
+  {% endfor %}
+</div>
+{% endif %}

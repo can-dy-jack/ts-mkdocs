@@ -1,6 +1,16 @@
 ---
 title: CLI Reference
 description: All ts-mkdocs command-line commands and flags
+tags:
+  - CLI
+  - Reference
+  - Commands
+groups:
+  - Reference
+date: 2026-07-01
+updated: 2026-07-02
+authors:
+  - kartjim
 ---
 
 # CLI Reference

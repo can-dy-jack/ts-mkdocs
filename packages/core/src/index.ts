@@ -31,6 +31,19 @@ export {
   shouldShowPageAuthors,
 } from './authors.js'
 export type { AuthorDefinition, ResolvedAuthor, ResolvedAuthorLink } from './authors.js'
+export {
+  aggregateTags,
+  buildTagCloudData,
+  getTagArchiveUrl,
+  getTagIndexUrl,
+  getTagsPluginConfig,
+  hasTagsPlugin,
+  resolvePageTags,
+  shouldShowPageTags,
+  slugifyTag,
+} from './tags.js'
+export type { ResolvedTag, TagEntry, TagIndex, TagPageRef, TagsPluginConfig } from './tags.js'
+export { slugify } from './utils.js'
 export { PluginManager, loadPlugins } from './plugins.js'
 export type { Plugin, PluginEvents } from './plugins.js'
 export { buildSearchIndex, writeSearchIndex } from './search.js'

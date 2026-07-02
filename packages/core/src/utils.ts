@@ -34,6 +34,15 @@ export function titleFromFilename(name: string): string {
     .replace(/\b\w/g, (c) => c.toUpperCase())
 }
 
+export function slugify(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/[^\w\s-]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+    .trim()
+}
+
 /** Join a page-relative base URL (e.g. `../../`) with a site-relative path (e.g. `./` or `guide/`). */
 export function joinUrl(base: string, path: string): string {
   if (!path) return base || './'

@@ -1,0 +1,26 @@
+{% extends "tags-base.html" %}
+
+{% block content %}
+<article class="md-content__inner md-typeset md-tags-index" data-md-component="tags-index">
+  <h1>{{ i18n['tags.title'] }}</h1>
+  <p class="md-tags-index__summary">
+    {{ i18n['tags.summary'] | replace('{tags}', tag_index.tags | length | string) | replace('{pages}', tag_index.totalTaggedPages | string) }}
+  </p>
+
+  <div class="md-tags-filter">
+    <input
+      type="search"
+      class="md-tags-filter__input"
+      id="tags-filter-input"
+      placeholder="{{ i18n['tags.filter'] }}"
+      aria-label="{{ i18n['tags.filter'] }}"
+      autocomplete="off"
+    >
+  </div>
+  <p class="md-tags-filter__empty" id="tags-filter-empty" hidden>{{ i18n['tags.empty'] }}</p>
+
+  {% include "partials/tags-cloud.html" %}
+  {% set tags = tag_index.tags %}
+  {% include "partials/tags-listing.html" %}
+</article>
+{% endblock %}

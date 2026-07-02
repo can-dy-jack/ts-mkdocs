@@ -1,0 +1,32 @@
+{% extends "tags-base.html" %}
+
+{% block content %}
+<article class="md-content__inner md-typeset md-tags-archive-page">
+  <nav class="md-tags-breadcrumb" aria-label="Breadcrumb">
+    <a href="{{ base_url }}tags/">{{ i18n['tags.back'] }}</a>
+    <span class="md-tags-breadcrumb__sep" aria-hidden="true">/</span>
+    <span>{{ tag.name }}</span>
+  </nav>
+
+  <h1>{{ tag.name }}</h1>
+  <p class="md-tags-archive-page__summary">
+    {{ i18n['tags.pages'] | replace('{n}', tag.count | string) }}
+  </p>
+
+  <ul class="md-tags-archive">
+    {% for item in tag.pages %}
+    <li class="md-tags-archive__item">
+      <a class="md-tags-archive__link" href="{{ base_url }}{{ item.url }}">
+        <span class="md-tags-archive__title">{{ item.title }}</span>
+        {% if item.description %}
+        <span class="md-tags-archive__description">{{ item.description }}</span>
+        {% endif %}
+        {% if item.date %}
+        <span class="md-tags-archive__date">{{ item.date }}</span>
+        {% endif %}
+      </a>
+    </li>
+    {% endfor %}
+  </ul>
+</article>
+{% endblock %}

@@ -1,11 +1,23 @@
-{% macro page_tags(page) %}
-{% if page and page.meta %}
+{% macro page_tags(page, i18n) %}
+{% if page and page.resolved_tags and page.resolved_tags | length > 0 %}
+<div class="md-page-tags" aria-label="{{ i18n['tags.label'] }}">
+  <span class="md-page-tags__label">{{ i18n['tags.label'] }}</span>
+  <div class="md-page-tags__items">
+    {% for tag in page.resolved_tags %}
+    <a class="md-page-tag" href="{{ tag.url }}">#{{ tag.name }}</a>
+    {% endfor %}
+  </div>
+</div>
+{% elif page and page.meta and not page.tags_enabled %}
 {% set hide = page.meta.hide if page.meta.hide else [] %}
 {% if page.meta.tags and page.meta.tags | length > 0 and 'tags' not in hide %}
-<div class="md-page-tags" aria-label="Tags">
-  {% for tag in page.meta.tags %}
-  <span class="md-page-tag">#{{ tag }}</span>
-  {% endfor %}
+<div class="md-page-tags" aria-label="{{ i18n['tags.label'] }}">
+  <span class="md-page-tags__label">{{ i18n['tags.label'] }}</span>
+  <div class="md-page-tags__items">
+    {% for tag in page.meta.tags %}
+    <span class="md-page-tag">#{{ tag }}</span>
+    {% endfor %}
+  </div>
 </div>
 {% endif %}
 {% endif %}

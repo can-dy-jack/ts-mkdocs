@@ -1,6 +1,16 @@
 ---
 title: Installation
 description: How to install ts-mkdocs and create your first project
+tags:
+  - Installation
+  - Setup
+  - Guide
+groups:
+  - Guide
+date: 2026-07-01
+updated: 2026-07-02
+authors:
+  - kartjim
 ---
 
 # Installation
