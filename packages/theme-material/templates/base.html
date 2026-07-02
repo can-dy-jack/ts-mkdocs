@@ -44,6 +44,10 @@
   <link rel="stylesheet" href="{{ base_url }}{{ css }}">
   {% endfor %}
 
+  {% if math and math.enabled and math.cdn.stylesheet %}
+  <link rel="stylesheet" href="{{ math.cdn.stylesheet }}" crossorigin="anonymous">
+  {% endif %}
+
   {% block styles %}{% endblock %}
   {% if config.extra and config.extra.analytics %}
     {% if config.extra.analytics.provider == 'google' %}
@@ -263,6 +267,9 @@
 
 <script src="{{ base_url }}assets/js/ts-mkdocs-config.js"></script>
 <script src="{{ base_url }}assets/js/material.js"></script>
+{% if math and math.enabled %}
+{% include "partials/math.html" %}
+{% endif %}
 {% for js in config.extra_javascript %}
 <script src="{{ base_url }}{{ js }}"></script>
 {% endfor %}

@@ -261,3 +261,88 @@ export function build(): void {}
 ````
 
 Syntax highlighting themes are configured separately under `theme.highlight.theme_light` / `theme_dark`.
+
+## Math
+
+Enable LaTeX math with the `pymdownx.arithmatex` extension. ts-mkdocs loads the renderer (KaTeX or MathJax) from a CDN — you do not need to add scripts under `extra_javascript`.
+
+### Basic setup
+
+```yaml
+markdown_extensions:
+  - pymdownx.arithmatex:
+      provider: katex    # default — fast, self-contained
+      # provider: mathjax  # alternative renderer
+```
+
+### KaTeX with CDN base URL
+
+This is the configuration used by the example site:
+
+```yaml
+markdown_extensions:
+  - pymdownx.arithmatex:
+      provider: katex
+      version: "0.16.22"
+      cdn:
+        base: https://cdn.jsdelivr.net/npm/katex@0.16.22/dist
+```
+
+`cdn.base` expands to `{base}/katex.min.css`, `{base}/katex.min.js`, and `{base}/contrib/auto-render.min.js`.
+
+### MathJax
+
+```yaml
+markdown_extensions:
+  - pymdownx.arithmatex:
+      provider: mathjax
+      version: "3.2.2"
+      cdn:
+        javascript: https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js
+```
+
+### Custom CDN mirrors
+
+Override individual asset URLs when self-hosting or using a private CDN:
+
+```yaml
+markdown_extensions:
+  - pymdownx.arithmatex:
+      provider: katex
+      cdn:
+        stylesheet: https://cdn.example.com/katex.min.css
+        javascript: https://cdn.example.com/katex.min.js
+        auto_render: https://cdn.example.com/auto-render.min.js
+```
+
+When `cdn` is omitted, defaults are built from `provider` + `version` on jsDelivr.
+
+| Option | Default | Description |
+|--------|---------|-------------|
+| `provider` | `katex` | Math renderer: `katex` or `mathjax` |
+| `generic` | `true` | Output `\(...\)` / `\[...\]` wrappers compatible with both renderers |
+| `smart_dollar` | `true` | Skip `$5`-style currency amounts |
+| `version` | `0.16.22` / `3.2.2` | CDN package version when using built-in defaults (depends on `provider`) |
+| `cdn.base` | — | KaTeX only: base URL for default asset paths (`katex.min.css`, `katex.min.js`, `contrib/auto-render.min.js`) |
+| `cdn.stylesheet` | jsDelivr KaTeX CSS | Full URL override for the stylesheet |
+| `cdn.javascript` | jsDelivr KaTeX / MathJax JS | Full URL override for the main library script |
+| `cdn.auto_render` | jsDelivr KaTeX auto-render | Full URL override for KaTeX auto-render helper |
+
+### Writing math in Markdown
+
+| Style | Syntax | Example |
+|-------|--------|---------|
+| Inline | `$...$` or `\(...\)` | `$E = mc^2$` |
+| Block | `$$...$$` on one or more lines | see below |
+
+````markdown
+Inline: $E = mc^2$
+
+Block:
+
+$$
+\int_0^1 x^2 \, dx = \frac{1}{3}
+$$
+````
+
+See [showcase/math](../showcase/math.md) for live examples and more detail.

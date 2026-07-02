@@ -26,6 +26,7 @@ nav:
     - Admonitions: showcase/admonitions.md
     - Content Tabs: showcase/tabs.md
     - Annotations: showcase/annotations.md
+    - Math: showcase/math.md
     - Task Lists: showcase/tasklist.md
     - Icons: showcase/icons.md
     - Footnotes: showcase/footnotes.md
@@ -106,6 +107,11 @@ markdown_extensions:
   - attr_list
   - tables
   - footnotes
+  - pymdownx.arithmatex:
+      provider: katex
+      version: "0.16.22"
+      cdn:
+        base: https://cdn.jsdelivr.net/npm/katex@0.16.22/dist
   - toc:
       permalink: true
       toc_depth: 3   # include h2–h3 in page TOC (default: 3)

@@ -21,6 +21,8 @@ Use these pages as a visual regression checklist while developing ts-mkdocs.
 | [Code Blocks](code-blocks.md) | Fenced code, Shiki highlighting, copy / line numbers / language label |
 | [Admonitions](admonitions.md) | `!!!` / `???` callouts, all types, collapse |
 | [Content Tabs](tabs.md) | `===` tabbed content (`pymdownx.tabbed`) |
+| [Annotations](annotations.md) | Code and text annotations (`content.code.annotate`) |
+| [Math](math.md) | LaTeX math with KaTeX or MathJax (`pymdownx.arithmatex`) |
 | [Task Lists](tasklist.md) | `- [ ]` checkboxes (`pymdownx.tasklist`) |
 | [Icons](icons.md) | `:material-home:` shortcodes |
 | [Footnotes](footnotes.md) | `[^1]` references and definitions |
@@ -44,6 +46,11 @@ markdown_extensions:
   - attr_list
   - tables
   - footnotes
+  - pymdownx.arithmatex:
+      provider: katex
+      version: "0.16.22"
+      cdn:
+        base: https://cdn.jsdelivr.net/npm/katex@0.16.22/dist
   - toc:
       permalink: true
 

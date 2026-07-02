@@ -12,6 +12,7 @@ import { markPlugin } from './md/mark.js'
 import { criticPlugin } from './md/critic.js'
 import { footnotesPlugin } from './md/footnotes.js'
 import { snippetsPlugin } from './md/snippets.js'
+import { arithmatexPlugin } from './md/arithmatex.js'
 import { hasCodeAnnotateFeature, hasLangLabelFeature, hasLineNumbersFeature } from './md/code-highlight.js'
 
 export type ExtensionEntry = string | Record<string, unknown>
@@ -95,5 +96,8 @@ export function applyMarkdownExtensions(
   if (enabled.has('footnotes')) md.use(footnotesPlugin)
   if (enabled.has('pymdownx.snippets')) {
     md.use(snippetsPlugin, { docsDir: config.docs_dir, ...options.get('pymdownx.snippets') })
+  }
+  if (enabled.has('pymdownx.arithmatex')) {
+    md.use(arithmatexPlugin, options.get('pymdownx.arithmatex') ?? {})
   }
 }

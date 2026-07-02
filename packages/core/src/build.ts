@@ -18,6 +18,7 @@ import { getIconStylesheets, createIconService, buildThemeIcons } from './icons.
 import { parseRepoSource, buildRepoSourceIcons, fetchRepoStats } from './github.js'
 import type { RepoStats } from './github.js'
 import { buildPaletteStyles } from './palette.js'
+import { resolveMathConfig } from './md/arithmatex.js'
 
 let nunjucksEnv: nunjucks.Environment | null = null
 
@@ -292,6 +293,7 @@ function buildBaseContext(config: Config, baseUrl = './', repoStats?: RepoStats)
     repo_source_facts: repo_source ? repoStats : undefined,
     theme_icons: buildThemeIcons(config, icons.renderRef.bind(icons)),
     versions: config.extra?.version?.provider ? config.extra.version : null,
+    math: resolveMathConfig(config),
   }
 }
 

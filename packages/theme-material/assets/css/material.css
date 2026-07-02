@@ -660,6 +660,16 @@ body {
   word-break: break-word;
 }
 
+.md-typeset .arithmatex {
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.md-typeset div.arithmatex {
+  margin: 1em 0;
+  text-align: center;
+}
+
 .md-typeset h1 {
   color: var(--md-default-fg-color);
   font-size: 1.6rem;
