@@ -1,0 +1,12 @@
+{% macro page_tags(page) %}
+{% if page and page.meta %}
+{% set hide = page.meta.hide if page.meta.hide else [] %}
+{% if page.meta.tags and page.meta.tags | length > 0 and 'tags' not in hide %}
+<div class="md-page-tags" aria-label="Tags">
+  {% for tag in page.meta.tags %}
+  <span class="md-page-tag">#{{ tag }}</span>
+  {% endfor %}
+</div>
+{% endif %}
+{% endif %}
+{% endmacro %}

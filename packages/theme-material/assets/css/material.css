@@ -3210,19 +3210,61 @@ body:has(.md-tabs--sticky.md-tabs--hidden) .md-sidebar {
 }
 
 /* ============================================================
-   Tags & integrated TOC
+   Page meta bar & tags
    ============================================================ */
-.md-tags {
-  margin-bottom: 1rem;
+.md-page-meta-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  margin: .6rem 0 1.4rem;
+  color: var(--md-default-fg-color--light);
+  font-size: .82rem;
+  line-height: 1.7;
 }
 
-.md-tag {
+.md-meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: .25rem;
+}
+
+.md-meta-item__icon {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  user-select: none;
+}
+
+.md-meta-item__icon .material-symbols-outlined {
+  font-size: 1rem;
+  line-height: 1;
+  user-select: none;
+}
+
+.md-meta-sep {
+  margin: 0 .55rem;
+  color: var(--md-default-fg-color--lighter);
+  user-select: none;
+}
+
+.md-page-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+  margin-top: 2rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--md-default-fg-color--lightest);
+}
+
+.md-page-tag {
   display: inline-block;
-  padding: .1em .5em;
-  margin-right: .3em;
-  background: var(--md-code-bg-color);
-  border-radius: .2rem;
-  font-size: .75rem;
+  padding: .28em .7em;
+  background: var(--md-default-fg-color--lightest);
+  border: 1px solid var(--md-default-fg-color--lighter);
+  border-radius: .25rem;
+  font-size: .78rem;
+  color: var(--md-default-fg-color--light);
+  line-height: 1.4;
 }
 
 .md-nav--integrated {

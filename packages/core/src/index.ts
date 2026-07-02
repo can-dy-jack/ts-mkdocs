@@ -9,7 +9,20 @@ export type { NavItem, NavPage, NavSection, NavLink, Navigation } from './nav.js
 export { initMarkdown, renderMarkdown } from './markdown.js'
 export type { TocEntry, MarkdownResult } from './markdown.js'
 export { loadPage } from './page.js'
-export type { Page, PageMeta } from './page.js'
+export type { Page } from './page.js'
+export type { PageMeta } from './frontmatter.js'
+export {
+  normalizePageMeta,
+  mergePageMeta,
+  loadInheritedMeta,
+  resolveEditUrl,
+} from './frontmatter.js'
+export {
+  computeReadingTime,
+  resolveReadingTimeConfig,
+  injectAfterFirstH1,
+} from './reading-time.js'
+export { buildMetaBarItems } from './page-meta.js'
 export { PluginManager, loadPlugins } from './plugins.js'
 export type { Plugin, PluginEvents } from './plugins.js'
 export { buildSearchIndex, writeSearchIndex } from './search.js'

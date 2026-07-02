@@ -43,11 +43,15 @@ export function buildSearchIndex(pages: Page[], config: Config): SearchIndex {
   for (const page of pages) {
     if (page.meta.search?.exclude) continue
 
+    const tags = page.meta.tags?.join(' ') ?? ''
+    const groups = page.meta.groups?.join(' ') ?? ''
     const text = stripHtml(page.content)
     docs.push({
       location: page.file.url,
       title: page.title,
-      text: isCjk ? tokenizeCjk(text + ' ' + page.title).join(' ') : text,
+      text: isCjk
+        ? tokenizeCjk(`${text} ${page.title} ${tags} ${groups}`).join(' ')
+        : `${text} ${tags} ${groups}`.trim(),
     })
 
     for (const section of page.toc) {

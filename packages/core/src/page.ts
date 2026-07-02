@@ -1,16 +1,20 @@
 import { readFileSync } from 'fs'
 import matter from 'gray-matter'
 import type { DocFile } from './files.js'
+import {
+  loadInheritedMeta,
+  mergePageMeta,
+  normalizePageMeta,
+  type PageMeta,
+} from './frontmatter.js'
 import type { TocEntry } from './markdown.js'
 
-export interface PageMeta {
-  title?: string
-  description?: string
-  tags?: string[]
-  hide?: string[]
-  search?: { boost?: number; exclude?: boolean }
-  hero?: { title?: string; tagline?: string }
-  [key: string]: unknown
+export type { PageMeta } from './frontmatter.js'
+
+export interface LoadPageOptions {
+  docsDir: string
+  language?: string
+  inheritMeta?: boolean
 }
 
 export interface Page {
@@ -22,14 +26,22 @@ export interface Page {
   rawMarkdown: string
 }
 
-export function loadPage(file: DocFile): Page {
+export function loadPage(file: DocFile, options?: LoadPageOptions): Page {
   const raw = readFileSync(file.srcPath, 'utf-8')
-  const { data: meta, content: markdown } = matter(raw)
-  const title = (meta.title as string) ?? extractFirstH1(markdown) ?? file.srcUri
+  const { data: frontmatter, content: markdown } = matter(raw)
+
+  const inherited =
+    options?.inheritMeta && options.docsDir
+      ? loadInheritedMeta(options.docsDir, file.srcUri)
+      : {}
+
+  const merged = mergePageMeta(inherited, frontmatter as Record<string, unknown>)
+  const meta = normalizePageMeta(merged, options?.language ?? 'en')
+  const title = meta.title ?? extractFirstH1(markdown) ?? file.srcUri
 
   return {
     file,
-    meta: meta as PageMeta,
+    meta,
     title,
     content: '',
     toc: [],

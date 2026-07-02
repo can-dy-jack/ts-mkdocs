@@ -97,6 +97,7 @@ const MATERIAL_ALIASES: Record<string, string> = {
   'check-circle': 'check_circle',
   'format-quote': 'format_quote',
   'bug-report': 'bug_report',
+  'folder-outline': 'folder_open',
 }
 
 function materialSymbolName(parts: string[]): string {

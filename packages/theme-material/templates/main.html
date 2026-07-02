@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% from "partials/page-meta.html" import page_tags %}
 
 {% block content %}
 <article class="md-content__inner md-typeset">
@@ -9,6 +10,7 @@
   </a>
   {% endif %}
   {{ page.content | safe }}
+  {{ page_tags(page) }}
   {% endif %}
 </article>
 {% endblock %}

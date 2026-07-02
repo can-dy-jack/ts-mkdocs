@@ -6,6 +6,14 @@ import { collectFiles } from './files.js'
 import { buildNavigation, setActivePage } from './nav.js'
 import type { NavPage } from './nav.js'
 import { initMarkdown, renderMarkdown } from './markdown.js'
+import { resolveEditUrl } from './frontmatter.js'
+import { buildMetaBarItems } from './page-meta.js'
+import {
+  computeReadingTime,
+  injectAfterFirstH1,
+  isReadingTimeEnabled,
+  resolveReadingTimeConfig,
+} from './reading-time.js'
 import { loadPage } from './page.js'
 import type { Page } from './page.js'
 import { loadPlugins } from './plugins.js'
@@ -79,7 +87,11 @@ export async function build(config: Config): Promise<Page[]> {
     }
 
     log(`Building page: ${file.srcUri}`)
-    let page = loadPage(file)
+    let page = loadPage(file, {
+      docsDir: resolvedConfig.docs_dir,
+      language: resolvedConfig.theme.language,
+      inheritMeta: hasMetaPlugin(resolvedConfig),
+    })
 
     const navPage = nav.pages.find((p) => p.file.srcUri === file.srcUri)
     if (navPage && !page.title && navPage.title) page.title = navPage.title
@@ -149,6 +161,13 @@ export async function syncStaticAssets(config: Config): Promise<void> {
   }
 }
 
+function hasMetaPlugin(config: Config): boolean {
+  return config.plugins.some((entry) => {
+    const name = typeof entry === 'string' ? entry : Object.keys(entry)[0]
+    return name === 'meta'
+  })
+}
+
 function computeBaseUrl(destUri: string): string {
   const depth = destUri.split('/').length - 1
   return depth === 0 ? './' : '../'.repeat(depth)
@@ -185,10 +204,12 @@ function rewriteDocLinks(html: string, useDirectoryUrls: boolean): string {
   })
 }
 
-function buildEditUrl(config: Config, srcUri: string): string | undefined {
-  if (!config.repo_url) return undefined
-  const editPath = config.edit_uri ?? 'edit/main/docs/'
-  return `${config.repo_url}/${editPath.replace(/^\//, '')}${srcUri}`
+function buildEditUrl(
+  config: Config,
+  srcUri: string,
+  meta: Page['meta'],
+): string | undefined {
+  return resolveEditUrl(config, srcUri, meta)
 }
 
 function shouldShowFooterNav(feature: FeatureContext, page: Page): boolean {
@@ -222,15 +243,52 @@ function renderPage(
   const toc = feature.toc_integrate ? [] : page.toc
   const navToc = feature.toc_integrate ? page.toc : []
 
+  const icons = createIconService(config)
+  const readingTimeConfig = resolveReadingTimeConfig(config.extra)
+  const readtimeOverride =
+    typeof page.meta.readtime === 'number' ? page.meta.readtime : undefined
+  const readtimeResult =
+    isReadingTimeEnabled(readingTimeConfig, page.meta) &&
+    !page.meta.hide?.includes('readtime') &&
+    !page.meta.hide?.includes('meta')
+      ? computeReadingTime(
+          page.rawMarkdown,
+          readingTimeConfig,
+          config.theme.language,
+          readtimeOverride,
+        )
+      : undefined
+
+  if (readtimeResult) {
+    page.meta.readtime = readtimeResult.minutes
+    page.meta.readtime_formatted = readtimeResult.formatted
+  }
+
+  const metaBarItems = buildMetaBarItems(page.meta, i18n, {
+    dateIconHtml: icons.renderRef('material/calendar_today'),
+    updatedIconHtml: icons.renderRef('material/update'),
+    groupIconHtml: icons.renderRef('material/folder-outline'),
+    readtimeIconHtml: icons.renderRef('material/schedule'),
+    readtimeFormatted: readtimeResult?.formatted,
+  })
+
+  let content = rewrittenContent
+  if (metaBarItems.length > 0 && !isHome) {
+    const metaBarHtml = nunjucksEnv!.render('partials/page-meta-bar.html', {
+      items: metaBarItems,
+    })
+    content = injectAfterFirstH1(content, metaBarHtml)
+  }
+
   const ctx = {
     ...buildBaseContext(config, baseUrl, repoStats),
     feature,
     i18n,
     page: {
       ...page,
-      content: rewrittenContent,
+      content,
       url: page.file.url,
-      edit_url: buildEditUrl(config, page.file.srcUri),
+      edit_url: buildEditUrl(config, page.file.srcUri, page.meta),
       prev_page: showFooterNav ? buildFooterPageRef(navPage?.prev, baseUrl) : undefined,
       next_page: showFooterNav ? buildFooterPageRef(navPage?.next, baseUrl) : undefined,
       is_homepage: isHome,

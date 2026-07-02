@@ -8,8 +8,13 @@
 
   <title>{% block title %}{% if page %}{{ page.title }} - {% endif %}{{ config.site_name }}{% endblock %}</title>
 
-  {% if config.site_description %}
+  {% if page and page.meta and page.meta.description %}
+  <meta name="description" content="{{ page.meta.description }}">
+  {% elif config.site_description %}
   <meta name="description" content="{{ config.site_description }}">
+  {% endif %}
+  {% if page and page.meta and page.meta.robots %}
+  <meta name="robots" content="{{ page.meta.robots }}">
   {% endif %}
   {% if config.site_author %}
   <meta name="author" content="{{ config.site_author }}">

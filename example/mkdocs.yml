@@ -14,6 +14,7 @@ nav:
   - Getting Started:
     - Installation: guide/installation.md
     - Configuration: guide/configuration.md
+    - Frontmatter: guide/frontmatter.md
     - Admonitions: guide/admonitions.md
   - Feature Showcase:
     - Overview: showcase/index.md
@@ -94,6 +95,7 @@ theme:
 
 plugins:
   - search
+  - meta
   - tags
   - social
 
@@ -121,6 +123,12 @@ markdown_extensions:
       toc_depth: 3   # include h2–h3 in page TOC (default: 3)
 
 extra:
+  reading_time:
+    enabled: true
+    words_per_minute: 265
+    cjk_chars_per_minute: 500
+    exclude_code: true
+    min_minutes: 1
   version:
     provider: mike
     default: latest

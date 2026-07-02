@@ -41,6 +41,12 @@ describe('icons', () => {
     expect(html).not.toContain('>zap<')
   })
 
+  it('maps folder-outline alias to folder_open for material', () => {
+    const html = renderIconRef('material/folder-outline', 'material')
+    expect(html).toContain('folder_open')
+    expect(html).not.toContain('folder_outline')
+  })
+
   it('uses admonition icon overrides', () => {
     const icons = createIconService({
       theme: {

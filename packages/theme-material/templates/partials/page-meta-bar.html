@@ -1,0 +1,15 @@
+{% if items and items | length > 0 %}
+<div class="md-page-meta-bar">
+  {% for item in items %}
+  {% if not loop.first %}<span class="md-meta-sep" aria-hidden="true">·</span>{% endif %}
+  <span class="md-meta-item md-meta-item--{{ item.type }}"{% if item.label %} aria-label="{{ item.label }}: {{ item.value }}"{% endif %}>
+    {% if item.icon %}<span class="md-meta-item__icon md-icon" aria-hidden="true">{{ item.icon | safe }}</span>{% endif %}
+    {% if item.datetime %}
+    <time datetime="{{ item.datetime }}">{{ item.value }}</time>
+    {% else %}
+    <span>{{ item.value }}</span>
+    {% endif %}
+  </span>
+  {% endfor %}
+</div>
+{% endif %}

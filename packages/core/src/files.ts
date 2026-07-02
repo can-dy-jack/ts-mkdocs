@@ -1,6 +1,7 @@
 import { existsSync } from 'fs'
 import { join, relative, extname, basename, dirname, sep } from 'path'
 import type { Config } from './config.js'
+import { isMetaFile } from './frontmatter.js'
 import { walkDir, isMarkdown } from './utils.js'
 
 export interface DocFile {
@@ -18,6 +19,7 @@ export function collectFiles(config: Config): DocFile[] {
 
   for (const absPath of walkDir(docs_dir)) {
     const srcUri = relative(docs_dir, absPath).split(sep).join('/')
+    if (isMetaFile(srcUri)) continue
     const file = buildDocFile(srcUri, docs_dir, site_dir, use_directory_urls)
     files.push(file)
   }
