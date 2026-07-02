@@ -1,0 +1,36 @@
+{% if authors and authors | length > 0 %}
+<div class="md-page-authors" aria-label="{{ i18n['meta.authors'] }}">
+  {% for author in authors %}
+  <div class="md-page-author">
+    {% if author.avatar %}
+    <img class="md-page-author__avatar" src="{{ author.avatar }}" alt="{{ author.name }}" loading="lazy">
+    {% else %}
+    <span class="md-page-author__avatar md-page-author__avatar--icon md-icon" aria-hidden="true">
+      {{ avatar_icon_html | safe }}
+    </span>
+    {% endif %}
+    <div class="md-page-author__info">
+      <span class="md-page-author__name">{{ author.name }}</span>
+      {% if author.title %}
+      <span class="md-page-author__title">{{ author.title }}</span>
+      {% endif %}
+      {% if author.links and author.links | length > 0 %}
+      <div class="md-page-author__links">
+        {% for link in author.links %}
+        {% if link.href %}
+        <a href="{{ link.href }}" class="md-page-author__link md-icon" target="_blank" rel="noopener noreferrer" aria-label="{{ link.label }}" title="{{ link.label }}">
+          {{ link.iconHtml | safe }}
+        </a>
+        {% else %}
+        <span class="md-page-author__link md-page-author__link--static md-icon" aria-label="{{ link.label }}" title="{{ link.label }}">
+          {{ link.iconHtml | safe }}
+        </span>
+        {% endif %}
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}

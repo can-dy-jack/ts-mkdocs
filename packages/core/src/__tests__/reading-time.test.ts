@@ -75,7 +75,6 @@ describe('page-meta', () => {
         updated: '2024-12-01T00:00:00.000Z',
         updated_formatted: 'December 1, 2024',
         groups: ['Guide'],
-        authors: ['Alice'],
       },
       i18n,
       {
@@ -91,14 +90,13 @@ describe('page-meta', () => {
       'date',
       'updated',
       'groups',
-      'authors',
       'readtime',
     ])
     expect(items[0].icon).toBe('<i>date</i>')
     expect(items[1].value).toBe('December 1, 2024')
     expect(items[1].icon).toBe('<i>updated</i>')
     expect(items[2].icon).toBe('<svg></svg>')
-    expect(items[4].icon).toBe('<i>time</i>')
+    expect(items[3].icon).toBe('<i>time</i>')
   })
 
   it('respects hide flags', () => {
@@ -108,5 +106,13 @@ describe('page-meta', () => {
     expect(
       buildMetaBarItems({ date_formatted: 'June 1, 2024', hide: ['meta'] }, getI18n('en')),
     ).toEqual([])
+  })
+
+  it('does not include authors in meta bar', () => {
+    const items = buildMetaBarItems(
+      { authors: ['alice'], date_formatted: 'June 1, 2024' },
+      getI18n('en'),
+    )
+    expect(items.some((item) => item.type === 'authors')).toBe(false)
   })
 })

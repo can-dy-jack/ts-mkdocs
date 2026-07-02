@@ -2,7 +2,7 @@ import type { PageMeta } from './frontmatter.js'
 import type { I18nStrings } from './i18n.js'
 
 export interface PageMetaBarItem {
-  type: 'date' | 'updated' | 'groups' | 'authors' | 'readtime'
+  type: 'date' | 'updated' | 'groups' | 'readtime'
   value: string
   datetime?: string
   icon?: string
@@ -51,14 +51,6 @@ export function buildMetaBarItems(
       value: meta.groups.join(', '),
       icon: options.groupIconHtml,
       label: i18n['meta.groups'],
-    })
-  }
-
-  if (meta.authors?.length && !hide.includes('authors')) {
-    items.push({
-      type: 'authors',
-      value: meta.authors.join(', '),
-      label: i18n['meta.authors'],
     })
   }
 

@@ -123,6 +123,18 @@ markdown_extensions:
       toc_depth: 3   # include h2–h3 in page TOC (default: 3)
 
 extra:
+  authors:
+    kartjim:
+      name: Kart Jim
+      title: ts-mkdocs author
+      avatar: https://avatars.githubusercontent.com/u/62332701
+      url:
+        github: can-dy-jack/ts-mkdocs
+        x: kartjim2
+        reddit: kartjim
+        youtube: kartjim5475
+        bilibili: 481922596
+        website: https://kartjim.cn
   reading_time:
     enabled: true
     words_per_minute: 265

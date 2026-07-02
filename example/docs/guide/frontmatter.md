@@ -6,10 +6,10 @@ tags:
   - Frontmatter
 groups:
   - Guide
-date: 2024-06-01
-updated: 2024-12-01
+date: 2026-07-01
+updated: 2026-07-02
 authors:
-  - ts-mkdocs team
+  - kartjim
 ---
 
 # Frontmatter
@@ -28,7 +28,7 @@ Each Markdown page can declare metadata in YAML frontmatter at the top of the fi
 | `status` | string | Page status identifier |
 | `tags` | list | Tags shown at the bottom of the page (`#tag` style) and indexed for search |
 | `groups` | list | Logical groups shown below the title with a folder icon |
-| `authors` | list | Document authors shown below the title |
+| `authors` | list | Author identifiers defined in `extra.authors` (see below) |
 | `readtime` | number | Override reading time in minutes |
 | `reading_time` | boolean | Set to `false` to disable automatic reading time |
 | `date` | date | Publish / creation date (`created`, `published` aliases) |
@@ -54,7 +54,8 @@ groups:
 date: 2024-06-01
 updated: 2024-12-15
 authors:
-  - Jane Doe
+  - alice
+  - bob
 edit_uri: edit/main/docs/custom-path.md
 hide:
   - footer
@@ -108,6 +109,44 @@ hide:
 ```
 
 Available values: `tags`, `groups`, `dates`, `authors`, `readtime`, `meta`.
+
+## Authors
+
+Define authors globally in `mkdocs.yml`, then reference them by identifier in page frontmatter:
+
+```yaml
+extra:
+  authors:
+    alice:
+      name: Alice Doe
+      title: Core Maintainer
+      avatar: assets/authors/alice.jpg   # relative to docs_dir
+      url:
+        x: alice
+        github: alice
+        website: https://alice.example.com
+    bob:
+      name: Bob Lee
+      title: Contributor
+      avatar: https://example.com/bob.png
+      url:
+        bilibili: "123456"
+        qq: "10001"
+        wechat: bob_wechat_id
+        reddit: boblee
+```
+
+`url` accepts either a **website string** or a **platform map**. Supported platforms include `x`, `reddit`, `youtube`, `wechat`, `qq`, `bilibili`, `github`, `linkedin`, `discord`, `facebook`, `instagram`, `tiktok`, and `website`. Usernames are expanded to profile URLs automatically; full URLs are used as-is. WeChat IDs render as a static icon with tooltip (no public link).
+
+```yaml
+---
+authors:
+  - alice
+  - team
+---
+```
+
+Authors render below the meta bar with avatar, name, title, and social link icons.
 
 ## Reading time
 

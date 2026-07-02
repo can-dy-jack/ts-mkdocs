@@ -23,6 +23,14 @@ export {
   injectAfterFirstH1,
 } from './reading-time.js'
 export { buildMetaBarItems } from './page-meta.js'
+export {
+  parseAuthorRegistry,
+  resolvePageAuthors,
+  resolveAssetUrl,
+  resolveAuthorLinks,
+  shouldShowPageAuthors,
+} from './authors.js'
+export type { AuthorDefinition, ResolvedAuthor, ResolvedAuthorLink } from './authors.js'
 export { PluginManager, loadPlugins } from './plugins.js'
 export type { Plugin, PluginEvents } from './plugins.js'
 export { buildSearchIndex, writeSearchIndex } from './search.js'

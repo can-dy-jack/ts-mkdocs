@@ -6,6 +6,7 @@ import { collectFiles } from './files.js'
 import { buildNavigation, setActivePage } from './nav.js'
 import type { NavPage } from './nav.js'
 import { initMarkdown, renderMarkdown } from './markdown.js'
+import { parseAuthorRegistry, resolvePageAuthors, shouldShowPageAuthors } from './authors.js'
 import { resolveEditUrl } from './frontmatter.js'
 import { buildMetaBarItems } from './page-meta.js'
 import {
@@ -245,6 +246,7 @@ function renderPage(
 
   const icons = createIconService(config)
   const readingTimeConfig = resolveReadingTimeConfig(config.extra)
+  const authorAvatarIconHtml = icons.renderRef('material/account_circle')
   const readtimeOverride =
     typeof page.meta.readtime === 'number' ? page.meta.readtime : undefined
   const readtimeResult =
@@ -272,12 +274,29 @@ function renderPage(
     readtimeFormatted: readtimeResult?.formatted,
   })
 
+  const authorRegistry = parseAuthorRegistry(config.extra)
+  const pageAuthors = shouldShowPageAuthors(page.meta.authors, page.meta.hide)
+    ? resolvePageAuthors(page.meta.authors, authorRegistry, baseUrl, icons.renderRef.bind(icons))
+    : []
+
   let content = rewrittenContent
-  if (metaBarItems.length > 0 && !isHome) {
-    const metaBarHtml = nunjucksEnv!.render('partials/page-meta-bar.html', {
-      items: metaBarItems,
-    })
-    content = injectAfterFirstH1(content, metaBarHtml)
+  if (!isHome) {
+    let injection = ''
+    if (metaBarItems.length > 0) {
+      injection += nunjucksEnv!.render('partials/page-meta-bar.html', {
+        items: metaBarItems,
+      })
+    }
+    if (pageAuthors.length > 0) {
+      injection += nunjucksEnv!.render('partials/page-authors.html', {
+        authors: pageAuthors,
+        i18n,
+        avatar_icon_html: authorAvatarIconHtml,
+      })
+    }
+    if (injection) {
+      content = injectAfterFirstH1(content, injection)
+    }
   }
 
   const ctx = {
