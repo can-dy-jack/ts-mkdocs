@@ -1,9 +1,9 @@
 site_name: ts-mkdocs
 site_description: A demo site built with ts-mkdocs to validate features during development
 site_url: https://example.com/
-repo_url: https://github.com/can-dy-jack/ts-mkdocs# test
-repo_name: can-dy-jack/ts-mkdocs # test
-# repo_token: 
+repo_url: https://github.com/anthropics/claude-code # test
+repo_name: anthropics/claude-code # test
+# repo_token: .env里去
 copyright: Copyright &copy; {year} ts-mkdocs contributors
 
 edit_uri: edit/main/docs/

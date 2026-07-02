@@ -95,6 +95,16 @@ export function ensureNonemptyLineSpans(html: string): string {
   return html.replace(/<span class="line"><\/span>/g, '<span class="line"> </span>')
 }
 
+const CODEBLOCK_TRAFFIC_HTML =
+  '<span class="md-codeblock__traffic">' +
+  '<button type="button" class="md-codeblock__traffic-dot md-codeblock__traffic-dot--close" aria-expanded="true">' +
+  '<span class="md-codeblock__traffic-icon" aria-hidden="true"></span></button>' +
+  '<button type="button" class="md-codeblock__traffic-dot md-codeblock__traffic-dot--minimize" aria-expanded="true">' +
+  '<span class="md-codeblock__traffic-icon" aria-hidden="true"></span></button>' +
+  '<button type="button" class="md-codeblock__traffic-dot md-codeblock__traffic-dot--maximize" aria-expanded="true">' +
+  '<span class="md-codeblock__traffic-icon" aria-hidden="true"></span></button>' +
+  '</span>'
+
 export function wrapCodeblockWithHead(
   html: string,
   lang: string,
@@ -106,8 +116,8 @@ export function wrapCodeblockWithHead(
   const pre = html.trimEnd()
   return (
     `<div class="md-codeblock" data-md-lang="${escape(codeLang)}">` +
-    `<div class="md-codeblock__head"><span class="md-codeblock__lang">${label}</span></div>` +
-    `${pre}</div>\n`
+    `<div class="md-codeblock__head">${CODEBLOCK_TRAFFIC_HTML}<span class="md-codeblock__lang">${label}</span></div>` +
+    `<div class="md-codeblock__body">${pre}</div></div>\n`
   )
 }
 
