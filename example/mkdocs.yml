@@ -142,6 +142,9 @@ extra:
     cjk_chars_per_minute: 500
     exclude_code: true
     min_minutes: 1
+  license:
+    enabled: true
+    preset: cc-by-nc-sa-4.0
   version:
     provider: mike
     default: latest

@@ -25,6 +25,7 @@ import {
   isReadingTimeEnabled,
   resolveReadingTimeConfig,
 } from './reading-time.js'
+import { resolveLicenseConfig, resolvePageLicense, buildCanonicalPageUrl, formatLicenseDate, resolveLicenseAuthor } from './license.js'
 import { loadPage } from './page.js'
 import type { Page } from './page.js'
 import { loadPlugins } from './plugins.js'
@@ -267,6 +268,7 @@ function renderPage(
 
   const icons = createIconService(config)
   const readingTimeConfig = resolveReadingTimeConfig(config.extra)
+  const licenseConfig = resolveLicenseConfig(config.extra)
   const authorAvatarIconHtml = icons.renderRef('material/account_circle')
   const readtimeOverride =
     typeof page.meta.readtime === 'number' ? page.meta.readtime : undefined
@@ -325,6 +327,18 @@ function renderPage(
       ? resolvePageTags(page.meta.tags, baseUrl)
       : []
 
+  const pageLicense = resolvePageLicense(
+    licenseConfig,
+    page.meta,
+    i18n,
+    {
+      title: page.title,
+      pageUrl: buildCanonicalPageUrl(config.site_url, page.file.url),
+      author: resolveLicenseAuthor(page.meta, authorRegistry, licenseConfig, config.site_author),
+      date: formatLicenseDate(page.meta.date),
+    },
+  )
+
   const ctx = {
     ...buildBaseContext(config, baseUrl, repoStats),
     feature,
@@ -339,6 +353,7 @@ function renderPage(
       is_homepage: isHome,
       resolved_tags: resolvedTags,
       tags_enabled: tagsEnabled,
+      license: pageLicense,
     },
     nav: nav.items,
     sidebar_nav: getSidebarNav(

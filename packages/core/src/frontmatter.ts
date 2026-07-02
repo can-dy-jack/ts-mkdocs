@@ -34,6 +34,21 @@ export interface PageMeta {
   reading_time?: boolean
   /** Locale-formatted reading time label for templates. */
   readtime_formatted?: string
+  /** Page license declaration override (`false` to hide). */
+  license?:
+    | boolean
+    | string
+    | {
+        preset?: string
+        notice?: string
+        text?: string
+        url?: string
+        name?: string
+        author?: string
+        title?: string
+        page_url?: string
+        date?: string
+      }
   [key: string]: unknown
 }
 

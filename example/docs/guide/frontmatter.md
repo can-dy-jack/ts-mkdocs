@@ -36,7 +36,8 @@ Each Markdown page can declare metadata in YAML frontmatter at the top of the fi
 | `updated` | date | Last updated date (`modified` alias) |
 | `edit_url` | string | Full edit link override |
 | `edit_uri` | string | Edit path override relative to `repo_url` |
-| `hide` | list | Hide UI elements: `tags`, `groups`, `dates`, `authors`, `readtime`, `meta`, `footer` |
+| `hide` | list | Hide UI elements: `tags`, `groups`, `dates`, `authors`, `readtime`, `license`, `meta`, `footer` |
+| `license` | bool / string / object | Article license declaration override (`false` to hide); see [Article license](#article-license) |
 | `search` | object | Search tuning: `boost`, `exclude` |
 | `hero` | object | Homepage hero: `title`, `tagline` |
 | `robots` | string | Value for `<meta name="robots">` |
@@ -109,7 +110,7 @@ hide:
 ---
 ```
 
-Available values: `tags`, `groups`, `dates`, `authors`, `readtime`, `meta`.
+Available values: `tags`, `groups`, `dates`, `authors`, `readtime`, `license`, `meta`.
 
 ## Tags system
 
@@ -177,6 +178,79 @@ authors:
 ```
 
 Authors render below the meta bar with avatar, name, title, and social link icons.
+
+## Article license
+
+When enabled, a license declaration card is rendered at the bottom of each page (above tags). It shows the article title, canonical URL, author, publish date, license type, and a footer notice.
+
+Configure globally in `mkdocs.yml`:
+
+```yaml
+site_url: https://example.com/   # required for the article URL line
+
+extra:
+  license:
+    enabled: true
+    preset: cc-by-nc-sa-4.0        # default when enabled
+    author: Site Author            # fallback when the page has no authors
+    notice: Custom footer notice   # optional; overrides the preset notice
+    show_url: true                 # default: true
+    show_author: true              # default: true
+    show_date: true                # default: true
+```
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `enabled` | boolean | Turn the declaration card on or off site-wide |
+| `preset` | string | Built-in license preset. Currently supported: `cc-by-nc-sa-4.0` |
+| `author` | string | Default author name when a page has no `authors` frontmatter |
+| `notice` | string | Footer notice text override |
+| `name` | string | License name override (e.g. `CC BY-NC-SA 4.0`) |
+| `url` | string | License link override |
+| `show_url` | boolean | Show the article URL line (default: `true`) |
+| `show_author` | boolean | Show the author column (default: `true`) |
+| `show_date` | boolean | Show the publish date column (default: `true`) |
+
+Field population rules:
+
+- **Title** — page `title` frontmatter (or first `#` heading)
+- **URL** — `site_url` + page path; hidden when `site_url` is not set
+- **Author** — page `authors` (resolved via `extra.authors`), then `extra.license.author`, then `site_author`
+- **Date** — page `date` frontmatter, formatted as `YYYY-MM-DD`
+- **Notice** — localized preset text based on `theme.language`, unless overridden by `notice`
+
+Override per page with frontmatter:
+
+```yaml
+---
+license: false   # hide the card on this page
+---
+```
+
+```yaml
+---
+license: cc-by-nc-sa-4.0
+---
+```
+
+```yaml
+---
+license:
+  author: Alice
+  notice: Custom notice for this page only.
+  page_url: https://example.com/custom-url/
+  date: 2026-02-16
+---
+```
+
+Or hide via `hide`:
+
+```yaml
+---
+hide:
+  - license
+---
+```
 
 ## Reading time
 

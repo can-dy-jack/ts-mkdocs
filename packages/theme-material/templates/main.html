@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "partials/page-meta.html" import page_tags %}
+{% from "partials/page-meta.html" import page_tags, page_license %}
 
 {% block content %}
 <article class="md-content__inner md-typeset">
@@ -10,6 +10,7 @@
   </a>
   {% endif %}
   {{ page.content | safe }}
+  {{ page_license(page, i18n) }}
   {{ page_tags(page, i18n) }}
   {% endif %}
 </article>

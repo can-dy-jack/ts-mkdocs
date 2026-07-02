@@ -38,6 +38,11 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     'tags.filter': 'Filter tags…',
     'tags.empty': 'No tags found',
     'tags.back': 'All tags',
+    'license.label': 'License',
+    'license.author': 'Author',
+    'license.agreement': 'License',
+    'license.cc-by-nc-sa-4.0.notice':
+      'When reprinting or citing this article, please comply with the license agreement, indicate the source, and do not use it for commercial purposes.',
     'clipboard.copy': 'Copy to clipboard',
     'clipboard.copied': 'Copied!',
     'code.wrap.enable': 'Enable line wrap',
@@ -82,6 +87,11 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     'tags.filter': '筛选标签…',
     'tags.empty': '未找到标签',
     'tags.back': '全部标签',
+    'license.label': '文章声明',
+    'license.author': '本文作者',
+    'license.agreement': '许可协议',
+    'license.cc-by-nc-sa-4.0.notice':
+      '转载或引用本文时请遵守许可协议，注明出处、不得用于商业用途！',
     'clipboard.copy': '复制到剪贴板',
     'clipboard.copied': '已复制！',
     'code.wrap.enable': '启用自动换行',

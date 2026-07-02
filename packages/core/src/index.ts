@@ -22,6 +22,15 @@ export {
   resolveReadingTimeConfig,
   injectAfterFirstH1,
 } from './reading-time.js'
+export {
+  buildCanonicalPageUrl,
+  formatLicenseDate,
+  resolveLicenseAuthor,
+  resolveLicenseConfig,
+  resolvePageLicense,
+  shouldShowPageLicense,
+} from './license.js'
+export type { LicenseConfig, LicensePageContext, ResolvedPageLicense } from './license.js'
 export { buildMetaBarItems } from './page-meta.js'
 export {
   parseAuthorRegistry,
