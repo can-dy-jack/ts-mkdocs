@@ -96,7 +96,7 @@ Or with parentheses: \(\alpha + \beta = \gamma\).
 
 Einstein's mass–energy relation is $E = mc^2$.
 
-You can also use `\(\alpha + \beta = \gamma\)` delimiters.
+You can also use \(\alpha + \beta = \gamma\) delimiters.
 
 When `smart_dollar` is enabled (default), currency amounts like $5 and $10 are **not** treated as math.
 

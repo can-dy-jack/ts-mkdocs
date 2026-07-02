@@ -64,11 +64,18 @@ function parseInlineMath(state: StateInline, start: number, silent: boolean, sma
   if (src.charCodeAt(start) !== 0x24 /* $ */) return false
   if (src.charCodeAt(start + 1) === 0x24) return false
   if (start > 0 && src.charCodeAt(start - 1) === 0x5c /* \ */) return false
+  if (start > 0 && src.charCodeAt(start - 1) === 0x24) return false
   if (smartDollar && isCurrencyStart(src, start)) return false
 
   let pos = start + 1
   while (pos < src.length) {
-    if (src.charCodeAt(pos) === 0x24 && src.charCodeAt(pos - 1) !== 0x5c) break
+    if (src.charCodeAt(pos) === 0x24 && src.charCodeAt(pos - 1) !== 0x5c) {
+      if (src.charCodeAt(pos + 1) === 0x24) {
+        pos += 2
+        continue
+      }
+      break
+    }
     pos++
   }
   if (pos >= src.length) return false
@@ -199,7 +206,7 @@ export function arithmatexPlugin(md: MarkdownIt, options: ArithmatexOptions = {}
 
   md.block.ruler.before('fence', 'math_block', (state, startLine, endLine, silent) => {
     return parseBlockMath(state, startLine, endLine, silent, generic)
-  })
+  }, { alt: ['paragraph'] })
 }
 
 function parseExtension(entry: string | Record<string, unknown>): { name: string; options: Record<string, unknown> } {

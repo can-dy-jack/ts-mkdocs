@@ -1,22 +1,24 @@
 {% if math.provider == 'katex' %}
 <script defer src="{{ math.cdn.javascript }}" crossorigin="anonymous"></script>
-{% if math.cdn.auto_render %}
-<script defer src="{{ math.cdn.auto_render }}" crossorigin="anonymous"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-  if (typeof renderMathInElement !== 'function') return;
-  renderMathInElement(document.body, {
-    delimiters: [
-      { left: '$$', right: '$$', display: true },
-      { left: '$', right: '$', display: false },
-      { left: '\\(', right: '\\)', display: false },
-      { left: '\\[', right: '\\]', display: true },
-    ],
-    throwOnError: false,
+  if (typeof katex === 'undefined') return;
+
+  document.querySelectorAll('.arithmatex').forEach(function (el) {
+    var tex = el.textContent.trim();
+    var displayMode = el.tagName === 'DIV';
+
+    if (tex.indexOf('\\(') === 0 && tex.lastIndexOf('\\)') === tex.length - 2) {
+      tex = tex.slice(2, -2);
+    } else if (tex.indexOf('\\[') === 0 && tex.lastIndexOf('\\]') === tex.length - 2) {
+      tex = tex.slice(2, -2);
+      displayMode = true;
+    }
+
+    katex.render(tex, el, { displayMode: displayMode, throwOnError: false });
   });
 });
 </script>
-{% endif %}
 {% elif math.provider == 'mathjax' %}
 <script>
 window.MathJax = {
@@ -31,4 +33,10 @@ window.MathJax = {
 };
 </script>
 <script defer src="{{ math.cdn.javascript }}" crossorigin="anonymous"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  if (!window.MathJax || typeof MathJax.typesetPromise !== 'function') return;
+  MathJax.typesetPromise();
+});
+</script>
 {% endif %}
