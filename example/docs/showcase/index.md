@@ -41,6 +41,7 @@ Markdown extensions that add inline or block elements on top of standard syntax.
 | [Footnotes](extended/footnotes.md) | `[^1]` references and definitions | `footnotes` |
 | [Icons](extended/icons.md) | `:material-home:` shortcodes | built-in icon service |
 | [Keyboard & Mark](extended/keys-mark.md) | `++key++` and `==highlight==` | `pymdownx.keys` / `pymdownx.mark` |
+| [Superscript & Subscript](extended/sup-sub.md) | `^sup^`, `~sub~`, `^^ins^^`, `~~del~~` | `pymdownx.caret` / `pymdownx.tilde` |
 | [Attributes](extended/attributes.md) | `{: .class #id}` on block elements | `attr_list` |
 
 ## Advanced Components
@@ -75,6 +76,8 @@ markdown_extensions:
   - pymdownx.tasklist
   - pymdownx.keys
   - pymdownx.mark
+  - pymdownx.caret
+  - pymdownx.tilde
   - attr_list
   - tables
   - footnotes

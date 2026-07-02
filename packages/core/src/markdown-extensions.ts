@@ -9,6 +9,8 @@ import { superfencesPlugin } from './md/superfences.js'
 import { tasklistPlugin } from './md/tasklist.js'
 import { keysPlugin } from './md/keys.js'
 import { markPlugin } from './md/mark.js'
+import { caretPlugin } from './md/caret.js'
+import { tildePlugin } from './md/tilde.js'
 import { criticPlugin } from './md/critic.js'
 import { footnotesPlugin } from './md/footnotes.js'
 import { snippetsPlugin } from './md/snippets.js'
@@ -92,6 +94,8 @@ export function applyMarkdownExtensions(
   if (enabled.has('pymdownx.tasklist')) md.use(tasklistPlugin)
   if (enabled.has('pymdownx.keys')) md.use(keysPlugin)
   if (enabled.has('pymdownx.mark')) md.use(markPlugin)
+  if (enabled.has('pymdownx.caret')) md.use(caretPlugin, options.get('pymdownx.caret') ?? {})
+  if (enabled.has('pymdownx.tilde')) md.use(tildePlugin, options.get('pymdownx.tilde') ?? {})
   if (enabled.has('pymdownx.critic')) md.use(criticPlugin)
   if (enabled.has('footnotes')) md.use(footnotesPlugin)
   if (enabled.has('pymdownx.snippets')) {

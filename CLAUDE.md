@@ -69,7 +69,7 @@ Dynamic import: `await import('ts-mkdocs-theme-material')`. Core depends on them
 
 ### Markdown Extensions ([md/](packages/core/src/md/))
 
-Custom markdown-it plugins implementing Material for MkDocs syntax: admonitions (`!!!`/`???`), content tabs (`===`), enhanced code blocks (superfences), Shiki syntax highlighting, annotations, task lists, icon shortcodes (`:icon-name:`), keyboard keys (`++key++`), highlight marks (`==text==`), footnotes, and file snippets (`--8<--`).
+Custom markdown-it plugins implementing Material for MkDocs syntax: admonitions (`!!!`/`???`), content tabs (`===`), enhanced code blocks (superfences), Shiki syntax highlighting, annotations, task lists, icon shortcodes (`:icon-name:`), keyboard keys (`++key++`), highlight marks (`==text==`), superscript/subscript (`^text^`/`~text~`), insert/delete (`^^text^^`/`~~text~~`), footnotes, and file snippets (`--8<--`).
 
 ## Code Conventions
 

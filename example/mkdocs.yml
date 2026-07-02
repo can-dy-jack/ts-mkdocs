@@ -30,6 +30,7 @@ nav:
       - Footnotes: showcase/extended/footnotes.md
       - Icons: showcase/extended/icons.md
       - Keyboard & Mark: showcase/extended/keys-mark.md
+      - Superscript & Subscript: showcase/extended/sup-sub.md
       - Attributes: showcase/extended/attributes.md
     - Advanced Components:
       - Admonitions: showcase/advanced/admonitions.md
@@ -111,6 +112,8 @@ markdown_extensions:
   - pymdownx.tasklist
   - pymdownx.keys
   - pymdownx.mark
+  - pymdownx.caret
+  - pymdownx.tilde
   - attr_list
   - tables
   - footnotes

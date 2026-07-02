@@ -12,6 +12,13 @@ authors:
 
 # Changelog
 
+## Unreleased
+
+### Added
+
+- `pymdownx.caret` — superscript (`^text^`) and insert (`^^text^^`)
+- `pymdownx.tilde` — subscript (`~text~`) and delete (`~~text~~`)
+
 ## 0.1.0 — 2024-06-25
 
 Initial release.
