@@ -149,6 +149,8 @@ plugins:
   - tags:
       sort_by: count
   - social
+  - sitemap:
+      hostname: https://example.com
 
 markdown_extensions:
   - admonition:

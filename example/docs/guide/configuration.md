@@ -108,6 +108,8 @@ theme:
 # ── Plugins ─────────────────────────────────────────────────
 plugins:
   - search           # built-in, enabled by default
+  - sitemap:
+      hostname: https://example.com  # required for sitemap generation
 
 # ── Markdown extensions ─────────────────────────────────────
 markdown_extensions:
@@ -481,3 +483,67 @@ $$
 ````
 
 See [showcase/math](../showcase/advanced/math.md) for live examples and more detail.
+
+## Sitemap
+
+Generate a `sitemap.xml` file to help search engines index your documentation.
+
+### Basic setup
+
+```yaml
+plugins:
+  - sitemap:
+      hostname: https://example.com  # required
+```
+
+### Full configuration
+
+```yaml
+plugins:
+  - sitemap:
+      hostname: https://example.com   # required — your site's root URL
+      changefreq: weekly               # optional — default: weekly
+      priority: 0.8                    # optional — default: 0.8
+      exclude:                         # optional — pages to skip
+        - draft-*.html
+        - private/**
+```
+
+### Options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `hostname` | string | *(required)* | Site root URL, e.g. `https://example.com` |
+| `changefreq` | string | `weekly` | How often pages change: `always`, `hourly`, `daily`, `weekly`, `monthly`, `yearly`, `never` |
+| `priority` | number | `0.8` | Page priority for crawlers, range 0.0–1.0 |
+| `exclude` | string[] | `[]` | File path patterns to exclude, supports `*` wildcard |
+
+### Generated output
+
+The plugin creates `sitemap.xml` in your site root:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://example.com/</loc>
+    <lastmod>2026-07-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://example.com/guide/installation/</loc>
+    <lastmod>2026-07-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <!-- ... -->
+</urlset>
+```
+
+### Notes
+
+- Sitemap is only generated when `hostname` is configured
+- Non-document pages are automatically excluded: `404.html`, `search/`, `assets/`, `tags/`
+- `<lastmod>` is derived from file modification time
+- URLs are sorted alphabetically for deterministic output

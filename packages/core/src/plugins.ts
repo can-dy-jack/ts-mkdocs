@@ -6,6 +6,7 @@ import { blogPlugin } from './plugins/blog.js'
 import { searchPlugin, offlinePlugin, privacyPlugin, typesetPlugin, groupPlugin, infoPlugin } from './plugins/builtin.js'
 import { metaPlugin, socialPlugin } from './plugins/social.js'
 import { tagsPlugin } from './plugins/tags.js'
+import { sitemapPlugin } from './plugins/sitemap.js'
 
 export interface PluginEvents {
   on_config?: (config: Config) => Config | void
@@ -32,6 +33,7 @@ const BUILTIN_PLUGINS: Record<string, Plugin> = {
   typeset: typesetPlugin,
   group: groupPlugin,
   info: infoPlugin,
+  sitemap: sitemapPlugin,
 }
 
 export class PluginManager {
