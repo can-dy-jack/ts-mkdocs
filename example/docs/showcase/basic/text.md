@@ -98,6 +98,22 @@ Requires `pymdownx.mark` in `markdown_extensions`:
 
 ==Marked text== stands out without bold weight.
 
+### Emoji (`pymdownx.emoji`)
+
+Requires `pymdownx.emoji` in `markdown_extensions`:
+
+```markdown
+:smile: :heart: :thumbsup: :rocket:
+
+Emoticon shortcuts work too: :) :-)
+```
+
+:smile: :heart: :thumbsup: :rocket:
+
+Emoticon shortcuts work too: :) :-)
+
+Icon shortcodes still use a library prefix, e.g. `:material-home:`.
+
 ## Combining with other syntax
 
 Inline elements work inside tables, admonitions, and footnotes:

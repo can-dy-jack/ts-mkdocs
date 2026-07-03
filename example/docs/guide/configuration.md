@@ -117,6 +117,7 @@ markdown_extensions:
       default_collapsed: true    # ??? blocks: true = collapsed by default
   - pymdownx.tabbed
   - pymdownx.superfences
+  - pymdownx.emoji
   - attr_list
   - tables
 

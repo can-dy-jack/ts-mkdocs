@@ -15,6 +15,7 @@ import { criticPlugin } from './md/critic.js'
 import { footnotesPlugin } from './md/footnotes.js'
 import { snippetsPlugin } from './md/snippets.js'
 import { arithmatexPlugin } from './md/arithmatex.js'
+import { emojiPlugin } from './md/emoji.js'
 import { hasCodeAnnotateFeature, hasLangLabelFeature, hasLineNumbersFeature } from './md/code-highlight.js'
 
 export type ExtensionEntry = string | Record<string, unknown>
@@ -55,7 +56,11 @@ export function applyMarkdownExtensions(
   }
 
   const icons = createIconService(config)
-  md.use(iconsPlugin, icons)
+  const emojiEnabled = enabled.has('pymdownx.emoji')
+  if (emojiEnabled) {
+    md.use(emojiPlugin, options.get('pymdownx.emoji') ?? {})
+  }
+  md.use(iconsPlugin, icons, { emojiEnabled })
 
   if (enabled.has('attr_list')) md.use(attrs)
   if (enabled.has('admonition') || enabled.has('pymdownx.details')) {

@@ -161,6 +161,7 @@ markdown_extensions:
   - pymdownx.tasklist
   - pymdownx.keys
   - pymdownx.mark
+  - pymdownx.emoji
   - pymdownx.caret
   - pymdownx.tilde
   - attr_list
