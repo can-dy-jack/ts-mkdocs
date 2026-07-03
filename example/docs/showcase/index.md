@@ -55,6 +55,7 @@ Self-contained UI components and richer content blocks.
 | [Content Tabs](advanced/tabs.md) | `===` tabbed content | `pymdownx.tabbed` |
 | [Annotations](advanced/annotations.md) | Code and text annotations | `content.code.annotate` |
 | [Math](advanced/math.md) | LaTeX math with KaTeX or MathJax | `pymdownx.arithmatex` |
+| [Mermaid](advanced/mermaid.md) | Flowcharts, sequence diagrams, Gantt charts | `pymdownx.superfences` |
 
 ## Nesting & Combinations
 

@@ -1092,19 +1092,78 @@
     });
   }
 
+  function resolveMermaidTheme(cfg) {
+    if (cfg && cfg.theme && cfg.theme !== 'auto') return cfg.theme;
+    return html.getAttribute('data-theme') === 'dark' ? 'dark' : 'default';
+  }
+
+  function buildMermaidInitOptions(cfg) {
+    const opts = {
+      startOnLoad: false,
+      theme: resolveMermaidTheme(cfg),
+    };
+    if (cfg) {
+      if (cfg.themeVariables) opts.themeVariables = cfg.themeVariables;
+      if (cfg.securityLevel) opts.securityLevel = cfg.securityLevel;
+      if (cfg.flowchart) opts.flowchart = cfg.flowchart;
+      if (cfg.sequence) opts.sequence = cfg.sequence;
+      if (cfg.gantt) opts.gantt = cfg.gantt;
+    }
+    return opts;
+  }
+
+  let mermaidApi = null;
+
+  function getMermaidApi() {
+    if (mermaidApi) return mermaidApi;
+    return window.mermaid && typeof window.mermaid.initialize === 'function'
+      ? window.mermaid
+      : null;
+  }
+
+  function loadMermaidScript(scriptUrl) {
+    if (scriptUrl.endsWith('.mjs')) {
+      return import(scriptUrl).then(function (mod) {
+        return mod.default || mod;
+      });
+    }
+    return new Promise(function (resolve, reject) {
+      const s = document.createElement('script');
+      s.src = scriptUrl;
+      s.crossOrigin = 'anonymous';
+      s.onload = function () {
+        const api = getMermaidApi();
+        if (api) resolve(api);
+        else reject(new Error('Mermaid failed to load'));
+      };
+      s.onerror = function () { reject(new Error('Mermaid failed to load')); };
+      document.head.appendChild(s);
+    });
+  }
+
   function initMermaid() {
     const blocks = document.querySelectorAll('pre.mermaid');
     if (!blocks.length) return;
-    if (!window.mermaid) {
-      const s = document.createElement('script');
-      s.src = 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';
-      s.onload = function () {
-        window.mermaid.initialize({ startOnLoad: false, theme: html.getAttribute('data-theme') === 'dark' ? 'dark' : 'default' });
-        window.mermaid.run({ nodes: blocks });
-      };
-      document.head.appendChild(s);
+
+    const cfg = CFG.mermaid;
+    const scriptUrl = (cfg && cfg.cdn && cfg.cdn.javascript)
+      || 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js';
+
+    function runMermaid(api) {
+      const m = api || getMermaidApi();
+      if (!m || typeof m.initialize !== 'function') return;
+      mermaidApi = m;
+      m.initialize(buildMermaidInitOptions(cfg));
+      m.run({ nodes: blocks });
+    }
+
+    const existing = getMermaidApi();
+    if (existing) {
+      runMermaid(existing);
     } else {
-      window.mermaid.run({ nodes: blocks });
+      loadMermaidScript(scriptUrl).then(runMermaid).catch(function (err) {
+        console.error('Failed to load Mermaid:', err);
+      });
     }
   }
 

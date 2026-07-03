@@ -137,13 +137,7 @@ function example() {
 
 ### Mermaid diagrams
 
-Use the `mermaid` language for diagram fences (rendered client-side):
-
-```mermaid
-flowchart LR
-  A[Markdown] --> B[ts-mkdocs]
-  B --> C[Static HTML]
-```
+Mermaid diagrams use the `mermaid` fence language and are rendered client-side. See the dedicated [Mermaid](../advanced/mermaid.md) page for configuration, CDN options, and more diagram types.
 
 ## Theme features in action
 

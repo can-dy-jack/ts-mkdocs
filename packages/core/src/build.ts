@@ -41,6 +41,7 @@ import { parseRepoSource, buildRepoSourceIcons, fetchRepoStats } from './github.
 import type { RepoStats } from './github.js'
 import { buildPaletteStyles, resolveColor } from './palette.js'
 import { resolveMathConfig } from './md/arithmatex.js'
+import { resolveMermaidConfig } from './md/mermaid.js'
 
 let nunjucksEnv: nunjucks.Environment | null = null
 
@@ -529,6 +530,7 @@ function buildBaseContext(config: Config, baseUrl = './', repoStats?: RepoStats)
     theme_icons: buildThemeIcons(config, icons.renderRef.bind(icons)),
     versions: config.extra?.version?.provider ? config.extra.version : null,
     math: resolveMathConfig(config),
+    mermaid: resolveMermaidConfig(config),
     settings_config: buildSettingsConfig(config),
     og_title: config.site_name,
     og_description: config.site_description ?? '',
@@ -561,12 +563,14 @@ function writeSiteBootstrap(config: Config, repoStats?: RepoStats): void {
     ? parseRepoSource(config.repo_url, config.repo_name)
     : undefined
 
+  const mermaid = resolveMermaidConfig(config)
   const payload = {
     features: [...getFeatures(config)],
     i18n: getI18n(config.theme.language),
     repoSource: repoSource ?? null,
     repoSourceFacts: repoSource ? (repoStats ?? null) : null,
     settings: buildSettingsConfig(config),
+    mermaid: mermaid?.enabled ? mermaid : null,
   }
 
   const configPath = join(config.site_dir, 'assets/js/ts-mkdocs-config.js')

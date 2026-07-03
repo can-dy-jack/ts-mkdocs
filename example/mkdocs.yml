@@ -38,6 +38,7 @@ nav:
       - Content Tabs: showcase/advanced/tabs.md
       - Annotations: showcase/advanced/annotations.md
       - Math: showcase/advanced/math.md
+      - Mermaid: showcase/advanced/mermaid.md
     - Nesting & Combinations:
       - Combinations: showcase/nesting/combinations.md
   - Reference:
@@ -160,7 +161,12 @@ markdown_extensions:
       default_collapsed: true
   - pymdownx.tabbed:
       alternate_style: true
-  - pymdownx.superfences
+  - pymdownx.superfences:
+      mermaid:
+        version: "11"
+        cdn:
+          base: https://cdn.jsdelivr.net/npm/mermaid@11/dist
+        theme: auto
   - pymdownx.tasklist
   - pymdownx.keys
   - pymdownx.mark

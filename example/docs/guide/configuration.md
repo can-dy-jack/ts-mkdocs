@@ -485,6 +485,70 @@ $$
 
 See [showcase/math](../showcase/advanced/math.md) for live examples and more detail.
 
+## Mermaid diagrams
+
+Mermaid diagrams are rendered from ` ```mermaid ` code fences when `pymdownx.superfences` is enabled (included by default). ts-mkdocs loads the Mermaid library from a CDN at build time — you do not need to add scripts under `extra_javascript`.
+
+### Basic setup
+
+```yaml
+markdown_extensions:
+  - pymdownx.superfences:
+      mermaid:
+        version: "10.9.3"
+        cdn:
+          base: https://cdn.jsdelivr.net/npm/mermaid@10.9.3/dist
+```
+
+`cdn.base` expands to `{base}/mermaid.min.js`.
+
+### Custom CDN mirrors
+
+Override the script URL when self-hosting or using a private CDN:
+
+```yaml
+markdown_extensions:
+  - pymdownx.superfences:
+      mermaid:
+        cdn:
+          javascript: https://cdn.example.com/mermaid.min.js
+```
+
+### Theme and diagram options
+
+```yaml
+markdown_extensions:
+  - pymdownx.superfences:
+      mermaid:
+        theme: auto          # auto | default | dark | forest | neutral | base | null
+        securityLevel: strict
+        themeVariables:
+          primaryColor: "#4f46e5"
+        flowchart:
+          curve: basis
+          useMaxWidth: true
+        sequence:
+          actorMargin: 80
+        gantt:
+          barHeight: 24
+```
+
+When `theme` is `auto` (default), diagrams follow the site light/dark palette.
+
+| Option | Default | Description |
+|--------|---------|-------------|
+| `version` | `10.9.3` | CDN package version when using built-in defaults |
+| `cdn.base` | — | Base URL for default asset path (`mermaid.min.js`) |
+| `cdn.javascript` | jsDelivr Mermaid JS | Full URL override for the main library script |
+| `theme` | `auto` | Mermaid theme; `auto` follows site light/dark mode |
+| `themeVariables` | — | Custom theme color variables |
+| `securityLevel` | — | `strict`, `loose`, `antiscript`, or `sandbox` |
+| `flowchart` | — | Flowchart-specific options (`curve`, `useMaxWidth`, `htmlLabels`, `diagramPadding`) |
+| `sequence` | — | Sequence diagram layout options |
+| `gantt` | — | Gantt chart layout options |
+
+See [showcase/mermaid](../showcase/advanced/mermaid.md) for live examples and more detail.
+
 ## Sitemap
 
 Generate a `sitemap.xml` file to help search engines index your documentation.
