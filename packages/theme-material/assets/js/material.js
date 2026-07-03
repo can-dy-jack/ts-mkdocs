@@ -81,6 +81,155 @@
     updateThemeToggle(loadThemeMode());
   }
 
+  /* ── Settings (apply early to prevent FOUC) ─────────────────── */
+  var SETTINGS_KEY = 'ts-mkdocs-settings';
+  var settingsConfig = (CFG.settings || {});
+
+  function lightenColor(hex, amount) {
+    var r = parseInt(hex.slice(1, 3), 16);
+    var g = parseInt(hex.slice(3, 5), 16);
+    var b = parseInt(hex.slice(5, 7), 16);
+    r = Math.min(255, Math.round(r + (255 - r) * amount));
+    g = Math.min(255, Math.round(g + (255 - g) * amount));
+    b = Math.min(255, Math.round(b + (255 - b) * amount));
+    return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+  }
+
+  function darkenColor(hex, amount) {
+    var r = parseInt(hex.slice(1, 3), 16);
+    var g = parseInt(hex.slice(3, 5), 16);
+    var b = parseInt(hex.slice(5, 7), 16);
+    r = Math.max(0, Math.round(r * (1 - amount)));
+    g = Math.max(0, Math.round(g * (1 - amount)));
+    b = Math.max(0, Math.round(b * (1 - amount)));
+    return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+  }
+
+  function computeColorScheme(baseColor) {
+    return {
+      light: lightenColor(baseColor, 0.18),
+      dark: darkenColor(baseColor, 0.28),
+      accent: lightenColor(baseColor, 0.3)
+    };
+  }
+
+  function getFontFamily(fontIndex) {
+    var fonts = settingsConfig.fonts || [];
+    var idx = parseInt(fontIndex, 10);
+    if (idx >= 0 && idx < fonts.length && fonts[idx].family) {
+      return fonts[idx].family;
+    }
+    return '';
+  }
+
+  function getFontUrl(fontIndex) {
+    var fonts = settingsConfig.fonts || [];
+    var idx = parseInt(fontIndex, 10);
+    if (idx >= 0 && idx < fonts.length && fonts[idx].url) {
+      return fonts[idx].url;
+    }
+    return '';
+  }
+
+  function getAllowedColors() {
+    return (settingsConfig.colors || []).map(function (c) { return c.color; });
+  }
+
+  function getAllowedFontSizes() {
+    return (settingsConfig.font_sizes || []).map(function (s) { return s.value; });
+  }
+
+  function defaultSettings() {
+    return {
+      color: settingsConfig.default_color || '#3f51b5',
+      fontIndex: 0,
+      fontSize: settingsConfig.default_font_size || 115
+    };
+  }
+
+  function normalizeSettings(parsed) {
+    var def = defaultSettings();
+    if (!parsed || typeof parsed !== 'object') return def;
+
+    var allowedColors = getAllowedColors();
+    var color = typeof parsed.color === 'string' && allowedColors.indexOf(parsed.color) !== -1
+      ? parsed.color
+      : def.color;
+
+    var fonts = settingsConfig.fonts || [];
+    var fontIndex = typeof parsed.fontIndex === 'number' && parsed.fontIndex >= 0 && parsed.fontIndex < fonts.length
+      ? parsed.fontIndex
+      : 0;
+
+    var allowedSizes = getAllowedFontSizes();
+    var fontSize = typeof parsed.fontSize === 'number' && allowedSizes.indexOf(parsed.fontSize) !== -1
+      ? parsed.fontSize
+      : def.fontSize;
+
+    return { color: color, fontIndex: fontIndex, fontSize: fontSize };
+  }
+
+  function loadSettings() {
+    try {
+      var raw = localStorage.getItem(SETTINGS_KEY);
+      if (raw) return normalizeSettings(JSON.parse(raw));
+    } catch (_) {}
+    return defaultSettings();
+  }
+
+  function saveSettings(settings) {
+    try {
+      localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+    } catch (_) {}
+  }
+
+  function clearSettings() {
+    try {
+      localStorage.removeItem(SETTINGS_KEY);
+    } catch (_) {}
+  }
+
+  function applySettings(settings) {
+    var root = document.documentElement;
+
+    var scheme = computeColorScheme(settings.color);
+    root.style.setProperty('--md-primary-fg-color', settings.color);
+    root.style.setProperty('--md-primary-fg-color--light', scheme.light);
+    root.style.setProperty('--md-primary-fg-color--dark', scheme.dark);
+    root.style.setProperty('--md-accent-fg-color', scheme.accent);
+
+    var family = getFontFamily(settings.fontIndex);
+    if (family) {
+      root.style.setProperty('--md-font-text', family);
+    } else {
+      root.style.removeProperty('--md-font-text');
+    }
+
+    root.style.fontSize = settings.fontSize + '%';
+  }
+
+  function loadExtraFont(fontIndex) {
+    var url = getFontUrl(fontIndex);
+    if (!url) return;
+    var id = 'settings-font-' + fontIndex;
+    if (document.getElementById(id)) return;
+    var link = document.createElement('link');
+    link.id = id;
+    link.rel = 'stylesheet';
+    link.href = url;
+    document.head.appendChild(link);
+  }
+
+  function bootstrapSettings() {
+    var settings = loadSettings();
+    applySettings(settings);
+    if (settings.fontIndex > 0) {
+      loadExtraFont(settings.fontIndex);
+    }
+  }
+
+  bootstrapSettings();
+
   document.addEventListener('DOMContentLoaded', function () {
     updateThemeToggle(loadThemeMode());
 
@@ -110,6 +259,7 @@
     initSourceRepo();
     initTagsFilter();
     initLightbox();
+    initSettings();
   });
 
   function getBaseUrl() {
@@ -1198,6 +1348,134 @@
       zoomable: true,
       draggable: true,
     });
+  }
+
+  function syncSettingsUI(settings) {
+    var colorsContainer = document.getElementById('settings-colors');
+    var fontsContainer = document.getElementById('settings-fonts');
+    var sizesContainer = document.getElementById('settings-sizes');
+
+    if (colorsContainer) {
+      colorsContainer.querySelectorAll('.md-settings__color-swatch').forEach(function (el) {
+        el.classList.toggle('is-active', el.dataset.color === settings.color);
+      });
+    }
+    if (fontsContainer) {
+      fontsContainer.querySelectorAll('.md-settings__font-btn').forEach(function (el) {
+        el.classList.toggle('is-active', el.dataset.font === String(settings.fontIndex));
+      });
+    }
+    if (sizesContainer) {
+      sizesContainer.querySelectorAll('.md-settings__size-btn').forEach(function (el) {
+        el.classList.toggle('is-active', parseInt(el.dataset.size, 10) === settings.fontSize);
+      });
+    }
+  }
+
+  function initSettings() {
+    var panel = document.getElementById('__settings');
+    var toggleBtn = document.getElementById('settings-toggle');
+    var closeBtn = document.getElementById('settings-close');
+    var resetBtn = document.getElementById('settings-reset');
+    var colorsContainer = document.getElementById('settings-colors');
+    var fontsContainer = document.getElementById('settings-fonts');
+    var sizesContainer = document.getElementById('settings-sizes');
+
+    if (!panel || !toggleBtn) return;
+
+    var settings = loadSettings();
+    syncSettingsUI(settings);
+
+    function setPanelOpen(isOpen) {
+      panel.classList.toggle('md-settings--active', isOpen);
+      toggleBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    }
+
+    function openSettings() {
+      setPanelOpen(true);
+    }
+
+    function closeSettings() {
+      setPanelOpen(false);
+    }
+
+    toggleBtn.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      if (panel.classList.contains('md-settings--active')) {
+        closeSettings();
+      } else {
+        openSettings();
+      }
+    });
+
+    if (closeBtn) {
+      closeBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        closeSettings();
+      });
+    }
+
+    document.addEventListener('click', function (e) {
+      if (!panel.classList.contains('md-settings--active')) return;
+      if (e.target.closest('.md-settings') || e.target.closest('#settings-toggle')) return;
+      closeSettings();
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && panel.classList.contains('md-settings--active')) {
+        closeSettings();
+      }
+    });
+
+    if (colorsContainer) {
+      colorsContainer.addEventListener('click', function (e) {
+        var swatch = e.target.closest('.md-settings__color-swatch');
+        if (!swatch) return;
+        settings.color = swatch.dataset.color;
+        applySettings(settings);
+        saveSettings(settings);
+        syncSettingsUI(settings);
+      });
+    }
+
+    if (fontsContainer) {
+      fontsContainer.addEventListener('click', function (e) {
+        var btn = e.target.closest('.md-settings__font-btn');
+        if (!btn) return;
+        settings.fontIndex = parseInt(btn.dataset.font, 10);
+        if (settings.fontIndex > 0) loadExtraFont(settings.fontIndex);
+        applySettings(settings);
+        saveSettings(settings);
+        syncSettingsUI(settings);
+      });
+    }
+
+    if (sizesContainer) {
+      sizesContainer.addEventListener('click', function (e) {
+        var btn = e.target.closest('.md-settings__size-btn');
+        if (!btn) return;
+        settings.fontSize = parseInt(btn.dataset.size, 10);
+        applySettings(settings);
+        saveSettings(settings);
+        syncSettingsUI(settings);
+      });
+    }
+
+    if (resetBtn) {
+      resetBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        clearSettings();
+        settings = defaultSettings();
+        applySettings(settings);
+        if (settings.fontIndex > 0) {
+          loadExtraFont(settings.fontIndex);
+        } else {
+          document.documentElement.style.removeProperty('--md-font-text');
+        }
+        syncSettingsUI(settings);
+      });
+    }
   }
 
   const style = document.createElement('style');

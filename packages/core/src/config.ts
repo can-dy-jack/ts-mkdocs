@@ -52,6 +52,36 @@ const ThemeSchema = z.object({
     ])
     .optional(),
   custom_dir: z.string().optional(),
+  settings: z
+    .object({
+      colors: z
+        .array(
+          z.object({
+            name: z.string(),
+            color: z.string(),
+          }),
+        )
+        .optional(),
+      fonts: z
+        .array(
+          z.object({
+            name: z.string(),
+            family: z.string().optional(),
+            url: z.string().optional(),
+          }),
+        )
+        .optional(),
+      font_sizes: z
+        .array(
+          z.object({
+            name: z.string(),
+            value: z.number().int().min(50).max(300),
+          }),
+        )
+        .optional(),
+      default_font_size: z.number().int().min(50).max(300).optional(),
+    })
+    .optional(),
   highlight: z.object({
     theme_light: z.string().default('github-light'),
     theme_dark: z.string().default('github-dark'),

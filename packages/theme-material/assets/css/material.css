@@ -4,6 +4,8 @@
    CSS Custom Properties (Design Tokens)
    ============================================================ */
 :root {
+  --md-font-text: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --md-font-code: "JetBrains Mono", "Fira Code", "SFMono-Regular", Consolas, monospace;
   --md-primary-fg-color: #3f51b5;
   --md-primary-fg-color--light: #5c6bc0;
   --md-primary-fg-color--dark: #283593;
@@ -76,7 +78,7 @@ html {
 
 body {
   margin: 0;
-  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: var(--md-font-text);
   font-size: .82rem;
   line-height: 1.6;
   color: var(--md-default-fg-color);
@@ -1013,7 +1015,7 @@ body {
 .md-typeset kbd {
   display: inline-block;
   padding: .12em .35em;
-  font-family: "JetBrains Mono", "Fira Code", monospace;
+  font-family: var(--md-font-code);
   font-size: .85em;
   color: var(--md-default-fg-color);
   background: var(--md-code-bg-color);
@@ -1067,7 +1069,7 @@ body {
    override them in extra_css to customise without editing here.
    ============================================================ */
 .md-typeset code {
-  font-family: "JetBrains Mono", "Fira Code", "SFMono-Regular", Consolas, monospace;
+  font-family: var(--md-font-code);
   font-size: var(--md-code-inline-font-size);
   padding: var(--md-code-inline-padding);
   background: var(--md-code-bg-color);
@@ -4181,7 +4183,7 @@ pre.mermaid {
 
 .md-annotation__tooltip-inner code {
   display: inline;
-  font-family: "JetBrains Mono", "Fira Code", "SFMono-Regular", Consolas, monospace;
+  font-family: var(--md-font-code);
   font-size: var(--md-code-inline-font-size);
   padding: var(--md-code-inline-padding);
   background: var(--md-code-bg-color);
@@ -4289,4 +4291,262 @@ html[data-features*="content.code.linenumbers"] .md-typeset pre code .md-annotat
     display: block;
     margin-top: .5rem;
   }
+}
+
+/* ============================================================
+   Settings Popup
+   ============================================================ */
+.md-settings {
+  position: absolute;
+  top: calc(100% + .3rem);
+  right: 0;
+  z-index: 250;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(-6px) scale(.97);
+  transition: opacity .18s ease, transform .18s ease;
+}
+
+.md-settings.md-settings--active {
+  pointer-events: auto;
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.md-settings__inner {
+  width: min(88vw, 17rem);
+  background: var(--md-default-bg-color);
+  border: 1px solid rgba(0, 0, 0, .1);
+  border-radius: .4rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, .12), 0 0 0 1px rgba(0, 0, 0, .04);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+[data-theme="dark"] .md-settings__inner {
+  border-color: rgba(255, 255, 255, .1);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, .35), 0 0 0 1px rgba(255, 255, 255, .05);
+}
+
+.md-settings__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: .5rem .65rem;
+  border-bottom: 1px solid rgba(0, 0, 0, .07);
+}
+
+[data-theme="dark"] .md-settings__header {
+  border-bottom-color: rgba(255, 255, 255, .07);
+}
+
+.md-settings__title {
+  font-size: .75rem;
+  font-weight: 700;
+  color: var(--md-default-fg-color);
+}
+
+.md-settings__close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.3rem;
+  height: 1.3rem;
+  padding: 0;
+  border: none;
+  border-radius: .15rem;
+  background: transparent;
+  color: var(--md-default-fg-color--light);
+  cursor: pointer;
+  transition: background-color .15s, color .15s;
+}
+
+.md-settings__close:hover {
+  background: rgba(0, 0, 0, .06);
+  color: var(--md-default-fg-color);
+}
+
+[data-theme="dark"] .md-settings__close:hover {
+  background: rgba(255, 255, 255, .08);
+}
+
+.md-settings__close svg {
+  width: .9rem;
+  height: .9rem;
+  fill: currentColor;
+}
+
+.md-settings__body {
+  padding: .55rem .65rem;
+}
+
+.md-settings__group {
+  margin-bottom: .65rem;
+}
+
+.md-settings__group:last-child {
+  margin-bottom: 0;
+}
+
+.md-settings__label {
+  font-size: .6rem;
+  font-weight: 600;
+  color: var(--md-default-fg-color--light);
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  margin-bottom: .35rem;
+}
+
+/* Color swatches */
+.md-settings__colors {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .35rem;
+}
+
+.md-settings__color-swatch {
+  width: 1.4rem;
+  height: 1.4rem;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: transform .15s, border-color .15s, box-shadow .15s;
+  position: relative;
+  padding: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  font: inherit;
+}
+
+.md-settings__color-swatch:hover {
+  transform: scale(1.15);
+}
+
+.md-settings__color-swatch.is-active {
+  border-color: var(--md-default-fg-color);
+  box-shadow: 0 0 0 2px var(--md-default-bg-color), 0 0 0 3.5px var(--md-default-fg-color--lighter);
+}
+
+.md-settings__color-swatch.is-active::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: .35rem;
+  height: .35rem;
+  border-radius: 50%;
+  background: #fff;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .3);
+}
+
+/* Font buttons */
+.md-settings__fonts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .3rem;
+}
+
+.md-settings__font-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: .25rem .5rem;
+  border: 1px solid var(--md-default-fg-color--lighter);
+  border-radius: .2rem;
+  background: transparent;
+  color: var(--md-default-fg-color);
+  font-size: .65rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color .15s, background-color .15s, color .15s;
+  white-space: nowrap;
+}
+
+.md-settings__font-btn:hover {
+  border-color: var(--md-primary-fg-color);
+  color: var(--md-primary-fg-color);
+}
+
+.md-settings__font-btn.is-active {
+  background: var(--md-primary-fg-color);
+  border-color: var(--md-primary-fg-color);
+  color: #fff;
+}
+
+/* Font size buttons (Wikipedia-style) */
+.md-settings__sizes {
+  display: flex;
+  gap: .3rem;
+}
+
+.md-settings__size-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: .28rem .2rem;
+  border: 1px solid var(--md-default-fg-color--lighter);
+  border-radius: .2rem;
+  background: transparent;
+  color: var(--md-default-fg-color);
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color .15s, background-color .15s, color .15s;
+  white-space: nowrap;
+}
+
+.md-settings__size-btn:hover {
+  border-color: var(--md-primary-fg-color);
+  color: var(--md-primary-fg-color);
+}
+
+.md-settings__size-btn.is-active {
+  background: var(--md-primary-fg-color);
+  border-color: var(--md-primary-fg-color);
+  color: #fff;
+}
+
+.md-settings__footer {
+  padding: .45rem .65rem .55rem;
+  border-top: 1px solid rgba(0, 0, 0, .07);
+}
+
+[data-theme="dark"] .md-settings__footer {
+  border-top-color: rgba(255, 255, 255, .07);
+}
+
+.md-settings__reset {
+  width: 100%;
+  padding: .35rem .5rem;
+  border: 1px solid rgba(0, 0, 0, .12);
+  border-radius: .25rem;
+  background: transparent;
+  color: var(--md-default-fg-color--light);
+  font-size: .62rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color .15s ease, color .15s ease, background .15s ease;
+}
+
+[data-theme="dark"] .md-settings__reset {
+  border-color: rgba(255, 255, 255, .12);
+}
+
+.md-settings__reset:hover {
+  border-color: var(--md-primary-fg-color);
+  color: var(--md-primary-fg-color);
+  background: rgba(0, 0, 0, .03);
+}
+
+[data-theme="dark"] .md-settings__reset:hover {
+  background: rgba(255, 255, 255, .05);
+}
+
+/* Settings toggle button in header */
+.md-header__button--settings {
+  position: relative;
+  min-width: 1.55rem;
+  padding: 0 .2rem;
 }

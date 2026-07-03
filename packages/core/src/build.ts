@@ -38,7 +38,7 @@ import { getI18n } from './i18n.js'
 import { getIconStylesheets, createIconService, buildThemeIcons } from './icons.js'
 import { parseRepoSource, buildRepoSourceIcons, fetchRepoStats } from './github.js'
 import type { RepoStats } from './github.js'
-import { buildPaletteStyles } from './palette.js'
+import { buildPaletteStyles, resolveColor } from './palette.js'
 import { resolveMathConfig } from './md/arithmatex.js'
 
 let nunjucksEnv: nunjucks.Environment | null = null
@@ -398,6 +398,87 @@ function buildSocialLinks(config: Config, baseUrl: string): Array<{ href: string
     .filter((item) => item.href.length > 0)
 }
 
+function resolveDefaultPaletteColor(config: Config): string {
+  const palette = config.theme.palette
+  if (!palette) return '#3f51b5'
+  if (Array.isArray(palette)) {
+    const first = palette.find((e) => (e.scheme ?? 'default') !== 'slate') ?? palette[0]
+    return resolveColor(first?.primary, '#3f51b5')
+  }
+  return resolveColor((palette as { primary?: string }).primary, '#3f51b5')
+}
+
+function buildSettingsConfig(config: Config): Record<string, unknown> {
+  const themeSettings = config.theme.settings
+  const defaultColor = resolveDefaultPaletteColor(config)
+  const i18n = getI18n(config.theme.language)
+  const lang = config.theme.language.split('-')[0].toLowerCase()
+
+  const defaultColors = [
+    { name: 'Indigo', color: '#3f51b5' },
+    { name: 'Blue', color: '#2196f3' },
+    { name: 'Teal', color: '#009688' },
+    { name: 'Green', color: '#4caf50' },
+    { name: 'Purple', color: '#9c27b0' },
+    { name: 'Red', color: '#ef5350' },
+    { name: 'Deep Orange', color: '#ff5722' },
+    { name: 'Brown', color: '#795548' },
+  ]
+
+  const defaultFonts =
+    lang === 'zh'
+      ? [
+          { name: '系统字体' },
+          {
+            name: 'Serif',
+            family: '"Noto Serif SC", "Noto Serif", Georgia, serif',
+            url: 'https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&display=swap',
+          },
+          { name: 'Mono', family: '"JetBrains Mono", "Fira Code", monospace' },
+          {
+            name: '圆体',
+            family: '"Nunito", "Varela Round", sans-serif',
+            url: 'https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap',
+          },
+        ]
+      : [
+          { name: 'System' },
+          {
+            name: 'Serif',
+            family: '"Noto Serif", Georgia, serif',
+            url: 'https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;600;700&display=swap',
+          },
+          { name: 'Mono', family: '"JetBrains Mono", "Fira Code", monospace' },
+          {
+            name: 'Rounded',
+            family: '"Nunito", "Varela Round", sans-serif',
+            url: 'https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap',
+          },
+        ]
+
+  const defaultFontSizes = [
+    { name: i18n['settings.size.small'], value: 90 },
+    { name: i18n['settings.size.default'], value: 115 },
+    { name: i18n['settings.size.large'], value: 135 },
+    { name: i18n['settings.size.xlarge'], value: 160 },
+  ]
+
+  const fontSizes = themeSettings?.font_sizes ?? defaultFontSizes
+  const defaultFontSize =
+    themeSettings?.default_font_size ??
+    fontSizes.find((s) => s.value === 115)?.value ??
+    fontSizes[Math.min(1, fontSizes.length - 1)]?.value ??
+    115
+
+  return {
+    default_color: defaultColor,
+    default_font_size: defaultFontSize,
+    colors: themeSettings?.colors ?? defaultColors,
+    fonts: themeSettings?.fonts ?? defaultFonts,
+    font_sizes: fontSizes,
+  }
+}
+
 function buildBaseContext(config: Config, baseUrl = './', repoStats?: RepoStats): Record<string, unknown> {
   const feature = buildFeatureContext(config)
   const i18n = getI18n(config.theme.language)
@@ -420,6 +501,7 @@ function buildBaseContext(config: Config, baseUrl = './', repoStats?: RepoStats)
     theme_icons: buildThemeIcons(config, icons.renderRef.bind(icons)),
     versions: config.extra?.version?.provider ? config.extra.version : null,
     math: resolveMathConfig(config),
+    settings_config: buildSettingsConfig(config),
   }
 }
 
@@ -453,6 +535,7 @@ function writeSiteBootstrap(config: Config, repoStats?: RepoStats): void {
     i18n: getI18n(config.theme.language),
     repoSource: repoSource ?? null,
     repoSourceFacts: repoSource ? (repoStats ?? null) : null,
+    settings: buildSettingsConfig(config),
   }
 
   const configPath = join(config.site_dir, 'assets/js/ts-mkdocs-config.js')
