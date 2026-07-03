@@ -36,6 +36,7 @@ import type { FeatureContext } from './features.js'
 import { rewriteContentImages } from './content-images.js'
 import { getI18n } from './i18n.js'
 import { getIconStylesheets, createIconService, buildThemeIcons } from './icons.js'
+import { buildShareItems } from './share.js'
 import { parseRepoSource, buildRepoSourceIcons, fetchRepoStats } from './github.js'
 import type { RepoStats } from './github.js'
 import { buildPaletteStyles, resolveColor } from './palette.js'
@@ -345,6 +346,17 @@ function renderPage(
     },
   )
 
+  const sharePageUrl = buildCanonicalPageUrl(config.site_url, page.file.url) ?? page.file.url
+  const shareItems = buildShareItems(
+    config.theme.share?.platforms,
+    config.theme.share?.enabled,
+    sharePageUrl,
+    page.title,
+    i18n,
+    icons,
+    page.file.url.replace(/[^\w-]+/g, '-').replace(/^-+|-+$/g, '') || 'page',
+  )
+
   const ctx = {
     ...buildBaseContext(config, baseUrl, repoStats),
     feature,
@@ -361,6 +373,8 @@ function renderPage(
       tags_enabled: tagsEnabled,
       license: pageLicense,
     },
+    share_items: shareItems,
+    share_page_url: sharePageUrl,
     nav: nav.items,
     sidebar_nav: getSidebarNav(
       nav.items,
@@ -477,6 +491,7 @@ function buildSettingsConfig(config: Config): Record<string, unknown> {
     115
 
   return {
+    enabled: themeSettings?.enabled ?? true,
     default_color: defaultColor,
     default_font_size: defaultFontSize,
     colors: themeSettings?.colors ?? defaultColors,

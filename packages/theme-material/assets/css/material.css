@@ -3670,6 +3670,214 @@ a.md-page-tag:hover {
   color: var(--md-accent-fg-color);
 }
 
+/* Share buttons */
+@keyframes md-share-toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes md-share-qr-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(.92);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.md-page-share {
+  position: relative;
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1.25rem;
+  padding-top: .75rem;
+  border-top: 1px solid var(--md-default-fg-color--lightest);
+}
+
+.md-page-tags + .md-page-share {
+  margin-top: .85rem;
+  padding-top: 0;
+  border-top: 0;
+}
+
+.md-page-share__items {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+  gap: .3rem;
+  max-width: 100%;
+}
+
+.md-page-share__item-wrap {
+  position: relative;
+  height: 1.75rem;
+}
+
+.md-page-share__item-wrap:hover {
+  z-index: 2;
+}
+
+.md-page-share__item-wrap .md-tooltip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.md-page-share__item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+  background: none;
+  color: var(--md-share-brand);
+  text-decoration: none;
+  transition: transform .3s ease, filter .3s ease;
+}
+
+.md-page-share__item .md-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.35rem;
+  height: 1.35rem;
+  font-size: 1.35rem;
+  line-height: 1;
+  color: var(--md-share-brand);
+}
+
+.md-page-share__item .md-icon--fontawesome i {
+  font-size: 1.25rem;
+  line-height: 1;
+  color: var(--md-share-brand);
+}
+
+.md-page-share__item .md-icon--bootstrap i {
+  font-size: 1.3rem;
+  line-height: 1;
+  color: var(--md-share-brand);
+}
+
+.md-page-share__item .md-icon--brand svg {
+  display: block;
+  width: 1.25rem;
+  height: 1.25rem;
+  fill: var(--md-share-brand);
+}
+
+.md-page-share__item:hover {
+  opacity: .85;
+}
+
+.md-page-share__item:focus-visible {
+  outline: 2px solid var(--md-share-brand);
+  outline-offset: 2px;
+}
+
+.md-tooltip--share .md-tooltip__bubble {
+  font-size: .72rem;
+  white-space: nowrap;
+  z-index: 10;
+}
+
+.md-page-share__toast {
+  position: fixed;
+  top: 0;
+  left: 0;
+  padding: .45rem .85rem;
+  font-size: .78rem;
+  font-weight: 500;
+  color: #fff;
+  background: var(--md-accent-fg-color);
+  border-radius: .45rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, .18);
+  pointer-events: none;
+  z-index: 500;
+  animation: md-share-toast-in .3s cubic-bezier(.34, 1.56, .64, 1);
+}
+
+.md-page-share__toast::after {
+  content: "";
+  position: absolute;
+  left: var(--md-share-arrow-left, 50%);
+  bottom: -.35rem;
+  width: .7rem;
+  height: .7rem;
+  background: var(--md-accent-fg-color);
+  transform: translateX(-50%) rotate(45deg);
+  border-radius: 0 0 .15rem 0;
+}
+
+.md-page-share__popover {
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: max-content;
+  max-width: calc(100vw - 1rem);
+  padding: 1rem;
+  background: var(--md-default-bg-color);
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: .75rem;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, .15);
+  z-index: 500;
+  animation: md-share-qr-in .35s cubic-bezier(.34, 1.56, .64, 1);
+}
+
+.md-page-share__popover::after {
+  content: "";
+  position: absolute;
+  left: var(--md-share-arrow-left, 50%);
+  bottom: -.4rem;
+  width: .75rem;
+  height: .75rem;
+  background: var(--md-default-bg-color);
+  border-right: 1px solid var(--md-default-fg-color--lightest);
+  border-bottom: 1px solid var(--md-default-fg-color--lightest);
+  transform: translateX(-50%) rotate(45deg);
+}
+
+.md-page-share__popover-title {
+  margin: 0 0 .65rem;
+  width: 100%;
+  font-size: .82rem;
+  font-weight: 600;
+  text-align: center;
+  color: var(--md-default-fg-color);
+}
+
+.md-page-share__popover-hint {
+  margin: .55rem 0 0;
+  width: 100%;
+  font-size: .72rem;
+  text-align: center;
+  color: var(--md-default-fg-color--light);
+}
+
+.md-page-share__qr {
+  display: block;
+  width: 9.5rem;
+  height: 9.5rem;
+  margin: 0 auto;
+  border-radius: .5rem;
+}
+
 /* Tags index & archive */
 .tags-page .md-main__inner.md-grid {
   max-width: var(--md-grid-max-width);

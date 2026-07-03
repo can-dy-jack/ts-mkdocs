@@ -54,6 +54,7 @@ const ThemeSchema = z.object({
   custom_dir: z.string().optional(),
   settings: z
     .object({
+      enabled: z.boolean().default(true),
       colors: z
         .array(
           z.object({
@@ -86,6 +87,15 @@ const ThemeSchema = z.object({
     theme_light: z.string().default('github-light'),
     theme_dark: z.string().default('github-dark'),
   }).default({ theme_light: 'github-light', theme_dark: 'github-dark' }),
+  share: z.object({
+    enabled: z.boolean().default(true),
+    platforms: z.array(z.enum([
+      'x', 'facebook', 'weibo', 'linkedin',
+      'wechat', 'bilibili', 'zhihu', 'reddit',
+      'telegram', 'whatsapp', 'email', 'mastodon',
+      'pinterest', 'threads', 'bluesky',
+    ])).default(['x', 'facebook', 'weibo']),
+  }).default({ enabled: true, platforms: ['x', 'facebook', 'weibo'] }),
 })
 
 const PluginConfigSchema = z.union([

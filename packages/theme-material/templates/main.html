@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% from "partials/page-meta.html" import page_tags, page_license %}
+{% from "partials/share.html" import page_share %}
 
 {% block content %}
 <article class="md-content__inner md-typeset">
@@ -12,6 +13,7 @@
   {{ page.content | safe }}
   {{ page_license(page, i18n) }}
   {{ page_tags(page, i18n) }}
+  {{ page_share(share_items, share_page_url, i18n) }}
   {% endif %}
 </article>
 {% endblock %}

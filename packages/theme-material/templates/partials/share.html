@@ -1,0 +1,38 @@
+{% from "partials/tooltip.html" import tooltip %}
+
+{% macro page_share(share_items, share_page_url, i18n) %}
+{% if share_items and share_items | length > 0 %}
+<div class="md-page-share"
+     data-share-url="{{ share_page_url }}"
+     aria-label="{{ i18n['share.label'] }}">
+  <div class="md-page-share__items">
+    {% for item in share_items %}
+    <div class="md-page-share__item-wrap">
+      {% if item.action %}
+      <button type="button"
+              class="md-page-share__item md-page-share__item--{{ item.id }}"
+              id="{{ item.trigger_id }}"
+              style="--md-share-brand: {{ item.color }}"
+              data-share-action="{{ item.action }}"
+              aria-label="{{ item.tooltip }}">
+        {{ item.icon_html | safe }}
+      </button>
+      {% else %}
+      {% call tooltip(item.trigger_id, item.tooltip, 'md-tooltip--share', 'top') %}
+      <a class="md-page-share__item md-page-share__item--{{ item.id }}"
+         id="{{ item.trigger_id }}"
+         style="--md-share-brand: {{ item.color }}"
+         href="{{ item.href }}"
+         target="_blank" rel="noopener noreferrer"
+         aria-label="{{ item.tooltip }}">
+        {{ item.icon_html | safe }}
+      </a>
+      {% endcall %}
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  <div class="md-page-share__toast" role="status" aria-live="polite" hidden></div>
+</div>
+{% endif %}
+{% endmacro %}

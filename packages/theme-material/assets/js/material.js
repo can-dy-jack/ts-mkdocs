@@ -84,6 +84,7 @@
   /* ── Settings (apply early to prevent FOUC) ─────────────────── */
   var SETTINGS_KEY = 'ts-mkdocs-settings';
   var settingsConfig = (CFG.settings || {});
+  var settingsEnabled = settingsConfig.enabled !== false;
 
   function lightenColor(hex, amount) {
     var r = parseInt(hex.slice(1, 3), 16);
@@ -228,7 +229,9 @@
     }
   }
 
-  bootstrapSettings();
+  if (settingsEnabled) {
+    bootstrapSettings();
+  }
 
   document.addEventListener('DOMContentLoaded', function () {
     updateThemeToggle(loadThemeMode());
@@ -259,7 +262,8 @@
     initSourceRepo();
     initTagsFilter();
     initLightbox();
-    initSettings();
+    if (settingsEnabled) initSettings();
+    initPageShare();
   });
 
   function getBaseUrl() {
@@ -1476,6 +1480,169 @@
         syncSettingsUI(settings);
       });
     }
+  }
+
+  function initPageShare() {
+    const shareEl = document.querySelector('.md-page-share');
+    if (!shareEl) return;
+
+    const shareUrl = shareEl.dataset.shareUrl || location.href;
+    const toast = shareEl.querySelector('.md-page-share__toast');
+    const copiedLabel = t('share.copied', 'Link copied!');
+    const wechatTitle = t('share.wechat_title', 'Scan with WeChat');
+    const wechatHint = t('share.wechat_hint', 'Scan the QR code to share');
+    let popover = null;
+    let popoverAnchor = null;
+    let toastTimer = null;
+
+    function positionSharePopup(popup, anchor, gap) {
+      const offset = gap != null ? gap : 10;
+      const padding = 8;
+      popup.hidden = false;
+      popup.style.visibility = 'hidden';
+      popup.style.left = '0';
+      popup.style.top = '0';
+
+      const anchorRect = anchor.getBoundingClientRect();
+      const popupRect = popup.getBoundingClientRect();
+      const anchorCenter = anchorRect.left + anchorRect.width / 2;
+
+      let left = anchorCenter - popupRect.width / 2;
+      let top = anchorRect.top - popupRect.height - offset;
+
+      left = Math.max(padding, Math.min(left, window.innerWidth - popupRect.width - padding));
+      if (top < padding) {
+        top = anchorRect.bottom + offset;
+      }
+
+      popup.style.left = left + 'px';
+      popup.style.top = top + 'px';
+      popup.style.visibility = '';
+
+      const arrowLeft = Math.max(14, Math.min(anchorCenter - left, popupRect.width - 14));
+      popup.style.setProperty('--md-share-arrow-left', arrowLeft + 'px');
+    }
+
+    function showToast(message, anchor) {
+      if (!toast || !anchor) return;
+      toast.textContent = message;
+      toast.style.animation = 'none';
+      positionSharePopup(toast, anchor);
+      void toast.offsetWidth;
+      toast.style.animation = '';
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(function () {
+        toast.hidden = true;
+      }, 2200);
+    }
+
+    function copyShareUrl(anchor) {
+      function onSuccess() {
+        showToast(copiedLabel, anchor);
+      }
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(shareUrl).then(onSuccess).catch(fallbackCopy);
+      } else {
+        fallbackCopy();
+      }
+
+      function fallbackCopy() {
+        const ta = document.createElement('textarea');
+        ta.value = shareUrl;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        try {
+          document.execCommand('copy');
+          onSuccess();
+        } catch (e) { /* ignore */ }
+        document.body.removeChild(ta);
+      }
+    }
+
+    function closePopover() {
+      if (popover) {
+        popover.remove();
+        popover = null;
+        popoverAnchor = null;
+      }
+    }
+
+    function openWechatPopover(anchor) {
+      closePopover();
+      popoverAnchor = anchor;
+      popover = document.createElement('div');
+      popover.className = 'md-page-share__popover';
+      popover.setAttribute('role', 'dialog');
+      popover.setAttribute('aria-label', wechatTitle);
+
+      const title = document.createElement('p');
+      title.className = 'md-page-share__popover-title';
+      title.textContent = wechatTitle;
+
+      const img = document.createElement('img');
+      img.className = 'md-page-share__qr';
+      img.alt = wechatTitle;
+      img.width = 152;
+      img.height = 152;
+      img.src = 'https://api.qrserver.com/v1/create-qr-code/?size=152x152&data=' + encodeURIComponent(shareUrl);
+      img.addEventListener('load', function () {
+        if (popover && popoverAnchor) {
+          positionSharePopup(popover, popoverAnchor, 20);
+        }
+      });
+
+      const hint = document.createElement('p');
+      hint.className = 'md-page-share__popover-hint';
+      hint.textContent = wechatHint;
+
+      popover.appendChild(title);
+      popover.appendChild(img);
+      popover.appendChild(hint);
+      document.body.appendChild(popover);
+      positionSharePopup(popover, anchor, 20);
+    }
+
+    shareEl.addEventListener('click', function (e) {
+      const btn = e.target.closest('[data-share-action]');
+      if (!btn) return;
+      e.preventDefault();
+
+      const action = btn.dataset.shareAction;
+      if (action === 'copy') {
+        copyShareUrl(btn);
+      } else if (action === 'wechat') {
+        if (popover) {
+          closePopover();
+        } else {
+          openWechatPopover(btn);
+        }
+      }
+    });
+
+    document.addEventListener('click', function (e) {
+      if (!popover) return;
+      if (e.target.closest('.md-page-share__popover') || e.target.closest('[data-share-action="wechat"]')) return;
+      closePopover();
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') closePopover();
+    });
+
+    window.addEventListener('scroll', function () {
+      if (popover && popoverAnchor) {
+        positionSharePopup(popover, popoverAnchor, 20);
+      }
+    }, { passive: true });
+
+    window.addEventListener('resize', function () {
+      if (popover && popoverAnchor) {
+        positionSharePopup(popover, popoverAnchor, 20);
+      }
+    });
   }
 
   const style = document.createElement('style');

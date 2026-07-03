@@ -78,6 +78,23 @@ theme:
       light: material/wb_sunny      # sun — light mode
       dark: material/dark_mode      # moon — dark mode
       system: material/brightness_auto  # auto — follow OS
+  settings:          # reader panel: accent colour, font, font size (see below)
+    enabled: true
+    colors:
+      - name: Blue
+        color: "#2196f3"
+    fonts:
+      - name: System
+    font_sizes:
+      - name: Default
+        value: 115
+    default_font_size: 115
+  share:             # page-level share buttons (see below)
+    enabled: true
+    platforms:
+      - x
+      - weibo
+      - wechat
   features:
     - navigation.tabs
     - navigation.sections
@@ -176,6 +193,113 @@ theme:
       dark: material/dark_mode
       system: material/brightness_auto
 ```
+
+## Reader settings
+
+The header can show a **settings** button (gear icon) that opens a panel where visitors customise theme accent colour, body font, and font size. Choices are saved in `localStorage` and applied on the next visit.
+
+Set `theme.settings.enabled` to `false` to hide the panel and ignore any saved reader preferences. Configure the available options under `theme.settings`. Omit the whole block to use built-in defaults (enabled, eight preset colours, four fonts, four font sizes). Labels follow `theme.language` when you rely on defaults.
+
+The initial accent colour is derived automatically from the light-mode `theme.palette` `primary` value (not set directly in `settings`).
+
+```yaml
+theme:
+  palette:
+    - scheme: default
+      primary: blue
+      accent: blue
+  settings:
+    enabled: true
+    colors:
+      - name: Blue
+        color: "#2196f3"
+      - name: Teal
+        color: "#009688"
+      - name: Green
+        color: "#4caf50"
+      - name: Purple
+        color: "#9c27b0"
+    fonts:
+      - name: System
+      - name: Serif
+        family: '"Noto Serif", Georgia, serif'
+        url: https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;600;700&display=swap
+      - name: Mono
+        family: '"JetBrains Mono", "Fira Code", monospace'
+    font_sizes:
+      - name: Small
+        value: 90
+      - name: Default
+        value: 115
+      - name: Large
+        value: 135
+      - name: Extra large
+        value: 160
+    default_font_size: 115
+```
+
+| Field | Description |
+|-------|-------------|
+| `enabled` | Show the settings panel and apply saved reader preferences. Default `true`. |
+| `colors` | Swatches in the panel. Each entry needs `name` (tooltip) and `color` (hex). |
+| `fonts` | Font choices. `name` is the button label. Optional `family` sets the CSS `font-family`; optional `url` loads a web font stylesheet when selected. The first entry is the default. |
+| `font_sizes` | Size presets. Each entry needs `name` and `value` (root `font-size` percentage, 50–300). |
+| `default_font_size` | Which `font_sizes` entry is active on first visit. Defaults to `115` when present in the list. |
+
+## Page share buttons
+
+Each article can show social share icons at the bottom (after tags and license). Icons use Font Awesome (and brand SVGs for platforms not in the icon library), colored with each platform's brand color. Each icon shows a tooltip like "Share to Weibo".
+
+Configure under `theme.share`:
+
+```yaml
+theme:
+  share:
+    enabled: true
+    platforms:
+      - x
+      - facebook
+      - weibo
+      - linkedin
+      - wechat
+      - bilibili
+      - zhihu
+      - reddit
+      - telegram
+      - whatsapp
+      - email
+      - mastodon
+      - pinterest
+      - threads
+      - bluesky
+```
+
+| Field | Description |
+|-------|-------------|
+| `enabled` | Show share buttons on article pages. Default `true`. |
+| `platforms` | Ordered list of platforms to display. Omit to use the built-in default (`x`, `facebook`, `weibo`). |
+
+Supported platform IDs:
+
+| Platform | Behaviour |
+|----------|-----------|
+| `x` | Opens X (Twitter) compose dialog |
+| `facebook` | Opens Facebook share dialog |
+| `weibo` | Opens Weibo share dialog |
+| `linkedin` | Opens LinkedIn share dialog |
+| `reddit` | Opens Reddit submit dialog |
+| `telegram` | Opens Telegram share dialog |
+| `whatsapp` | Opens WhatsApp share dialog |
+| `email` | Opens default mail client |
+| `mastodon` | Opens Mastodon share (mastodon.social) |
+| `pinterest` | Opens Pinterest pin creator |
+| `threads` | Opens Threads compose dialog |
+| `bluesky` | Opens Bluesky compose dialog |
+| `wechat` | Shows a QR code popover (scan to share) |
+| `bilibili` | Copies the page link to clipboard |
+| `zhihu` | Copies the page link to clipboard |
+
+Set `enabled: false` or pass an empty `platforms` list to hide share buttons entirely.
 
 ## Footer
 

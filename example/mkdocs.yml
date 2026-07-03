@@ -80,6 +80,53 @@ theme:
       light: material/wb_sunny
       dark: material/dark_mode
       system: material/brightness_auto
+  # Reader settings panel (header gear icon). Omit any field to keep built-in defaults.
+  # Default accent color follows theme.palette primary; choices persist in localStorage.
+  settings:
+    enabled: true
+    colors:
+      - name: Blue
+        color: "#2196f3"
+      - name: Teal
+        color: "#009688"
+      - name: Green
+        color: "#4caf50"
+      - name: Purple
+        color: "#9c27b0"
+    fonts:
+      - name: System
+      - name: Serif
+        family: '"Noto Serif", Georgia, serif'
+        url: https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;600;700&display=swap
+      - name: Mono
+        family: '"JetBrains Mono", "Fira Code", monospace'
+    font_sizes:
+      - name: Small
+        value: 90
+      - name: Default
+        value: 115
+      - name: Large
+        value: 135
+      - name: Extra large
+        value: 160
+    default_font_size: 115
+  # Page-level share buttons (shown at the bottom of each article)
+  share:
+    enabled: true
+    platforms:
+      - x
+      - facebook
+      - weibo
+      - linkedin
+      - wechat
+      - bilibili
+      - zhihu
+      - reddit
+      - telegram
+      - whatsapp
+      - email
+      - threads
+      - bluesky
   features:
     - navigation.tabs
     - navigation.tabs.sticky
