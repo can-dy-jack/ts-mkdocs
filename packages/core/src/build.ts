@@ -371,6 +371,12 @@ function renderPage(
     toc,
     tab_items: getTabItems(nav.items),
     first_doc_url: isHome ? firstDocUrl(nav.items) : undefined,
+    og_title: `${page.title} - ${config.site_name}`,
+    og_description: (typeof page.meta.description === 'string' ? page.meta.description : '') || config.site_description || '',
+    og_image: resolveOgImage(
+      (typeof page.meta.image === 'string' ? page.meta.image : undefined) ?? config.site_image,
+      config.site_url,
+    ),
   }
 
   const template = isHome ? 'home.html' : 'main.html'
@@ -479,6 +485,13 @@ function buildSettingsConfig(config: Config): Record<string, unknown> {
   }
 }
 
+function resolveOgImage(imageRaw: string | undefined, siteUrl?: string): string | undefined {
+  if (!imageRaw) return undefined
+  if (/^https?:\/\//.test(imageRaw)) return imageRaw
+  if (siteUrl) return `${siteUrl}/${imageRaw.replace(/^\//, '')}`
+  return imageRaw
+}
+
 function buildBaseContext(config: Config, baseUrl = './', repoStats?: RepoStats): Record<string, unknown> {
   const feature = buildFeatureContext(config)
   const i18n = getI18n(config.theme.language)
@@ -502,6 +515,9 @@ function buildBaseContext(config: Config, baseUrl = './', repoStats?: RepoStats)
     versions: config.extra?.version?.provider ? config.extra.version : null,
     math: resolveMathConfig(config),
     settings_config: buildSettingsConfig(config),
+    og_title: config.site_name,
+    og_description: config.site_description ?? '',
+    og_image: resolveOgImage(config.site_image, config.site_url),
   }
 }
 

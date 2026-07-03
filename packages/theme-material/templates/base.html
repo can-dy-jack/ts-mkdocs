@@ -20,6 +20,32 @@
   <meta name="author" content="{{ config.site_author }}">
   {% endif %}
 
+  {# --- Open Graph --- #}
+  {% set og_locale = config.theme.language | default('en') | replace('-', '_') %}
+  <meta property="og:type" content="{% if page and page.is_homepage %}website{% else %}article{% endif %}">
+  <meta property="og:title" content="{{ og_title }}">
+  {% if og_description %}
+  <meta property="og:description" content="{{ og_description }}">
+  {% endif %}
+  {% if config.site_url and page %}
+  <meta property="og:url" content="{{ config.site_url }}{{ page.url }}">
+  {% endif %}
+  <meta property="og:site_name" content="{{ config.site_name }}">
+  <meta property="og:locale" content="{{ og_locale }}">
+  {% if og_image %}
+  <meta property="og:image" content="{{ og_image }}">
+  {% endif %}
+
+  {# --- Twitter Card --- #}
+  <meta name="twitter:card" content="{% if og_image %}summary_large_image{% else %}summary{% endif %}">
+  <meta name="twitter:title" content="{{ og_title }}">
+  {% if og_description %}
+  <meta name="twitter:description" content="{{ og_description }}">
+  {% endif %}
+  {% if og_image %}
+  <meta name="twitter:image" content="{{ og_image }}">
+  {% endif %}
+
   {% if config.site_url and page %}
   <link rel="canonical" href="{{ config.site_url }}{{ page.url }}">
   {% endif %}

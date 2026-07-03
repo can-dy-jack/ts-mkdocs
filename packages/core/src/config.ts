@@ -98,6 +98,7 @@ export const ConfigSchema = z.object({
   site_url: z.string().optional(),
   site_description: z.string().optional(),
   site_author: z.string().optional(),
+  site_image: z.string().optional(),
   repo_url: z.string().optional(),
   repo_name: z.string().optional(),
   repo_token: z.string().optional(),

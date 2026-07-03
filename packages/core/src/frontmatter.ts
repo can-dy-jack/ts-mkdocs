@@ -34,6 +34,8 @@ export interface PageMeta {
   reading_time?: boolean
   /** Locale-formatted reading time label for templates. */
   readtime_formatted?: string
+  /** OG/Twitter card image (absolute URL or path relative to docs_dir). */
+  image?: string
   /** Page license declaration override (`false` to hide). */
   license?:
     | boolean
