@@ -110,6 +110,7 @@ plugins:
   - search           # built-in, enabled by default
   - sitemap:
       hostname: https://example.com  # required for sitemap generation
+  - robots               # generates robots.txt for search engine crawlers
 
 # ── Markdown extensions ─────────────────────────────────────
 markdown_extensions:
@@ -547,3 +548,66 @@ The plugin creates `sitemap.xml` in your site root:
 - Non-document pages are automatically excluded: `404.html`, `search/`, `assets/`, `tags/`
 - `<lastmod>` is derived from file modification time
 - URLs are sorted alphabetically for deterministic output
+
+## Robots.txt
+
+Generate a `robots.txt` file to control search engine crawler access.
+
+### Basic setup
+
+```yaml
+plugins:
+  - robots
+```
+
+This generates a minimal `robots.txt` that allows all crawlers and includes a `Sitemap:` directive if `site_url` is configured.
+
+### Full configuration
+
+```yaml
+plugins:
+  - robots:
+      rules:
+        - user_agent: '*'
+          disallow:
+            - /api/
+            - /admin/
+          allow:
+            - /api/public/
+        - user_agent: Googlebot
+          disallow:
+            - /drafts/
+      sitemap: https://example.com/sitemap.xml
+      extra:
+        - Crawl-delay: 10
+```
+
+### Options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `rules` | object[] | `[{user_agent: '*', disallow: [], allow: []}]` | Crawler access rules |
+| `rules[].user_agent` | string | `*` | Target crawler name (`*` = all) |
+| `rules[].disallow` | string[] | `[]` | URL paths to block |
+| `rules[].allow` | string[] | `[]` | URL paths to allow (overrides disallow) |
+| `sitemap` | string | auto from `site_url` | Full URL to sitemap.xml |
+| `extra` | string[] | `[]` | Additional directives (e.g. `Crawl-delay`) |
+
+### Generated output
+
+The plugin creates `robots.txt` in your site root:
+
+```
+User-agent: *
+Disallow: /api/
+Disallow: /admin/
+Allow: /api/public/
+
+Sitemap: https://example.com/sitemap.xml
+```
+
+### Notes
+
+- When `sitemap` is not set, the plugin auto-generates it from `site_url` + `/sitemap.xml`
+- Use shorthand `disallow`/`allow` at the top level for a quick `User-agent: *` rule
+- The `extra` array accepts any raw directive lines

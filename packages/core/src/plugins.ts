@@ -7,6 +7,7 @@ import { searchPlugin, offlinePlugin, privacyPlugin, typesetPlugin, groupPlugin,
 import { metaPlugin, socialPlugin } from './plugins/social.js'
 import { tagsPlugin } from './plugins/tags.js'
 import { sitemapPlugin } from './plugins/sitemap.js'
+import { robotsPlugin } from './plugins/robots.js'
 
 export interface PluginEvents {
   on_config?: (config: Config) => Config | void
@@ -34,6 +35,7 @@ const BUILTIN_PLUGINS: Record<string, Plugin> = {
   group: groupPlugin,
   info: infoPlugin,
   sitemap: sitemapPlugin,
+  robots: robotsPlugin,
 }
 
 export class PluginManager {
