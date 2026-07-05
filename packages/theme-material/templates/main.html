@@ -14,6 +14,7 @@
   {{ page_license(page, i18n) }}
   {{ page_tags(page, i18n) }}
   {{ page_share(share_items, share_page_url, i18n) }}
+  {% include "partials/comments.html" %}
   {% endif %}
 </article>
 {% endblock %}

@@ -73,6 +73,16 @@ export type { Plugin, PluginEvents } from './plugins.js'
 export { buildSearchIndex, writeSearchIndex } from './search.js'
 export { buildFeatureContext, getFeatures, hasFeature } from './features.js'
 export { getI18n } from './i18n.js'
+export {
+  resolveCommentsConfig,
+  shouldShowComments,
+} from './comments.js'
+export type {
+  CommentsConfig,
+  CommentsProvider,
+  GiscusCommentsConfig,
+  UtterancesCommentsConfig,
+} from './comments.js'
 export { resolveColor, shadeColor, buildPaletteStyles, buildPaletteCssVars } from './palette.js'
 export {
   createIconService,

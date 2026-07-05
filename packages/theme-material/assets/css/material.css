@@ -4021,6 +4021,28 @@ a.md-page-tag:hover {
   border-radius: .5rem;
 }
 
+/* Comments (Giscus / Utterances) */
+.md-comments {
+  margin-top: 2rem;
+}
+
+.md-page-share + .md-comments,
+.md-page-tags + .md-comments {
+  margin-top: 1.25rem;
+}
+
+.md-comments .giscus,
+.md-comments .utterances {
+  max-width: 100%;
+}
+
+.md-comments .giscus-frame,
+.md-comments iframe.utterances-frame {
+  width: 100% !important;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
 /* Tags index & archive */
 .tags-page .md-main__inner.md-grid {
   max-width: var(--md-grid-max-width);

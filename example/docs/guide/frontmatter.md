@@ -35,6 +35,7 @@ Each Markdown page can declare metadata in YAML frontmatter at the top of the fi
 | `edit_url` | string | Full edit link override |
 | `edit_uri` | string | Edit path override relative to `repo_url` |
 | `hide` | list | Hide UI elements: `tags`, `groups`, `dates`, `authors`, `readtime`, `license`, `meta`, `footer` |
+| `comments` | boolean | Enable the comment system on this page (requires `extra.comments` in `mkdocs.yml`) |
 | `license` | bool / string / object | Article license declaration override (`false` to hide); see [Article license](#article-license) |
 | `search` | object | Search tuning: `boost`, `exclude` |
 | `hero` | object | Homepage hero: `title`, `tagline` |

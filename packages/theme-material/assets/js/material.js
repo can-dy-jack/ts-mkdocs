@@ -51,6 +51,7 @@
     html.setAttribute('data-theme', resolveTheme(mode));
     localStorage.setItem(THEME_MODE_KEY, mode);
     updateThemeToggle(mode);
+    syncCommentsTheme();
   }
 
   function nextThemeMode(mode) {
@@ -72,7 +73,116 @@
     systemMedia.addEventListener('change', function () {
       if (loadThemeMode() === 'system') {
         html.setAttribute('data-theme', getSystemTheme());
+        syncCommentsTheme();
       }
+    });
+  }
+
+  /* ── Comments (Giscus / Utterances) theme sync ──────────────── */
+  var commentsConfig = null;
+
+  function getEffectiveSiteTheme() {
+    return html.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+  }
+
+  function readCommentsConfig() {
+    var el = document.getElementById('ts-mkdocs-comments-config');
+    if (!el) return null;
+    try {
+      return JSON.parse(el.textContent || '');
+    } catch (err) {
+      return null;
+    }
+  }
+
+  function resolveCommentsTheme(config) {
+    if (!config || !config.theme_dark) return config.theme;
+    return getEffectiveSiteTheme() === 'dark' ? config.theme_dark : config.theme;
+  }
+
+  function injectGiscusWidget(container, config) {
+    if (container.dataset.widgetInjected === '1') return;
+    container.dataset.widgetInjected = '1';
+    var script = document.createElement('script');
+    script.src = 'https://giscus.app/client.js';
+    script.crossOrigin = 'anonymous';
+    script.async = true;
+    script.setAttribute('data-repo', config.repo);
+    script.setAttribute('data-repo-id', config.repo_id);
+    script.setAttribute('data-category', config.category);
+    script.setAttribute('data-category-id', config.category_id);
+    script.setAttribute('data-mapping', config.mapping);
+    script.setAttribute('data-strict', config.strict);
+    script.setAttribute('data-reactions-enabled', config.reactions_enabled ? '1' : '0');
+    script.setAttribute('data-emit-metadata', config.emit_metadata ? '1' : '0');
+    script.setAttribute('data-input-position', config.input_position);
+    script.setAttribute('data-theme', resolveCommentsTheme(config));
+    script.setAttribute('data-lang', config.lang);
+    script.setAttribute('data-loading', config.loading);
+    container.appendChild(script);
+  }
+
+  function injectUtterancesWidget(container, config) {
+    if (container.dataset.widgetInjected === '1') return;
+    container.dataset.widgetInjected = '1';
+    var script = document.createElement('script');
+    script.src = 'https://utteranc.es/client.js';
+    script.crossOrigin = 'anonymous';
+    script.async = true;
+    script.setAttribute('repo', config.repo);
+    script.setAttribute('issue-term', config.issue_term);
+    if (config.issue_number != null) {
+      script.setAttribute('issue-number', String(config.issue_number));
+    }
+    if (config.label) script.setAttribute('label', config.label);
+    script.setAttribute('theme', resolveCommentsTheme(config));
+    container.appendChild(script);
+  }
+
+  function syncGiscusTheme(theme) {
+    var frame = document.querySelector('iframe.giscus-frame');
+    if (frame && frame.contentWindow) {
+      frame.contentWindow.postMessage(
+        { giscus: { setConfig: { theme: theme } } },
+        'https://giscus.app'
+      );
+    }
+  }
+
+  function syncUtterancesTheme(theme) {
+    var frame = document.querySelector('iframe.utterances-frame');
+    if (frame && frame.contentWindow) {
+      frame.contentWindow.postMessage(
+        { type: 'set-theme', theme: theme },
+        'https://utteranc.es'
+      );
+    }
+  }
+
+  function syncCommentsTheme() {
+    if (!commentsConfig || !commentsConfig.theme_dark) return;
+    var theme = resolveCommentsTheme(commentsConfig);
+    if (commentsConfig.provider === 'giscus') syncGiscusTheme(theme);
+    else if (commentsConfig.provider === 'utterances') syncUtterancesTheme(theme);
+  }
+
+  function initComments() {
+    commentsConfig = readCommentsConfig();
+    if (!commentsConfig || !commentsConfig.theme_dark) return;
+
+    var container = document.querySelector('.md-comments');
+    if (!container) return;
+
+    if (commentsConfig.provider === 'giscus') {
+      injectGiscusWidget(container, commentsConfig);
+    } else if (commentsConfig.provider === 'utterances') {
+      injectUtterancesWidget(container, commentsConfig);
+    }
+
+    window.addEventListener('message', function (event) {
+      if (event.origin !== 'https://giscus.app') return;
+      if (!event.data || typeof event.data !== 'object' || !event.data.giscus) return;
+      if ('resizeHeight' in event.data.giscus) syncCommentsTheme();
     });
   }
 
@@ -308,6 +418,7 @@
     initLightbox();
     if (settingsEnabled) initSettings();
     initPageShare();
+    initComments();
   });
 
   function getBaseUrl() {

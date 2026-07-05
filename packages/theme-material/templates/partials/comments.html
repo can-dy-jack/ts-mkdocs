@@ -1,0 +1,38 @@
+{% if comments and page and page.meta.comments and not page.is_homepage %}
+<section class="md-comments" aria-label="{{ i18n['meta.comments'] }}">
+
+  {% if comments.theme_dark %}
+  <script type="application/json" id="ts-mkdocs-comments-config">{{ comments | tojson | safe }}</script>
+  {% elif comments.provider == 'giscus' %}
+  <script
+    src="https://giscus.app/client.js"
+    data-repo="{{ comments.repo }}"
+    data-repo-id="{{ comments.repo_id }}"
+    data-category="{{ comments.category }}"
+    data-category-id="{{ comments.category_id }}"
+    data-mapping="{{ comments.mapping }}"
+    data-strict="{{ comments.strict }}"
+    data-reactions-enabled="{{ '1' if comments.reactions_enabled else '0' }}"
+    data-emit-metadata="{{ '1' if comments.emit_metadata else '0' }}"
+    data-input-position="{{ comments.input_position }}"
+    data-theme="{{ comments.theme }}"
+    data-lang="{{ comments.lang }}"
+    data-loading="{{ comments.loading }}"
+    crossorigin="anonymous"
+    async>
+  </script>
+  {% elif comments.provider == 'utterances' %}
+  <script
+    src="https://utteranc.es/client.js"
+    repo="{{ comments.repo }}"
+    issue-term="{{ comments.issue_term }}"
+    {% if comments.issue_number is defined %}issue-number="{{ comments.issue_number }}"{% endif %}
+    {% if comments.label %}label="{{ comments.label }}"{% endif %}
+    theme="{{ comments.theme }}"
+    crossorigin="anonymous"
+    async>
+  </script>
+  {% endif %}
+
+</section>
+{% endif %}

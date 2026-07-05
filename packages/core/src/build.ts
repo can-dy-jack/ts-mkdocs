@@ -49,6 +49,7 @@ import { buildAdmonitionTypesStyles } from './admonition-types.js'
 import { copyExtraAssets, resolveExtraScripts, resolveExtraStylesheets } from './extra-assets.js'
 import { resolveMathConfig } from './md/arithmatex.js'
 import { resolveMermaidConfig } from './md/mermaid.js'
+import { resolveCommentsConfig } from './comments.js'
 
 let nunjucksEnv: nunjucks.Environment | null = null
 
@@ -569,6 +570,7 @@ function buildBaseContext(config: Config, baseUrl = './', repoStats?: RepoStats)
     versions: config.extra?.version?.provider ? config.extra.version : null,
     math: resolveMathConfig(config),
     mermaid: resolveMermaidConfig(config),
+    comments: resolveCommentsConfig(config),
     settings_config: buildSettingsConfig(config),
     extra_stylesheets: resolveExtraStylesheets(config, baseUrl),
     extra_scripts: resolveExtraScripts(config, baseUrl),

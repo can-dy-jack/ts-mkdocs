@@ -108,7 +108,8 @@ program
   .option('--strict', 'Enable strict mode')
   .action(async (options: { configFile: string; siteDir?: string; strict?: boolean }) => {
     try {
-      const config = loadConfig(resolve(options.configFile))
+      const configFile = resolve(options.configFile)
+      const config = loadConfig(configFile)
       if (options.siteDir) config.site_dir = resolve(options.siteDir)
       if (options.strict) config.strict = true
       await build(config)

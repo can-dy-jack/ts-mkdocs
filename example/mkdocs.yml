@@ -40,6 +40,7 @@ nav:
       - Annotations: showcase/advanced/annotations.md
       - Math: showcase/advanced/math.md
       - Mermaid: showcase/advanced/mermaid.md
+      - Comments: showcase/advanced/comments.md
     - Nesting & Combinations:
       - Combinations: showcase/nesting/combinations.md
   - Reference:
@@ -248,3 +249,14 @@ extra:
       link: https://youtube.com/
     - icon: fontawesome/brands/linkedin
       link: https://linkedin.com/
+  # Comments (Giscus or Utterances). Enable per page with `comments: true`.
+  comments:
+    provider: giscus
+    repo: can-dy-jack/ts-mkdocs
+    repo_id: R_kgDOTEd3Sg
+    category: General
+    category_id: DIC_kwDOTEd3Ss4DAiNv
+    input_position: bottom
+    theme: light
+    theme_dark: dark
+    lang: zh-CN # TODO

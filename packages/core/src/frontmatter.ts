@@ -56,6 +56,8 @@ export interface PageMeta {
         page_url?: string
         date?: string
       }
+  /** Enable the comment system on this page (requires `extra.comments` config). */
+  comments?: boolean
   [key: string]: unknown
 }
 
