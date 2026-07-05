@@ -960,7 +960,7 @@ body {
 .md-typeset blockquote {
   border-left: .15rem solid var(--md-primary-fg-color);
   margin: .5rem 0;
-  padding: .35rem .6rem;
+  padding: .35rem .6rem 1px .6rem;
   color: var(--md-default-fg-color--light);
   background: var(--md-code-bg-color);
   border-radius: 0 .15rem .15rem 0;

@@ -6,8 +6,6 @@ tags:
   - Nesting
 groups:
   - Showcase
-date: 2026-07-01
-updated: 2026-07-02
 authors:
   - kartjim
 ---

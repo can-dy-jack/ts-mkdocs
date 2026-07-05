@@ -7,8 +7,6 @@ tags:
   - Guide
 groups:
   - Guide
-date: 2026-07-01
-updated: 2026-07-02
 authors:
   - kartjim
 ---
@@ -53,8 +51,6 @@ tags:
   - Reference
 groups:
   - Backend
-date: 2024-06-01
-updated: 2024-12-15
 authors:
   - alice
   - bob

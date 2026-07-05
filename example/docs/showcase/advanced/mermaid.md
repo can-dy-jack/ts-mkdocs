@@ -7,8 +7,6 @@ tags:
   - Showcase
 groups:
   - Showcase
-date: 2026-07-03
-updated: 2026-07-03
 authors:
   - kartjim
 ---
@@ -16,6 +14,8 @@ authors:
 # Mermaid
 
 ts-mkdocs renders [Mermaid](https://mermaid.js.org/) diagrams from ` ```mermaid ` code fences when `pymdownx.superfences` is enabled (included by default). The library is loaded from a CDN at build time — no extra `extra_javascript` wiring is required.
+
+> https://mermaid.js.org/intro/getting-started.html
 
 ## Configuration
 
@@ -155,9 +155,9 @@ stateDiagram-v2
 ```mermaid
 gantt
   title Documentation build
-  dateFormat YYYY-MM-DD
+  dateFormat YYYY-MM
   section Write
-    Draft pages   :a1, 2026-07-01, 3d
+    Draft pages   :a1, 2026-07, 3d
     Review        :a2, after a1, 2d
   section Build
     pnpm build    :b1, after a2, 1d

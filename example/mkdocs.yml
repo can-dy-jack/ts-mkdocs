@@ -147,6 +147,12 @@ theme:
 plugins:
   - search
   - meta
+  - git-revision-date:
+      enable_creation_date: true
+      fallback_to_build_date: true
+      source: git                  # git（默认）| filesystem
+      # exclude:                     # 跳过的页面（相对 docs_dir）
+      #   - index.md
   - tags:
       sort_by: count
   - social

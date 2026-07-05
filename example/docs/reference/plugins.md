@@ -8,8 +8,6 @@ tags:
   - TypeScript
 groups:
   - Reference
-date: 2026-07-01
-updated: 2026-07-02
 authors:
   - kartjim
 ---

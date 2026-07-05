@@ -52,6 +52,14 @@ export {
   slugifyTag,
 } from './tags.js'
 export type { ResolvedTag, TagEntry, TagIndex, TagPageRef, TagsPluginConfig } from './tags.js'
+export {
+  applyRevisionDatesToPage,
+  getGitRevisionDatePluginConfig,
+  hasGitRevisionDatePlugin,
+  resolveRevisionDateConfig,
+  resolveRevisionDates,
+} from './revision-date.js'
+export type { RevisionDateConfig, RevisionDateSource, ResolvedRevisionDates } from './revision-date.js'
 export { slugify } from './utils.js'
 export { PluginManager, loadPlugins } from './plugins.js'
 export type { Plugin, PluginEvents } from './plugins.js'
