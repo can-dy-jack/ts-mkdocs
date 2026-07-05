@@ -94,6 +94,7 @@
 <body class="{% if feature.has['header.autohide'] %}md-header--autohide{% endif %}{% if page and page.is_homepage %} home-page{% endif %}{% if page and (page.is_tags_index or page.is_tags_archive) %} tags-page{% endif %}">
 
 <input class="md-toggle" type="checkbox" id="__drawer" autocomplete="off">
+<label class="md-drawer__overlay" for="__drawer" aria-hidden="true"></label>
 
 {% if config.extra and config.extra.announce %}
 <div class="md-announce" data-md-component="announce" id="md-announce">
@@ -109,7 +110,7 @@
 {% block header %}
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid">
-    <label class="md-header__button md-icon" for="__drawer" id="menu-toggle" aria-label="{{ i18n['menu.open'] }}">
+    <label class="md-header__button md-icon" for="__drawer" id="menu-toggle" aria-label="{{ i18n['menu.open'] }}" aria-expanded="false" aria-controls="primary-nav">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
     </label>
     <a href="{{ base_url }}" class="md-header__button md-logo" aria-label="{{ config.site_name }}">
@@ -241,7 +242,7 @@
       <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar,navigation">
         <div class="md-sidebar__scrollwrap">
           <div class="md-sidebar__inner">
-            <nav class="md-nav md-nav--primary{% if feature.has['navigation.sections'] %} md-nav--lifted{% endif %}" aria-label="{{ i18n['nav.title'] }}">
+            <nav class="md-nav md-nav--primary{% if feature.has['navigation.sections'] %} md-nav--lifted{% endif %}" id="primary-nav" aria-label="{{ i18n['nav.title'] }}">
               {% if not feature.has['navigation.tabs'] %}
               <label class="md-nav__title" for="__drawer">
                 <a href="{{ base_url }}" class="md-nav__button md-logo" aria-label="{{ config.site_name }}">
