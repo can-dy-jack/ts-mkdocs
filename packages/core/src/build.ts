@@ -40,6 +40,7 @@ import { buildShareItems } from './share.js'
 import { parseRepoSource, buildRepoSourceIcons, fetchRepoStats } from './github.js'
 import type { RepoStats } from './github.js'
 import { buildPaletteStyles, resolveColor } from './palette.js'
+import { copyExtraAssets, resolveExtraScripts, resolveExtraStylesheets } from './extra-assets.js'
 import { resolveMathConfig } from './md/arithmatex.js'
 import { resolveMermaidConfig } from './md/mermaid.js'
 
@@ -166,24 +167,7 @@ export async function build(config: Config): Promise<Page[]> {
 export async function syncStaticAssets(config: Config): Promise<void> {
   const themeModule = await import('ts-mkdocs-theme-material')
   copyThemeAssets(themeModule.assetsDir, config.site_dir)
-
-  for (const cssPath of config.extra_css) {
-    const src = join(config.docs_dir, cssPath)
-    if (existsSync(src)) {
-      const dest = join(config.site_dir, cssPath)
-      ensureDir(dirname(dest))
-      copyFileSync(src, dest)
-    }
-  }
-
-  for (const jsPath of config.extra_javascript) {
-    const src = join(config.docs_dir, jsPath)
-    if (existsSync(src)) {
-      const dest = join(config.site_dir, jsPath)
-      ensureDir(dirname(dest))
-      copyFileSync(src, dest)
-    }
-  }
+  copyExtraAssets(config)
 }
 
 function hasMetaPlugin(config: Config): boolean {
@@ -532,6 +516,8 @@ function buildBaseContext(config: Config, baseUrl = './', repoStats?: RepoStats)
     math: resolveMathConfig(config),
     mermaid: resolveMermaidConfig(config),
     settings_config: buildSettingsConfig(config),
+    extra_stylesheets: resolveExtraStylesheets(config, baseUrl),
+    extra_scripts: resolveExtraScripts(config, baseUrl),
     og_title: config.site_name,
     og_description: config.site_description ?? '',
     og_image: resolveOgImage(config.site_image, config.site_url),

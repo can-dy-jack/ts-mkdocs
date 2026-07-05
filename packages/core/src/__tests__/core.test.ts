@@ -17,7 +17,18 @@ describe('config', () => {
     if (result.success) {
       expect(result.data.theme.name).toBe('material')
       expect(result.data.use_directory_urls).toBe(true)
+      expect(result.data.extra_css).toEqual([])
+      expect(result.data.extra_javascript).toEqual([])
     }
+  })
+
+  it('parses extra asset entries', () => {
+    const result = ConfigSchema.safeParse({
+      site_name: 'Test',
+      extra_css: ['assets/custom.css', { path: 'assets/print.css', media: 'print' }],
+      extra_javascript: [{ path: 'assets/module.js', type: 'module', defer: true }],
+    })
+    expect(result.success).toBe(true)
   })
 })
 

@@ -103,6 +103,24 @@ const PluginConfigSchema = z.union([
   z.record(z.any()),
 ])
 
+const ExtraCssEntrySchema = z.union([
+  z.string(),
+  z.object({
+    path: z.string(),
+    media: z.string().optional(),
+  }),
+])
+
+const ExtraJsEntrySchema = z.union([
+  z.string(),
+  z.object({
+    path: z.string(),
+    type: z.enum(['module', 'text/javascript']).optional(),
+    defer: z.boolean().optional(),
+    async: z.boolean().optional(),
+  }),
+])
+
 export const ConfigSchema = z.object({
   site_name: z.string(),
   site_url: z.string().optional(),
@@ -122,8 +140,8 @@ export const ConfigSchema = z.object({
   plugins: z.array(PluginConfigSchema).default(['search']),
   markdown_extensions: z.array(z.union([z.string(), z.record(z.any())])).default([]),
   extra: z.record(z.any()).optional(),
-  extra_css: z.array(z.string()).default([]),
-  extra_javascript: z.array(z.string()).default([]),
+  extra_css: z.array(ExtraCssEntrySchema).default([]),
+  extra_javascript: z.array(ExtraJsEntrySchema).default([]),
   copyright: z.string().optional(),
   strict: z.boolean().default(false),
   use_directory_urls: z.boolean().default(true),

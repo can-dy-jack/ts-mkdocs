@@ -154,6 +154,44 @@ When `nav:` is present, the sidebar exactly follows that order. Pages not listed
 
 When `nav:` is absent, ts-mkdocs walks the `docs_dir` alphabetically. Files starting with `_` are skipped. `index.md` / `README.md` inside a directory become the section's root page.
 
+## Custom CSS and JavaScript
+
+Use `extra_css` and `extra_javascript` to inject site-wide styles and scripts into every page. Paths are relative to `docs_dir` and are copied to the same location under `site_dir` during build.
+
+```yaml
+extra_css:
+  - assets/custom.css
+
+extra_javascript:
+  - assets/custom.js
+```
+
+Each entry can also be an object for finer control:
+
+```yaml
+extra_css:
+  - path: assets/print.css
+    media: print
+
+extra_javascript:
+  - path: assets/module.js
+    type: module
+    defer: true
+  - path: https://cdn.example.com/lib.js
+    async: true
+```
+
+| Option | Applies to | Purpose |
+|--------|------------|---------|
+| `path` | CSS / JS | File under `docs_dir`, or an external `http(s)://` URL |
+| `media` | CSS | Optional media query (e.g. `print`) |
+| `type` | JS | `module` for ES modules, or `text/javascript` |
+| `defer` / `async` | JS | Standard script loading attributes |
+
+External URLs and absolute paths (starting with `/`) are linked directly and are not copied from `docs_dir`. Local files are included after the theme stylesheet and before page-specific blocks, so they can override theme defaults.
+
+When a local file is missing, ts-mkdocs logs a warning. Set `strict: true` to fail the build instead.
+
 ## Palette colours
 
 `theme.palette` controls the site chrome (header, footer, links, buttons). You can pass a single object or an array of two entries for light and dark mode.

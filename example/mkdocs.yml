@@ -144,6 +144,12 @@ theme:
     - content.code.annotate
     - content.image.lightbox
 
+extra_css:
+  - assets/custom.css
+
+extra_javascript:
+  - assets/custom.js
+
 plugins:
   - search
   - meta

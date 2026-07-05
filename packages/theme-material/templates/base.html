@@ -75,8 +75,8 @@
   <link rel="stylesheet" href="{{ href }}">
   {% endfor %}
 
-  {% for css in config.extra_css %}
-  <link rel="stylesheet" href="{{ base_url }}{{ css }}">
+  {% for sheet in extra_stylesheets %}
+  <link rel="stylesheet" href="{{ sheet.href }}"{% if sheet.media %} media="{{ sheet.media }}"{% endif %}>
   {% endfor %}
 
   {% if math and math.enabled and math.cdn.stylesheet %}
@@ -359,8 +359,8 @@
 {% if math and math.enabled %}
 {% include "partials/math.html" %}
 {% endif %}
-{% for js in config.extra_javascript %}
-<script src="{{ base_url }}{{ js }}"></script>
+{% for script in extra_scripts %}
+<script src="{{ script.href }}"{% if script.type %} type="{{ script.type }}"{% endif %}{% if script.defer %} defer{% endif %}{% if script.async %} async{% endif %}></script>
 {% endfor %}
 {% block scripts %}{% endblock %}
 
