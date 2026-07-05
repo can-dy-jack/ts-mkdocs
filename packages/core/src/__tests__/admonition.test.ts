@@ -2,9 +2,14 @@ import { describe, expect, it } from 'vitest'
 import MarkdownIt from 'markdown-it'
 import { admonitionPlugin, detailsPlugin } from '../md/admonition.js'
 
-function renderAdmonition(markdown: string, defaultCollapsed = false): string {
+function renderAdmonition(
+  markdown: string,
+  defaultCollapsed = false,
+  types?: Set<string>,
+  typeDefaults?: Record<string, { title?: string }>,
+): string {
   const md = new MarkdownIt()
-  md.use(admonitionPlugin, { defaultCollapsed })
+  md.use(admonitionPlugin, { defaultCollapsed, types, typeDefaults })
   return md.render(markdown)
 }
 
@@ -42,5 +47,29 @@ describe('admonition', () => {
     const html = renderDetails('??? tip "More info"\n    Collapsed content\n')
     expect(html).toContain('<details class="admonition tip">')
     expect(html).not.toContain('<details class="admonition tip" open>')
+  })
+
+  it('renders custom admonition types when registered', () => {
+    const types = new Set(['note', 'todo'])
+    const html = renderAdmonition('!!! todo\n    Custom type content\n', false, types)
+    expect(html).toContain('<details class="admonition todo" open>')
+    expect(html).toContain('Custom type content')
+  })
+
+  it('rejects unregistered custom types', () => {
+    const html = renderAdmonition('!!! todo\n    Should not render\n')
+    expect(html).not.toContain('admonition todo')
+    expect(html).toContain('<p>!!! todo')
+  })
+
+  it('uses configured default title for custom types', () => {
+    const types = new Set(['note', 'experimental'])
+    const html = renderAdmonition(
+      '!!! experimental\n    Content\n',
+      false,
+      types,
+      { experimental: { title: 'Experimental feature' } },
+    )
+    expect(html).toContain('Experimental feature')
   })
 })

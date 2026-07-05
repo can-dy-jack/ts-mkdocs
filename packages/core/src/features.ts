@@ -1,4 +1,5 @@
 import type { Config } from './config.js'
+import { buildAdmonitionTypesStyles } from './admonition-types.js'
 import { buildPaletteStyles } from './palette.js'
 
 export type FeatureSet = Set<string>
@@ -16,6 +17,8 @@ export interface FeatureContext {
   has: Record<string, boolean>
   palette_css: string
   has_palette: boolean
+  admonition_types_css: string
+  has_admonition_types: boolean
   navigation_footer: boolean
   toc_integrate: boolean
   instant_loading: boolean
@@ -31,12 +34,15 @@ export function buildFeatureContext(config: Config): FeatureContext {
   for (const f of list) has[f] = true
 
   const paletteCss = buildPaletteStyles(config)
+  const admonitionTypesCss = buildAdmonitionTypesStyles(config)
 
   return {
     features: list,
     has,
     palette_css: paletteCss,
     has_palette: paletteCss.length > 0,
+    admonition_types_css: admonitionTypesCss,
+    has_admonition_types: admonitionTypesCss.length > 0,
     navigation_footer: features.has('navigation.footer'),
     toc_integrate: features.has('toc.integrate'),
     instant_loading: features.has('navigation.instant'),

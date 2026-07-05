@@ -146,9 +146,12 @@ theme:
 
 extra_css:
   - assets/custom.css
+  - assets/icon-browser.css
 
 extra_javascript:
   - assets/custom.js
+  - path: assets/icon-browser.js
+    defer: true
 
 plugins:
   - search
@@ -169,6 +172,15 @@ plugins:
 markdown_extensions:
   - admonition:
       default_collapsed: false
+      types: # extra type
+        todo:
+          title: Todo
+          icon: material/checklist
+          color: '#795548'
+        experimental:
+          title: Experimental
+          icon: material/experiment
+          color: '#673ab7'
   - pymdownx.details:
       default_collapsed: true
   - pymdownx.tabbed:

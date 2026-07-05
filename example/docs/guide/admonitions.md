@@ -157,6 +157,37 @@ theme:
 
 See [Configuration](configuration.md) for the full `theme.icon` reference.
 
+## Custom types
+
+Register additional admonition types under `markdown_extensions.admonition.types`. Each type can set a default title, icon, and color (`#hex`, `rgb()`, `rgba()`, `hsl()`, or `hsla()` — not palette keyword names). Colors are emitted to `assets/css/admonition-types.css` at build time.
+
+```yaml
+markdown_extensions:
+  - admonition:
+      types:
+        # Object map — recommended
+        todo:
+          title: Todo
+          icon: material/checklist
+          color: '#795548'
+        experimental:
+          title: Experimental
+          icon: material/science
+          color: 'rgba(103, 58, 183, 0.95)'
+        # Or a simple list of type names (uses default blue + material/{type} icon)
+        - draft
+```
+
+```markdown
+!!! todo
+    Track unfinished work with a custom callout.
+
+!!! experimental "Try it out"
+    Override the configured default title per block.
+```
+
+Icon overrides in `theme.icon.admonition` still take precedence over `types.*.icon`.
+
 ## Configuration summary
 
 | Option | Extension | Default | Description |
@@ -164,6 +195,7 @@ See [Configuration](configuration.md) for the full `theme.icon` reference.
 | `default_collapsed` | `admonition` | `false` | Initial state for `!!!` blocks |
 | `default_collapsed` | `pymdownx.details` | `true` | Initial state for `???` blocks |
 | `collapse` | both | — | Alias for `default_collapsed` |
+| `types` | `admonition` | — | Custom admonition type definitions |
 | `+` / `-` suffix | per block | — | Force open / closed for one block |
 
 

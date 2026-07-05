@@ -1,6 +1,7 @@
 import type MarkdownIt from 'markdown-it'
 import attrs from 'markdown-it-attrs'
 import type { Config } from './config.js'
+import { buildAdmonitionTypeDefaults, resolveAdmonitionTypes } from './admonition-types.js'
 import { createIconService } from './icons.js'
 import { admonitionPlugin, detailsPlugin } from './md/admonition.js'
 import { iconsPlugin } from './md/icons.js'
@@ -55,7 +56,8 @@ export function applyMarkdownExtensions(
     }
   }
 
-  const icons = createIconService(config)
+  const admonitionTypes = resolveAdmonitionTypes(config)
+  const icons = createIconService(config, admonitionTypes.icons)
   const emojiEnabled = enabled.has('pymdownx.emoji')
   if (emojiEnabled) {
     md.use(emojiPlugin, options.get('pymdownx.emoji') ?? {})
@@ -66,13 +68,19 @@ export function applyMarkdownExtensions(
   if (enabled.has('admonition') || enabled.has('pymdownx.details')) {
     const admonitionOpts = options.get('admonition') ?? {}
     const detailsOpts = options.get('pymdownx.details') ?? {}
-    md.use(admonitionPlugin, {
+    const typeDefaults = buildAdmonitionTypeDefaults(admonitionTypes.custom)
+    const sharedOpts = {
       icons,
+      types: admonitionTypes.allowed,
+      typeDefaults,
+    }
+    md.use(admonitionPlugin, {
+      ...sharedOpts,
       defaultCollapsed: Boolean(admonitionOpts.default_collapsed ?? admonitionOpts.collapse ?? false),
     })
     if (enabled.has('pymdownx.details')) {
       md.use(detailsPlugin, {
-        icons,
+        ...sharedOpts,
         defaultCollapsed: detailsOpts.default_collapsed !== undefined
           ? Boolean(detailsOpts.default_collapsed)
           : Boolean(detailsOpts.collapse ?? true),

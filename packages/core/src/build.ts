@@ -40,6 +40,7 @@ import { buildShareItems } from './share.js'
 import { parseRepoSource, buildRepoSourceIcons, fetchRepoStats } from './github.js'
 import type { RepoStats } from './github.js'
 import { buildPaletteStyles, resolveColor } from './palette.js'
+import { buildAdmonitionTypesStyles } from './admonition-types.js'
 import { copyExtraAssets, resolveExtraScripts, resolveExtraStylesheets } from './extra-assets.js'
 import { resolveMathConfig } from './md/arithmatex.js'
 import { resolveMermaidConfig } from './md/mermaid.js'
@@ -543,6 +544,13 @@ function writeSiteBootstrap(config: Config, repoStats?: RepoStats): void {
     const palettePath = join(config.site_dir, 'assets/css/palette.css')
     ensureDir(dirname(palettePath))
     writeFileSync(palettePath, paletteCss, 'utf-8')
+  }
+
+  const admonitionTypesCss = buildAdmonitionTypesStyles(config)
+  if (admonitionTypesCss) {
+    const admonitionTypesPath = join(config.site_dir, 'assets/css/admonition-types.css')
+    ensureDir(dirname(admonitionTypesPath))
+    writeFileSync(admonitionTypesPath, admonitionTypesCss, 'utf-8')
   }
 
   const repoSource = config.repo_url

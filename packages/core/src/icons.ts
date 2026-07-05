@@ -220,7 +220,10 @@ function getAnnotationIconOverride(config: Config): string | undefined {
 
 const SHORTCODE_RE = /:([a-z][a-z0-9-]*):/gi
 
-export function createIconService(config: Config): IconService {
+export function createIconService(
+  config: Config,
+  extraAdmonitionIcons?: Record<string, string>,
+): IconService {
   const { default: defaultLibrary } = getIconsConfig(config)
   const admonitionOverrides = getAdmonitionOverrides(config)
   const annotationOverride = getAnnotationIconOverride(config)
@@ -237,7 +240,10 @@ export function createIconService(config: Config): IconService {
     },
 
     getAdmonitionIcon(type: string) {
-      const ref = admonitionOverrides[type] ?? DEFAULT_ADMONITION_ICONS[type] ?? `material/${type}`
+      const ref = admonitionOverrides[type]
+        ?? extraAdmonitionIcons?.[type]
+        ?? DEFAULT_ADMONITION_ICONS[type]
+        ?? `material/${type}`
       return service.renderRef(ref)
     },
 

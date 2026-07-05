@@ -71,6 +71,9 @@
   {% if feature.has_palette %}
   <link rel="stylesheet" href="{{ base_url }}assets/css/palette.css">
   {% endif %}
+  {% if feature.has_admonition_types %}
+  <link rel="stylesheet" href="{{ base_url }}assets/css/admonition-types.css">
+  {% endif %}
   {% for href in icon_stylesheets %}
   <link rel="stylesheet" href="{{ href }}">
   {% endfor %}

@@ -1,10 +1,6 @@
 import type MarkdownIt from 'markdown-it'
 import type { IconService } from '../icons.js'
-
-const ADMONITION_TYPES = new Set([
-  'note', 'abstract', 'info', 'tip', 'success', 'question',
-  'warning', 'failure', 'danger', 'bug', 'example', 'quote',
-])
+import { BUILTIN_ADMONITION_TYPES } from '../admonition-types.js'
 
 const ADMONITION_RE = /^(!{3})([+-])?\s+(\w+)(?:\s+(annotate))?(?:\s+"([^"]*)")?\s*$/
 const DETAILS_RE = /^(\?{3})([+-])?\s+(\w+)(?:\s+(annotate))?(?:\s+"([^"]*)")?\s*$/
@@ -15,6 +11,8 @@ const TOGGLE_SVG =
 export interface AdmonitionPluginOptions {
   icons?: IconService
   defaultCollapsed?: boolean
+  types?: Set<string>
+  typeDefaults?: Record<string, { title?: string }>
 }
 
 function resolveCollapsed(modifier: string | undefined, defaultCollapsed: boolean): boolean {
@@ -46,7 +44,9 @@ function registerAdmonitionBlock(
   re: RegExp,
   validateType: boolean,
   defaultCollapsed: boolean,
-  icons?: IconService,
+  icons: IconService | undefined,
+  allowedTypes: Set<string>,
+  typeDefaults: Record<string, { title?: string }>,
 ): void {
   md.block.ruler.before(
     'fence',
@@ -61,9 +61,11 @@ function registerAdmonitionBlock(
 
       const modifier = match[2]
       const type = match[3].toLowerCase()
-      if (validateType && !ADMONITION_TYPES.has(type)) return false
+      if (validateType && !allowedTypes.has(type)) return false
       const annotate = Boolean(match[4])
-      const title = match[5] ?? type.charAt(0).toUpperCase() + type.slice(1)
+      const title = match[5]
+        ?? typeDefaults[type]?.title
+        ?? type.charAt(0).toUpperCase() + type.slice(1)
       const collapsed = resolveCollapsed(modifier, defaultCollapsed)
 
       let nextLine = startLine + 1
@@ -119,6 +121,7 @@ function registerAdmonitionBlock(
 }
 
 export function admonitionPlugin(md: MarkdownIt, opts: AdmonitionPluginOptions = {}): void {
+  const allowedTypes = opts.types ?? BUILTIN_ADMONITION_TYPES
   registerAdmonitionBlock(
     md,
     'admonition',
@@ -126,11 +129,14 @@ export function admonitionPlugin(md: MarkdownIt, opts: AdmonitionPluginOptions =
     true,
     opts.defaultCollapsed ?? false,
     opts.icons,
+    allowedTypes,
+    opts.typeDefaults ?? {},
   )
 }
 
 /** Collapsible admonitions: ??? note "Title" */
 export function detailsPlugin(md: MarkdownIt, opts: AdmonitionPluginOptions = {}): void {
+  const allowedTypes = opts.types ?? BUILTIN_ADMONITION_TYPES
   registerAdmonitionBlock(
     md,
     'details',
@@ -138,5 +144,7 @@ export function detailsPlugin(md: MarkdownIt, opts: AdmonitionPluginOptions = {}
     false,
     opts.defaultCollapsed ?? true,
     opts.icons,
+    allowedTypes,
+    opts.typeDefaults ?? {},
   )
 }

@@ -97,3 +97,16 @@ Icons + tabs:
 Icons + links:
 
 :fontawesome-brands-github: [Repository](https://github.com/can-dy-jack/ts-mkdocs)
+
+## Icon browser
+
+Search supported icon libraries online, preview each icon, and click a card to copy its shortcode.
+
+<div id="icon-browser-app" class="icon-browser">
+  <div class="icon-browser__toolbar">
+    <input class="icon-browser__search" type="search" placeholder="Search by name or shortcode…" aria-label="Search icons">
+    <div class="icon-browser__tabs" role="tablist" aria-label="Icon libraries"></div>
+  </div>
+  <p class="icon-browser__meta">Loading icon metadata…</p>
+  <div class="icon-browser__grid"></div>
+</div>

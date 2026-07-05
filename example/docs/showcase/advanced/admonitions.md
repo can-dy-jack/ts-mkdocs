@@ -64,6 +64,12 @@ Three exclamation marks, type name, indented body (four spaces):
 !!! quote
     **quote** — citation or quotation.
 
+!!! todo
+    **todo** — custom type with checklist icon and brown accent.
+
+!!! experimental
+    **experimental** — custom type with science icon and purple accent.
+
 ## Extended syntax
 
 ### Custom titles
