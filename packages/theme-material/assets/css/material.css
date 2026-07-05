@@ -906,6 +906,29 @@ body {
   margin-bottom: .15rem;
 }
 
+.md-typeset dl {
+  margin: 0 0 .5rem;
+}
+
+.md-typeset dt {
+  font-weight: 600;
+  margin-top: .35rem;
+}
+
+.md-typeset dt:first-child {
+  margin-top: 0;
+}
+
+.md-typeset dd {
+  margin: .15rem 0 .35rem 1.2rem;
+}
+
+.md-typeset abbr {
+  cursor: help;
+  text-decoration: underline dotted;
+  text-underline-offset: .15em;
+}
+
 .md-typeset table {
   width: fit-content;
   border-collapse: separate;

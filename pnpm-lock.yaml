@@ -36,12 +36,18 @@ importers:
       markdown-it:
         specifier: ^14.1.0
         version: 14.2.0
+      markdown-it-abbr:
+        specifier: ^2.0.0
+        version: 2.0.0
       markdown-it-anchor:
         specifier: ^9.1.0
         version: 9.2.0(@types/markdown-it@14.1.2)(markdown-it@14.2.0)
       markdown-it-attrs:
         specifier: ^4.2.0
         version: 4.5.0(markdown-it@14.2.0)
+      markdown-it-deflist:
+        specifier: ^3.0.1
+        version: 3.0.1
       markdown-it-emoji:
         specifier: ^3.0.0
         version: 3.0.0
@@ -860,6 +866,9 @@ packages:
   magic-string@0.30.21:
     resolution: {integrity: sha512-vd2F4YUyEXKGcLHoq+TEyCjxueSeHnFxyyjNp80yg0XV4vUhnDer/lvvlqM/arB5bXQN5K2/3oinyCRyx8T2CQ==}
 
+  markdown-it-abbr@2.0.0:
+    resolution: {integrity: sha512-of7C8pXSjXjDojW4neNP+jD7inUYH/DO0Ca+K/4FUEccg0oHAEX/nfscw0jfz66PJbYWOAT9U8mjO21X5p6aAw==}
+
   markdown-it-anchor@9.2.0:
     resolution: {integrity: sha512-sa2ErMQ6kKOA4l31gLGYliFQrMKkqSO0ZJgGhDHKijPf0pNFM9vghjAh3gn26pS4JDRs7Iwa9S36gxm3vgZTzg==}
     peerDependencies:
@@ -871,6 +880,9 @@ packages:
     engines: {node: '>=6'}
     peerDependencies:
       markdown-it: '>= 9.0.0'
+
+  markdown-it-deflist@3.0.1:
+    resolution: {integrity: sha512-pPtXxihDMi9jrwLLQ+Jra/FM20F/FFJWiVjXf0Js6Lwp7LFj+MuK6cUJNMVTRL+n9d/JqF4MEqYZwSMgVodK5g==}
 
   markdown-it-emoji@3.0.0:
     resolution: {integrity: sha512-+rUD93bXHubA4arpEZO3q80so0qgoFJEKRkRbjKX8RTdca89v2kfyF+xR3i2sQTwql9tpPZPOQN5B+PunspXRg==}
@@ -1836,6 +1848,8 @@ snapshots:
     dependencies:
       '@jridgewell/sourcemap-codec': 1.5.5
 
+  markdown-it-abbr@2.0.0: {}
+
   markdown-it-anchor@9.2.0(@types/markdown-it@14.1.2)(markdown-it@14.2.0):
     dependencies:
       '@types/markdown-it': 14.1.2
@@ -1844,6 +1858,8 @@ snapshots:
   markdown-it-attrs@4.5.0(markdown-it@14.2.0):
     dependencies:
       markdown-it: 14.2.0
+
+  markdown-it-deflist@3.0.1: {}
 
   markdown-it-emoji@3.0.0: {}
 

@@ -28,6 +28,7 @@ nav:
       - Code Blocks: showcase/extended/code-blocks.md
       - Task Lists: showcase/extended/tasklist.md
       - Footnotes: showcase/extended/footnotes.md
+      - Abbreviations & Definition Lists: showcase/extended/abbr-deflist.md
       - Icons: showcase/extended/icons.md
       - Keyboard & Mark: showcase/extended/keys-mark.md
       - Superscript & Subscript: showcase/extended/sup-sub.md
@@ -200,6 +201,8 @@ markdown_extensions:
   - attr_list
   - tables
   - footnotes
+  - abbr
+  - def_list
   - pymdownx.arithmatex:
       provider: katex
       version: "0.16.22"

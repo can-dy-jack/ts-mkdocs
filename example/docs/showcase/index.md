@@ -37,6 +37,7 @@ Markdown extensions that add inline or block elements on top of standard syntax.
 | [Code Blocks](extended/code-blocks.md) | Fenced code, Shiki highlighting, copy / line numbers / language label | `pymdownx.superfences` + theme features |
 | [Task Lists](extended/tasklist.md) | `- [ ]` checkboxes | `pymdownx.tasklist` |
 | [Footnotes](extended/footnotes.md) | `[^1]` references and definitions | `footnotes` |
+| [Abbreviations & Definition Lists](extended/abbr-deflist.md) | `*[ABBR]:` tooltips and `term : definition` pairs | `abbr` / `def_list` |
 | [Icons](extended/icons.md) | `:material-home:` shortcodes | built-in icon service |
 | [Keyboard & Mark](extended/keys-mark.md) | `++key++` and `==highlight==` | `pymdownx.keys` / `pymdownx.mark` |
 | [Superscript & Subscript](extended/sup-sub.md) | `^sup^`, `~sub~`, `^^ins^^`, `~~del~~` | `pymdownx.caret` / `pymdownx.tilde` |
@@ -81,6 +82,8 @@ markdown_extensions:
   - attr_list
   - tables
   - footnotes
+  - abbr
+  - def_list
   - pymdownx.arithmatex:
       provider: katex
       version: "0.16.22"

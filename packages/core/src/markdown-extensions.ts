@@ -14,6 +14,8 @@ import { caretPlugin } from './md/caret.js'
 import { tildePlugin } from './md/tilde.js'
 import { criticPlugin } from './md/critic.js'
 import { footnotesPlugin } from './md/footnotes.js'
+import { abbrPlugin } from './md/abbr.js'
+import { deflistPlugin } from './md/deflist.js'
 import { snippetsPlugin } from './md/snippets.js'
 import { arithmatexPlugin } from './md/arithmatex.js'
 import { emojiPlugin } from './md/emoji.js'
@@ -111,6 +113,8 @@ export function applyMarkdownExtensions(
   if (enabled.has('pymdownx.tilde')) md.use(tildePlugin, options.get('pymdownx.tilde') ?? {})
   if (enabled.has('pymdownx.critic')) md.use(criticPlugin)
   if (enabled.has('footnotes')) md.use(footnotesPlugin)
+  if (enabled.has('abbr')) md.use(abbrPlugin)
+  if (enabled.has('def_list')) md.use(deflistPlugin)
   if (enabled.has('pymdownx.snippets')) {
     md.use(snippetsPlugin, { docsDir: config.docs_dir, ...options.get('pymdownx.snippets') })
   }
