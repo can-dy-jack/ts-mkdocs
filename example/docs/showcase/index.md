@@ -40,6 +40,7 @@ Markdown extensions that add inline or block elements on top of standard syntax.
 | [Abbreviations & Definition Lists](extended/abbr-deflist.md) | `*[ABBR]:` tooltips and `term : definition` pairs | `abbr` / `def_list` |
 | [Icons](extended/icons.md) | `:material-home:` shortcodes | built-in icon service |
 | [Keyboard & Mark](extended/keys-mark.md) | `++key++` and `==highlight==` | `pymdownx.keys` / `pymdownx.mark` |
+| [MagicLink](extended/magiclink.md) | `#1`, `@user`, commit hashes | `pymdownx.magiclink` |
 | [Superscript & Subscript](extended/sup-sub.md) | `^sup^`, `~sub~`, `^^ins^^`, `~~del~~` | `pymdownx.caret` / `pymdownx.tilde` |
 | [Images](extended/images.md) | `![alt](path)`, lightbox zoom | `content.image.lightbox` |
 | [Attributes](extended/attributes.md) | `{: .class #id}` on block elements | `attr_list` |
@@ -78,6 +79,8 @@ markdown_extensions:
   - pymdownx.tasklist
   - pymdownx.keys
   - pymdownx.mark
+  - pymdownx.magiclink:
+      repo_url_shorthand: true
   - pymdownx.caret
   - pymdownx.tilde
   - attr_list

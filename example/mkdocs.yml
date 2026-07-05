@@ -31,6 +31,7 @@ nav:
       - Abbreviations & Definition Lists: showcase/extended/abbr-deflist.md
       - Icons: showcase/extended/icons.md
       - Keyboard & Mark: showcase/extended/keys-mark.md
+      - MagicLink: showcase/extended/magiclink.md
       - Superscript & Subscript: showcase/extended/sup-sub.md
       - Images: showcase/extended/images.md
       - Attributes: showcase/extended/attributes.md
@@ -196,6 +197,10 @@ markdown_extensions:
   - pymdownx.tasklist
   - pymdownx.keys
   - pymdownx.mark
+  - pymdownx.magiclink:
+      normalize_issue_symbols: true
+      repo_url_shorthand: true
+      repo_url_shortener: true
   - pymdownx.emoji
   - pymdownx.caret
   - pymdownx.tilde

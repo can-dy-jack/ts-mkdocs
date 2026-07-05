@@ -19,6 +19,7 @@ import { deflistPlugin } from './md/deflist.js'
 import { snippetsPlugin } from './md/snippets.js'
 import { arithmatexPlugin } from './md/arithmatex.js'
 import { emojiPlugin } from './md/emoji.js'
+import { magiclinkPlugin } from './md/magiclink.js'
 import { hasCodeAnnotateFeature, hasLangLabelFeature, hasLineNumbersFeature } from './md/code-highlight.js'
 
 export type ExtensionEntry = string | Record<string, unknown>
@@ -120,5 +121,11 @@ export function applyMarkdownExtensions(
   }
   if (enabled.has('pymdownx.arithmatex')) {
     md.use(arithmatexPlugin, options.get('pymdownx.arithmatex') ?? {})
+  }
+  if (enabled.has('pymdownx.magiclink')) {
+    magiclinkPlugin(md, options.get('pymdownx.magiclink') ?? {}, {
+      repo_url: config.repo_url,
+      repo_name: config.repo_name,
+    })
   }
 }
