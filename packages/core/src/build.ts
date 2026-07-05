@@ -8,6 +8,11 @@ import type { NavPage } from './nav.js'
 import { initMarkdown, renderMarkdown } from './markdown.js'
 import { parseAuthorRegistry, resolvePageAuthors, shouldShowPageAuthors } from './authors.js'
 import { resolveEditUrl } from './frontmatter.js'
+import {
+  resolveDocumentTitle,
+  resolvePageAuthor,
+  resolvePageHtmlMetaTags,
+} from './html-meta.js'
 import { buildMetaBarItems } from './page-meta.js'
 import {
   aggregateTags,
@@ -343,6 +348,13 @@ function renderPage(
     page.file.url.replace(/[^\w-]+/g, '-').replace(/^-+|-+$/g, '') || 'page',
   )
 
+  const documentTitle = resolveDocumentTitle({
+    siteName: config.site_name,
+    pageTitle: page.title,
+    metaTitle: typeof page.meta.title === 'string' ? page.meta.title : undefined,
+    isHomepage: isHome,
+  })
+
   const ctx = {
     ...buildBaseContext(config, baseUrl, repoStats),
     feature,
@@ -371,12 +383,15 @@ function renderPage(
     toc,
     tab_items: getTabItems(nav.items),
     first_doc_url: isHome ? firstDocUrl(nav.items) : undefined,
-    og_title: `${page.title} - ${config.site_name}`,
+    document_title: documentTitle,
+    og_title: documentTitle,
     og_description: (typeof page.meta.description === 'string' ? page.meta.description : '') || config.site_description || '',
     og_image: resolveOgImage(
       (typeof page.meta.image === 'string' ? page.meta.image : undefined) ?? config.site_image,
       config.site_url,
     ),
+    html_meta_tags: resolvePageHtmlMetaTags(page.meta),
+    page_author: resolvePageAuthor(page.meta, config.site_author),
   }
 
   const template = isHome ? 'home.html' : 'main.html'
@@ -517,7 +532,17 @@ function build404Context(
     search_icon_html: icons.renderRef('material/search'),
     nav_toc: [],
     toc: [],
-    og_title: `404 - ${i18n['404.title']} - ${config.site_name}`,
+    document_title: resolveDocumentTitle({
+      siteName: config.site_name,
+      pageTitle: i18n['404.title'],
+    }),
+    og_title: resolveDocumentTitle({
+      siteName: config.site_name,
+      pageTitle: `404 - ${i18n['404.title']}`,
+    }),
+    og_description: config.site_description ?? '',
+    og_image: resolveOgImage(config.site_image, config.site_url),
+    html_meta_tags: [],
   }
 }
 
@@ -547,6 +572,8 @@ function buildBaseContext(config: Config, baseUrl = './', repoStats?: RepoStats)
     settings_config: buildSettingsConfig(config),
     extra_stylesheets: resolveExtraStylesheets(config, baseUrl),
     extra_scripts: resolveExtraScripts(config, baseUrl),
+    document_title: config.site_name,
+    html_meta_tags: [],
     og_title: config.site_name,
     og_description: config.site_description ?? '',
     og_image: resolveOgImage(config.site_image, config.site_url),
@@ -610,12 +637,17 @@ function generateTagPages(
   const i18n = getI18n(config.theme.language)
 
   const indexBaseUrl = '../'
+  const tagIndexTitle = i18n['tags.title']
+  const tagIndexDocumentTitle = resolveDocumentTitle({
+    siteName: config.site_name,
+    pageTitle: tagIndexTitle,
+  })
   const indexCtx = {
     ...buildBaseContext(config, indexBaseUrl, repoStats),
     feature,
     i18n,
     page: {
-      title: i18n['tags.title'],
+      title: tagIndexTitle,
       meta: { description: i18n['tags.description'] },
       url: 'tags/',
       is_homepage: false,
@@ -628,6 +660,9 @@ function generateTagPages(
     nav_toc: [],
     toc: [],
     tab_items: getTabItems(nav.items),
+    document_title: tagIndexDocumentTitle,
+    og_title: tagIndexDocumentTitle,
+    og_description: i18n['tags.description'],
   }
 
   const indexPath = join(config.site_dir, 'tags', 'index.html')
@@ -648,6 +683,10 @@ function renderTagArchivePage(
   i18n: ReturnType<typeof getI18n>,
 ): void {
   const baseUrl = '../../'
+  const archiveDocumentTitle = resolveDocumentTitle({
+    siteName: config.site_name,
+    pageTitle: tag.name,
+  })
   const ctx = {
     ...buildBaseContext(config, baseUrl, repoStats),
     feature,
@@ -665,6 +704,8 @@ function renderTagArchivePage(
     nav_toc: [],
     toc: [],
     tab_items: getTabItems(nav.items),
+    document_title: archiveDocumentTitle,
+    og_title: archiveDocumentTitle,
   }
 
   const archivePath = join(config.site_dir, 'tags', tag.slug, 'index.html')

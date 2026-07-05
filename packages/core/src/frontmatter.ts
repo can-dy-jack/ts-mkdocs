@@ -1,6 +1,7 @@
 import { readFileSync, existsSync } from 'fs'
 import { join, dirname } from 'path'
 import yaml from 'js-yaml'
+import { isHtmlMetaMergeKey, parseHtmlMetaTags, type HtmlMetaTag } from './html-meta.js'
 
 export interface PageMeta {
   title?: string
@@ -28,6 +29,10 @@ export interface PageMeta {
   search?: { boost?: number; exclude?: boolean }
   hero?: { title?: string; tagline?: string }
   robots?: string
+  /** Page author for `<meta name="author">` (distinct from display `authors`). */
+  author?: string
+  /** Custom HTML `<meta>` tags rendered in the document head. */
+  html_meta?: HtmlMetaTag[]
   /** Reading time override in minutes. */
   readtime?: number
   /** Disable automatic reading time for this page. */
@@ -112,7 +117,7 @@ export function mergePageMeta(
 
 function mergeMetaLayer(target: Record<string, unknown>, layer: Record<string, unknown>): void {
   for (const [key, value] of Object.entries(layer)) {
-    if (ARRAY_MERGE_KEYS.has(key) && Array.isArray(value)) {
+    if ((ARRAY_MERGE_KEYS.has(key) || isHtmlMetaMergeKey(key)) && Array.isArray(value)) {
       const existing = Array.isArray(target[key]) ? (target[key] as unknown[]) : []
       target[key] = [...existing, ...value]
     } else {
@@ -158,6 +163,10 @@ export function normalizePageMeta(raw: Record<string, unknown>, language = 'en')
       meta.edit_url = editUri
       delete meta.edit_uri
     }
+  }
+
+  if (meta.html_meta !== undefined) {
+    meta.html_meta = parseHtmlMetaTags(meta.html_meta)
   }
 
   return meta as PageMeta

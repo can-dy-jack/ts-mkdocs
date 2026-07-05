@@ -18,6 +18,13 @@ export {
   resolveEditUrl,
 } from './frontmatter.js'
 export {
+  parseHtmlMetaTags,
+  resolveDocumentTitle,
+  resolvePageAuthor,
+  resolvePageHtmlMetaTags,
+} from './html-meta.js'
+export type { HtmlMetaTag } from './html-meta.js'
+export {
   computeReadingTime,
   resolveReadingTimeConfig,
   injectAfterFirstH1,

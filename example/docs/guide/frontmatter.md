@@ -39,6 +39,34 @@ Each Markdown page can declare metadata in YAML frontmatter at the top of the fi
 | `search` | object | Search tuning: `boost`, `exclude` |
 | `hero` | object | Homepage hero: `title`, `tagline` |
 | `robots` | string | Value for `<meta name="robots">` |
+| `author` | string | Page author for `<meta name="author">` (overrides `site_author`) |
+| `image` | string | Open Graph / Twitter card image (absolute URL or site-relative path) |
+| `html_meta` | list | Custom HTML `<meta>` tags; each item uses `name`, `property`, `http-equiv`, or `charset` plus `content` |
+
+## HTML meta tags
+
+Built-in frontmatter fields such as `description`, `robots`, `author`, and `image` are rendered automatically in the document `<head>`, along with Open Graph and Twitter Card tags.
+
+For additional tags, use `html_meta`:
+
+```yaml
+---
+title: API Reference
+description: REST API endpoints and request formats
+author: Alice Doe
+robots: noindex, nofollow
+image: assets/og-api.png
+html_meta:
+  - name: keywords
+    content: api, rest, reference
+  - property: article:section
+    content: Reference
+---
+```
+
+`html_meta` entries can also be inherited from `.meta.yml` files when the `meta` plugin is enabled; lists are appended like `tags`.
+
+To inject tags globally or with custom logic, override the `site_meta` or `extrahead` block in a theme template extension.
 
 ## Example
 
@@ -71,7 +99,7 @@ Global edit links come from `repo_url` and `edit_uri` in `mkdocs.yml`. Override 
 
 ## Inherited metadata (`.meta.yml`)
 
-Enable the `meta` plugin to merge metadata from `.meta.yml` files in parent folders. Array fields such as `tags`, `groups`, `authors`, and `hide` are appended; other fields are overridden by the page frontmatter.
+Enable the `meta` plugin to merge metadata from `.meta.yml` files in parent folders. Array fields such as `tags`, `groups`, `authors`, `hide`, and `html_meta` are appended; other fields are overridden by the page frontmatter.
 
 `guide/.meta.yml`:
 

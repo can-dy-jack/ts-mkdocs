@@ -6,8 +6,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
 
-  <title>{% block title %}{% if page %}{{ page.title }} - {% endif %}{{ config.site_name }}{% endblock %}</title>
+  <title>{% block title %}{{ document_title | default(config.site_name) }}{% endblock %}</title>
 
+  {% block site_meta %}
   {% if page and page.meta and page.meta.description %}
   <meta name="description" content="{{ page.meta.description }}">
   {% elif config.site_description %}
@@ -16,7 +17,9 @@
   {% if page and page.meta and page.meta.robots %}
   <meta name="robots" content="{{ page.meta.robots }}">
   {% endif %}
-  {% if config.site_author %}
+  {% if page_author %}
+  <meta name="author" content="{{ page_author }}">
+  {% elif config.site_author %}
   <meta name="author" content="{{ config.site_author }}">
   {% endif %}
 
@@ -27,7 +30,7 @@
   {% if og_description %}
   <meta property="og:description" content="{{ og_description }}">
   {% endif %}
-  {% if config.site_url and page %}
+  {% if config.site_url and page and page.url %}
   <meta property="og:url" content="{{ config.site_url }}{{ page.url }}">
   {% endif %}
   <meta property="og:site_name" content="{{ config.site_name }}">
@@ -46,9 +49,18 @@
   <meta name="twitter:image" content="{{ og_image }}">
   {% endif %}
 
-  {% if config.site_url and page %}
+  {% if config.site_url and page and page.url %}
   <link rel="canonical" href="{{ config.site_url }}{{ page.url }}">
   {% endif %}
+
+  {% if html_meta_tags %}
+  {% for tag in html_meta_tags %}
+  <meta{% if tag.charset %} charset="{{ tag.charset }}"{% endif %}{% if tag.name %} name="{{ tag.name }}"{% endif %}{% if tag.property %} property="{{ tag.property }}"{% endif %}{% if tag.http_equiv %} http-equiv="{{ tag.http_equiv }}"{% endif %}{% if tag.content is defined %} content="{{ tag.content }}"{% endif %}>
+  {% endfor %}
+  {% endif %}
+  {% endblock %}
+
+  {% block extrahead %}{% endblock %}
 
   {% if config.theme.favicon %}
   <link rel="icon" href="{{ base_url }}{{ config.theme.favicon }}"{% if '.svg' in config.theme.favicon %} type="image/svg+xml"{% elif '.png' in config.theme.favicon %} type="image/png"{% elif '.ico' in config.theme.favicon %} type="image/x-icon"{% endif %}>
