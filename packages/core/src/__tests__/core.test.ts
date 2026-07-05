@@ -5,7 +5,7 @@ import { getI18n } from '../i18n'
 import { resolveColor, buildPaletteStyles } from '../palette'
 import { buildNavigation } from '../nav'
 import { collectFiles } from '../files'
-import { joinUrl, formatCopyright } from '../utils.js'
+import { joinUrl, formatCopyright, resolveSiteRootBaseUrl } from '../utils.js'
 import { writeFileSync, mkdirSync, rmSync } from 'fs'
 import { join } from 'path'
 import { tmpdir } from 'os'
@@ -88,6 +88,12 @@ describe('utils', () => {
   it('expands copyright year placeholder', () => {
     const year = String(new Date().getFullYear())
     expect(formatCopyright('Copyright {year} Example')).toBe(`Copyright ${year} Example`)
+  })
+
+  it('resolves site root base URL for 404 assets', () => {
+    expect(resolveSiteRootBaseUrl()).toBe('/')
+    expect(resolveSiteRootBaseUrl('https://example.com/')).toBe('/')
+    expect(resolveSiteRootBaseUrl('https://example.com/docs/')).toBe('/docs/')
   })
 })
 

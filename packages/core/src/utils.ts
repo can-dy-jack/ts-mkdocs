@@ -51,6 +51,18 @@ export function joinUrl(base: string, path: string): string {
   return (base || './') + path.replace(/^\.\//, '')
 }
 
+/** Absolute site-root base URL for 404 and other root-level pages (e.g. `/`, `/docs/`). */
+export function resolveSiteRootBaseUrl(siteUrl?: string): string {
+  if (!siteUrl) return '/'
+  try {
+    const { pathname } = new URL(siteUrl)
+    const normalized = pathname.replace(/\/+$/, '')
+    return normalized ? `${normalized}/` : '/'
+  } catch {
+    return '/'
+  }
+}
+
 export function formatCopyright(template: string): string {
   const year = String(new Date().getFullYear())
   return template.replace(/\{year\}/gi, year)

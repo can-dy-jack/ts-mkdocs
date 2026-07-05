@@ -94,7 +94,7 @@
     {% endif %}
   {% endif %}
 </head>
-<body class="{% if feature.has['header.autohide'] %}md-header--autohide{% endif %}{% if page and page.is_homepage %} home-page{% endif %}{% if page and (page.is_tags_index or page.is_tags_archive) %} tags-page{% endif %}">
+<body class="{% if feature.has['header.autohide'] %}md-header--autohide{% endif %}{% if page and page.is_homepage %} home-page{% endif %}{% if page and page.is_not_found %} not-found-page{% endif %}{% if page and (page.is_tags_index or page.is_tags_archive) %} tags-page{% endif %}">
 
 <input class="md-toggle" type="checkbox" id="__drawer" autocomplete="off">
 <label class="md-drawer__overlay" for="__drawer" aria-hidden="true"></label>

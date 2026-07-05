@@ -30,7 +30,7 @@ import { loadPage } from './page.js'
 import type { Page } from './page.js'
 import { loadPlugins } from './plugins.js'
 import { buildSearchIndex, writeSearchIndex } from './search.js'
-import { ensureDir, walkDir, log, success, joinUrl, formatCopyright } from './utils.js'
+import { ensureDir, walkDir, log, success, joinUrl, formatCopyright, resolveSiteRootBaseUrl } from './utils.js'
 import { buildFeatureContext, getTabItems, getSidebarNav, getFeatures } from './features.js'
 import type { FeatureContext } from './features.js'
 import { rewriteContentImages } from './content-images.js'
@@ -154,7 +154,7 @@ export async function build(config: Config): Promise<Page[]> {
   }
 
   try {
-    const html404 = nunjucksEnv!.render('404.html', buildBaseContext(resolvedConfig, './', repoStats))
+    const html404 = nunjucksEnv!.render('404.html', build404Context(resolvedConfig, repoStats))
     writeFileSync(join(resolvedConfig.site_dir, '404.html'), html404)
   } catch {}
 
@@ -491,6 +491,34 @@ function resolveOgImage(imageRaw: string | undefined, siteUrl?: string): string 
   if (/^https?:\/\//.test(imageRaw)) return imageRaw
   if (siteUrl) return `${siteUrl}/${imageRaw.replace(/^\//, '')}`
   return imageRaw
+}
+
+function build404Context(
+  config: Config,
+  repoStats?: RepoStats,
+): Record<string, unknown> {
+  const baseUrl = resolveSiteRootBaseUrl(config.site_url)
+  const feature = buildFeatureContext(config)
+  const i18n = getI18n(config.theme.language)
+  const icons = createIconService(config)
+
+  return {
+    ...buildBaseContext(config, baseUrl, repoStats),
+    feature,
+    i18n,
+    page: {
+      title: i18n['404.title'],
+      content: '',
+      is_homepage: false,
+      is_not_found: true,
+    },
+    not_found_icon_html: icons.renderRef('material/travel_explore'),
+    home_icon_html: icons.renderRef('material/home'),
+    search_icon_html: icons.renderRef('material/search'),
+    nav_toc: [],
+    toc: [],
+    og_title: `404 - ${i18n['404.title']} - ${config.site_name}`,
+  }
 }
 
 function buildBaseContext(config: Config, baseUrl = './', repoStats?: RepoStats): Record<string, unknown> {
