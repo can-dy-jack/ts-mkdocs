@@ -1,5 +1,5 @@
 import { Command } from 'commander'
-import { resolve, join, dirname } from 'path'
+import { resolve, join, dirname, basename } from 'path'
 import { writeFileSync, mkdirSync, existsSync, copyFileSync, cpSync } from 'fs'
 import { fileURLToPath } from 'url'
 import { loadConfig } from './config.js'
@@ -9,12 +9,40 @@ import { log, error, success } from './utils.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
+function writeProjectFiles(projectDir: string, projectName: string) {
+  writeFileSync(
+    resolve(projectDir, 'package.json'),
+    JSON.stringify(
+      {
+        name: projectName,
+        version: '0.1.0',
+        private: true,
+        scripts: {
+          dev: 'ts-mkdocs serve',
+          build: 'ts-mkdocs build',
+          preview: 'ts-mkdocs build && npx serve site',
+        },
+        dependencies: {
+          "ts-mkdocs": '^0.2.2',
+        },
+      },
+      null,
+      2,
+    ) + '\n',
+  )
+
+  writeFileSync(
+    resolve(projectDir, '.gitignore'),
+    'node_modules/\nsite/\n',
+  )
+}
+
 const program = new Command()
 
 program
   .name('ts-mkdocs')
   .description('TypeScript implementation of MkDocs with Material theme')
-  .version('0.1.0')
+  .version('0.2.2')
 
 program
   .command('new <directory>')
@@ -27,6 +55,8 @@ program
       error(`Directory already exists: ${projectDir}`)
       process.exit(1)
     }
+
+    const projectName = basename(projectDir)
 
     if (opts.template) {
       const templateType = opts.template
@@ -42,6 +72,7 @@ program
       }
 
       cpSync(templateDir, projectDir, { recursive: true })
+      writeProjectFiles(projectDir, projectName)
       success(`Created new project from "${templateType}" template at: ${projectDir}`)
     } else {
       const docsDir = resolve(projectDir, 'docs')
@@ -114,12 +145,14 @@ Edit this file to get started with your documentation.
 `,
       )
 
+      writeProjectFiles(projectDir, projectName)
       success(`Created new project at: ${projectDir}`)
     }
 
     log('Run the following commands to get started:')
     console.log(`  cd ${directory}`)
-    console.log('  ts-mkdocs serve')
+    console.log('  npm install')
+    console.log('  npm run dev')
   })
 
 program

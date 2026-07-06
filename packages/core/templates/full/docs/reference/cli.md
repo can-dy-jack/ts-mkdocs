@@ -15,26 +15,48 @@ authors:
 
 ## `ts-mkdocs new <directory>`
 
-Scaffold a new project.
+Scaffold a new project. Every project is a standard npm package with `package.json`, ready to `npm install` and run.
 
 ```bash
-# Default: creates ts-mkdocs.yml + docs/index.md
-ts-mkdocs new my-docs
+# Default: minimal starter project
+npx ts-mkdocs new my-docs
 
 # Minimal template: basic starter with index and getting-started page
-ts-mkdocs new my-docs --template minimal
+npx ts-mkdocs new my-docs --template minimal
 
 # Full template: complete example with all features demonstrated
-ts-mkdocs new my-docs --template full
+npx ts-mkdocs new my-docs --template full
+
+# Then start developing
+cd my-docs
+npm install
+npm run dev
 ```
 
 | Flag | Default | Description |
 |------|---------|-------------|
 | `-t, --template <type>` | — | Use a template: `full` (complete example) or `minimal` (basic starter) |
 
-Without `--template`, creates a minimal project with `ts-mkdocs.yml` and `docs/index.md` inside `<directory>`.
+Generated project structure:
 
-With `--template`, copies a pre-built template:
+```
+my-docs/
+├── package.json        # npm scripts: dev, build, preview
+├── .gitignore
+├── ts-mkdocs.yml       # Site configuration
+└── docs/               # Markdown source files
+    └── index.md
+```
+
+Available npm scripts:
+
+| Script | Command | Description |
+|--------|---------|-------------|
+| `npm run dev` | `ts-mkdocs serve` | Start dev server with live reload |
+| `npm run build` | `ts-mkdocs build` | Build static site to `site/` |
+| `npm run preview` | `ts-mkdocs build && npx serve site` | Build and preview locally |
+
+Templates:
 
 - **`minimal`** — A clean starter with `index.md` and `getting-started.md`, ready for your own content.
 - **`full`** — The complete example site used in the ts-mkdocs documentation, showcasing all features: syntax extensions, admonitions, code blocks, tabs, search, and more. Great for exploring what ts-mkdocs can do.
