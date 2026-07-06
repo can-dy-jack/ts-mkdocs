@@ -1,0 +1,140 @@
+.icon-browser {
+  --ib-border: var(--md-default-fg-color--lightest, #e0e0e0);
+  --ib-surface: var(--md-code-bg-color, #f5f5f5);
+  --ib-muted: var(--md-default-fg-color--light, #757575);
+  margin: 1.5rem 0 2rem;
+  padding: 1rem;
+  border: 1px solid var(--ib-border);
+  border-radius: 0.4rem;
+  background: var(--md-default-bg-color, #fff);
+}
+
+.icon-browser__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.icon-browser__search {
+  flex: 1 1 14rem;
+  min-width: 0;
+  padding: 0.45rem 0.75rem;
+  border: 1px solid var(--ib-border);
+  border-radius: 0.25rem;
+  font: inherit;
+  background: var(--md-default-bg-color, #fff);
+  color: inherit;
+}
+
+.icon-browser__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.icon-browser__tab {
+  padding: 0.35rem 0.75rem;
+  border: 1px solid var(--ib-border);
+  border-radius: 999px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.icon-browser__tab:hover {
+  background: var(--ib-surface);
+}
+
+.icon-browser__tab.is-active {
+  border-color: var(--md-primary-fg-color, #2196f3);
+  background: color-mix(in srgb, var(--md-primary-fg-color, #2196f3) 12%, transparent);
+  color: var(--md-primary-fg-color, #2196f3);
+}
+
+.icon-browser__meta {
+  margin: 0 0 0.75rem;
+  font-size: 0.85rem;
+  color: var(--ib-muted);
+}
+
+.icon-browser__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr));
+  gap: 0.65rem;
+}
+
+.icon-browser__card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.75rem 0.5rem;
+  border: 1px solid var(--ib-border);
+  border-radius: 0.35rem;
+  background: var(--ib-surface);
+  cursor: pointer;
+  text-align: center;
+  transition: border-color 0.15s, transform 0.15s;
+}
+
+.icon-browser__card:hover,
+.icon-browser__card:focus-visible {
+  border-color: var(--md-primary-fg-color, #2196f3);
+  outline: none;
+  transform: translateY(-1px);
+}
+
+.icon-browser__preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.icon-browser__preview .material-symbols-outlined {
+  font-size: 1.75rem;
+}
+
+.icon-browser__name {
+  width: 100%;
+  font-family: var(--md-code-font, monospace);
+  font-size: 0.72rem;
+  line-height: 1.35;
+  word-break: break-all;
+  color: var(--ib-muted);
+}
+
+.icon-browser__empty,
+.icon-browser__loading {
+  grid-column: 1 / -1;
+  padding: 2rem 1rem;
+  text-align: center;
+  color: var(--ib-muted);
+}
+
+.icon-browser__toast {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 100;
+  padding: 0.55rem 0.9rem;
+  border-radius: 0.35rem;
+  background: var(--md-primary-fg-color, #2196f3);
+  color: var(--md-primary-bg-color, #fff);
+  font-size: 0.85rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+
+.icon-browser__toast.is-visible {
+  opacity: 1;
+}

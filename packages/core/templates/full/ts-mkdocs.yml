@@ -1,0 +1,171 @@
+site_name: My Documentation
+site_description: A documentation site built with ts-mkdocs
+site_dir: site
+
+nav:
+  - Home: index.md
+  - Tutorial:
+    - What is ts-mkdocs?: tutorial/index.md
+    - Features: tutorial/features.md
+    - Quick Start: tutorial/quick-start.md
+    - Basic Configuration: tutorial/basic-config.md
+  - Syntax:
+    - Overview: syntax/index.md
+    - Basic Syntax:
+      - Headings: syntax/basic/headings.md
+      - Text & Links: syntax/basic/text.md
+      - Blockquotes: syntax/basic/blockquote.md
+      - Lists: syntax/basic/lists.md
+      - Tables: syntax/basic/tables.md
+    - Extended Syntax:
+      - Code Blocks: syntax/extended/code-blocks.md
+      - Task Lists: syntax/extended/tasklist.md
+      - Footnotes: syntax/extended/footnotes.md
+      - Abbreviations & Definition Lists: syntax/extended/abbr-deflist.md
+      - Icons: syntax/extended/icons.md
+      - Keyboard & Mark: syntax/extended/keys-mark.md
+      - MagicLink: syntax/extended/magiclink.md
+      - Superscript & Subscript: syntax/extended/sup-sub.md
+      - Images: syntax/extended/images.md
+      - Attributes: syntax/extended/attributes.md
+    - Advanced Components:
+      - Admonitions: syntax/advanced/admonitions.md
+      - Content Tabs: syntax/advanced/tabs.md
+      - Annotations: syntax/advanced/annotations.md
+      - Math: syntax/advanced/math.md
+      - Mermaid: syntax/advanced/mermaid.md
+      - Comments: syntax/advanced/comments.md
+    - Nesting & Combinations:
+      - Combinations: syntax/nesting/combinations.md
+  - Reference:
+    - Overview: reference/index.md
+    - Configuration: reference/config.md
+    - Theme: reference/theme.md
+    - Markdown Extensions: reference/extensions.md
+    - Plugins: reference/plugins.md
+    - CLI: reference/cli.md
+    - Plugin API: reference/plugin-api.md
+    - Frontmatter: reference/frontmatter.md
+    - Internationalization: reference/i18n.md
+  - Changelog:
+    - Overview: changelog/index.md
+    - Unreleased: changelog/unreleased.md
+    - v0.1.0: changelog/v0.1.0.md
+
+theme:
+  name: material
+  language: en
+  logo: assets/logo.svg
+  favicon: assets/favicon.svg
+  palette:
+    - scheme: default
+      primary: blue
+      accent: blue
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+  font:
+    text: Inter
+    code: JetBrains Mono
+  highlight:
+    theme_light: catppuccin-latte
+    theme_dark: github-dark
+  icons:
+    default: material
+    libraries:
+      - material
+      - fontawesome
+      - bootstrap
+  features:
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.footer
+    - navigation.top
+    - toc.follow
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.code.linenumbers
+    - content.code.lang
+    - content.code.wrap
+    - content.code.annotate
+    - content.image.lightbox
+
+extra_css:
+  - assets/custom.css
+  - assets/icon-browser.css
+
+extra_javascript:
+  - assets/custom.js
+  - path: assets/icon-browser.js
+    defer: true
+
+plugins:
+  - search
+  - meta
+  - tags:
+      sort_by: count
+  - sitemap:
+      hostname: https://example.com
+  - robots
+
+markdown_extensions:
+  - admonition:
+      default_collapsed: false
+      types:
+        todo:
+          title: Todo
+          icon: material/checklist
+          color: '#795548'
+        experimental:
+          title: Experimental
+          icon: material/experiment
+          color: '#673ab7'
+  - md.details:
+      default_collapsed: true
+  - md.tabs:
+      alternate_style: true
+  - md.fences:
+      mermaid:
+        version: "11"
+        cdn:
+          base: https://cdn.jsdelivr.net/npm/mermaid@11/dist
+        theme: auto
+  - md.tasklist
+  - md.keys
+  - md.mark
+  - md.links:
+      normalize_issue_symbols: true
+      repo_url_shorthand: true
+      repo_url_shortener: true
+  - md.emoji
+  - md.caret
+  - md.tilde
+  - attr_list
+  - tables
+  - footnotes
+  - abbr
+  - def_list
+  - md.math:
+      provider: katex
+      version: "0.16.22"
+      cdn:
+        base: https://cdn.jsdelivr.net/npm/katex@0.16.22/dist
+  - toc:
+      permalink: true
+      toc_depth: 3
+
+extra:
+  reading_time:
+    enabled: true
+    words_per_minute: 265
+    cjk_chars_per_minute: 500
+    exclude_code: true
+    min_minutes: 1
+  license:
+    enabled: true
+    preset: cc-by-nc-sa-4.0
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/

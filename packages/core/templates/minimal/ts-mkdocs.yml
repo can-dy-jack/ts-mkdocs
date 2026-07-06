@@ -1,0 +1,44 @@
+site_name: My Documentation
+site_description: My documentation site
+docs_dir: docs
+site_dir: site
+
+theme:
+  name: material
+  logo: assets/logo.svg
+  favicon: assets/favicon.svg
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  font:
+    text: Roboto
+    code: Roboto Mono
+  icons:
+    default: material
+    libraries:
+      - material
+      - fontawesome
+      - bootstrap
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - toc.follow
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.code.linenumbers
+    - content.code.lang
+    - content.code.wrap
+
+plugins:
+  - search

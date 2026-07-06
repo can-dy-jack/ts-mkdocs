@@ -1,0 +1,4 @@
+/* Site-specific styles loaded via extra_css in ts-mkdocs.yml */
+.md-nav--lifted>.md-nav__list>.md-nav__item--section>.md-nav__link {
+  text-transform: none;
+}

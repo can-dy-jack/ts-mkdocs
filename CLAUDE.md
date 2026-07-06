@@ -27,6 +27,11 @@ pnpm example:build        # Build example site to example/site/
 # Single package
 cd packages/core
 pnpm test:watch           # Watch mode for tests
+
+# Create new project from template
+ts-mkdocs new my-docs                    # Default scaffold
+ts-mkdocs new my-docs --template minimal # Basic starter
+ts-mkdocs new my-docs --template full    # Complete example
 ```
 
 **Run a single test file:** `cd packages/core && npx vitest run src/__tests__/config.test.ts`

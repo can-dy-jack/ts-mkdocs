@@ -1,10 +1,13 @@
 import { Command } from 'commander'
-import { resolve, join } from 'path'
-import { writeFileSync, mkdirSync, existsSync, copyFileSync } from 'fs'
+import { resolve, join, dirname } from 'path'
+import { writeFileSync, mkdirSync, existsSync, copyFileSync, cpSync } from 'fs'
+import { fileURLToPath } from 'url'
 import { loadConfig } from './config.js'
 import { build } from './build.js'
 import { serve } from './serve.js'
 import { log, error, success } from './utils.js'
+
+const __dirname = dirname(fileURLToPath(import.meta.url))
 
 const program = new Command()
 
@@ -16,7 +19,8 @@ program
 program
   .command('new <directory>')
   .description('Create a new MkDocs project')
-  .action(async (directory: string) => {
+  .option('-t, --template <type>', 'Use a template: full (complete example) or minimal (basic starter)')
+  .action(async (directory: string, opts: { template?: string }) => {
     const projectDir = resolve(directory)
 
     if (existsSync(projectDir)) {
@@ -24,18 +28,34 @@ program
       process.exit(1)
     }
 
-    const docsDir = resolve(projectDir, 'docs')
-    const assetsDir = resolve(docsDir, 'assets')
-    mkdirSync(assetsDir, { recursive: true })
+    if (opts.template) {
+      const templateType = opts.template
+      if (templateType !== 'full' && templateType !== 'minimal') {
+        error(`Unknown template: ${templateType}. Use "full" or "minimal".`)
+        process.exit(1)
+      }
 
-    const themeModule = await import('ts-mkdocs-theme-material')
-    for (const file of ['logo.svg', 'favicon.svg']) {
-      copyFileSync(join(themeModule.brandDir, file), join(assetsDir, file))
-    }
+      const templateDir = resolve(__dirname, '..', 'templates', templateType)
+      if (!existsSync(templateDir)) {
+        error(`Template not found: ${templateDir}`)
+        process.exit(1)
+      }
 
-    writeFileSync(
-      resolve(projectDir, 'ts-mkdocs.yml'),
-      `site_name: My Documentation
+      cpSync(templateDir, projectDir, { recursive: true })
+      success(`Created new project from "${templateType}" template at: ${projectDir}`)
+    } else {
+      const docsDir = resolve(projectDir, 'docs')
+      const assetsDir = resolve(docsDir, 'assets')
+      mkdirSync(assetsDir, { recursive: true })
+
+      const themeModule = await import('ts-mkdocs-theme-material')
+      for (const file of ['logo.svg', 'favicon.svg']) {
+        copyFileSync(join(themeModule.brandDir, file), join(assetsDir, file))
+      }
+
+      writeFileSync(
+        resolve(projectDir, 'ts-mkdocs.yml'),
+        `site_name: My Documentation
 site_description: My documentation site
 docs_dir: docs
 site_dir: site
@@ -80,11 +100,11 @@ theme:
 plugins:
   - search
 `,
-    )
+      )
 
-    writeFileSync(
-      resolve(projectDir, 'docs', 'index.md'),
-      `# Welcome
+      writeFileSync(
+        resolve(projectDir, 'docs', 'index.md'),
+        `# Welcome
 
 Welcome to my documentation!
 
@@ -92,9 +112,11 @@ Welcome to my documentation!
 
 Edit this file to get started with your documentation.
 `,
-    )
+      )
 
-    success(`Created new project at: ${projectDir}`)
+      success(`Created new project at: ${projectDir}`)
+    }
+
     log('Run the following commands to get started:')
     console.log(`  cd ${directory}`)
     console.log('  ts-mkdocs serve')
