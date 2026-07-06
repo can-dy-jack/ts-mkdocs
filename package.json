@@ -11,7 +11,10 @@
     "test": "pnpm -r test",
     "example:build": "node packages/core/dist/cli.js build -f example/ts-mkdocs.yml",
     "example:serve": "node packages/core/dist/cli.js serve -f example/ts-mkdocs.yml",
-    "start": "node packages/core/dist/cli.js serve -f example/ts-mkdocs.yml"
+    "start": "node packages/core/dist/cli.js serve -f example/ts-mkdocs.yml",
+    "release": "pnpm build && pnpm test && pnpm -r publish --access public",
+    "release:dry-run": "pnpm build && pnpm -r publish --dry-run --access public",
+    "release:version": "pnpm -r version"
   },
   "devDependencies": {
     "typescript": "^5.5.0"

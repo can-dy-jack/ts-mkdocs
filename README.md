@@ -351,6 +351,54 @@ packages/
     └── assets/      CSS + JS
 ```
 
+## Publishing to npm
+
+### Prerequisites
+
+1. **npm account** — register at [npmjs.com](https://www.npmjs.com)
+2. **Login** in your terminal:
+   ```bash
+   npm login
+   ```
+3. **2FA** — npm requires two-factor authentication to publish. Enable it:
+   ```bash
+   npm profile enable-2fa auth-and-writes
+   ```
+
+### Release workflow
+
+This is a pnpm monorepo with two packages (`ts-mkdocs` and `ts-mkdocs-theme-material`). `pnpm publish` automatically replaces `workspace:*` with the actual version and publishes in dependency order.
+
+**1. Bump version** (choose one):
+
+```bash
+pnpm release:version patch   # 0.1.0 → 0.1.1
+pnpm release:version minor   # 0.1.0 → 0.2.0
+pnpm release:version major   # 0.1.0 → 1.0.0
+```
+
+**2. Preview what will be published** (dry-run):
+
+```bash
+pnpm release:dry-run
+```
+
+**3. Publish:**
+
+```bash
+pnpm release
+```
+
+This runs `build → test → publish` in sequence. Both packages are published to the public npm registry.
+
+### Available scripts
+
+| Script | Description |
+|--------|-------------|
+| `pnpm release:dry-run` | Build + preview publish (no actual upload) |
+| `pnpm release` | Build + test + publish to npm |
+| `pnpm release:version <bump>` | Bump version across all packages |
+
 ## License
 
 MIT
