@@ -10,43 +10,52 @@ site_dir: site
 
 nav:
   - Home: index.md
-  - Getting Started:
-    - Installation: guide/installation.md
-    - Configuration: guide/configuration.md
-    - Frontmatter: guide/frontmatter.md
-    - Admonitions: guide/admonitions.md
-  - Feature Showcase:
-    - Overview: showcase/index.md
+  - Tutorial:
+    - What is ts-mkdocs?: tutorial/index.md
+    - Features: tutorial/features.md
+    - Quick Start: tutorial/quick-start.md
+    - Basic Configuration: tutorial/basic-config.md
+  - Syntax:
+    - Overview: syntax/index.md
     - Basic Syntax:
-      - Headings: showcase/basic/headings.md
-      - Text & Links: showcase/basic/text.md
-      - Blockquotes: showcase/basic/blockquote.md
-      - Lists: showcase/basic/lists.md
-      - Tables: showcase/basic/tables.md
+      - Headings: syntax/basic/headings.md
+      - Text & Links: syntax/basic/text.md
+      - Blockquotes: syntax/basic/blockquote.md
+      - Lists: syntax/basic/lists.md
+      - Tables: syntax/basic/tables.md
     - Extended Syntax:
-      - Code Blocks: showcase/extended/code-blocks.md
-      - Task Lists: showcase/extended/tasklist.md
-      - Footnotes: showcase/extended/footnotes.md
-      - Abbreviations & Definition Lists: showcase/extended/abbr-deflist.md
-      - Icons: showcase/extended/icons.md
-      - Keyboard & Mark: showcase/extended/keys-mark.md
-      - MagicLink: showcase/extended/magiclink.md
-      - Superscript & Subscript: showcase/extended/sup-sub.md
-      - Images: showcase/extended/images.md
-      - Attributes: showcase/extended/attributes.md
+      - Code Blocks: syntax/extended/code-blocks.md
+      - Task Lists: syntax/extended/tasklist.md
+      - Footnotes: syntax/extended/footnotes.md
+      - Abbreviations & Definition Lists: syntax/extended/abbr-deflist.md
+      - Icons: syntax/extended/icons.md
+      - Keyboard & Mark: syntax/extended/keys-mark.md
+      - MagicLink: syntax/extended/magiclink.md
+      - Superscript & Subscript: syntax/extended/sup-sub.md
+      - Images: syntax/extended/images.md
+      - Attributes: syntax/extended/attributes.md
     - Advanced Components:
-      - Admonitions: showcase/advanced/admonitions.md
-      - Content Tabs: showcase/advanced/tabs.md
-      - Annotations: showcase/advanced/annotations.md
-      - Math: showcase/advanced/math.md
-      - Mermaid: showcase/advanced/mermaid.md
-      - Comments: showcase/advanced/comments.md
+      - Admonitions: syntax/advanced/admonitions.md
+      - Content Tabs: syntax/advanced/tabs.md
+      - Annotations: syntax/advanced/annotations.md
+      - Math: syntax/advanced/math.md
+      - Mermaid: syntax/advanced/mermaid.md
+      - Comments: syntax/advanced/comments.md
     - Nesting & Combinations:
-      - Combinations: showcase/nesting/combinations.md
+      - Combinations: syntax/nesting/combinations.md
   - Reference:
+    - Overview: reference/index.md
+    - Configuration: reference/config.md
+    - Theme: reference/theme.md
+    - Markdown Extensions: reference/extensions.md
+    - Plugins: reference/plugins.md
     - CLI: reference/cli.md
-    - Plugin API: reference/plugins.md
-  - Changelog: changelog.md
+    - Plugin API: reference/plugin-api.md
+    - Frontmatter: reference/frontmatter.md
+  - Changelog:
+    - Overview: changelog/index.md
+    - Unreleased: changelog/unreleased.md
+    - v0.1.0: changelog/v0.1.0.md
 
 theme:
   name: material

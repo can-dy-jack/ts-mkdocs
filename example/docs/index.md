@@ -12,13 +12,11 @@ hide:
 
 ## What's inside
 
-Explore the sections below to see how each feature works, or jump straight into the showcase to see every supported Markdown element rendered side by side.
+Explore the sections below to get started with ts-mkdocs.
 
 | Section | Covers |
 |---------|--------|
-| [Installation](guide/installation.md) | Install the CLI and scaffold your first project |
-| [Configuration](guide/configuration.md) | Every `ts-mkdocs.yml` option explained |
-| [Admonitions](guide/admonitions.md) | Callout syntax, types, and collapse options |
-| [Feature Showcase](showcase/index.md) | One page per syntax — headings, code, admonitions, tabs, … |
-| [CLI Reference](reference/cli.md) | Command flags and usage |
-| [Plugin API](reference/plugins.md) | Write your own build plugin |
+| [Tutorial](tutorial/index.md) | Introduction, features, quick start, and basic configuration |
+| [Syntax Reference](syntax/index.md) | Markdown syntax examples — headings, code, admonitions, tabs, … |
+| [Configuration](reference/index.md) | Complete reference for all configuration options |
+| [Changelog](changelog/index.md) | Release history and notable changes |

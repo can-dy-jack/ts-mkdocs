@@ -39,7 +39,7 @@ Non-Markdown files under `docs/` (png, jpg, svg, …) are copied to the site out
 
 ### Docs-relative path
 
-From this page (`showcase/extended/images.md`), paths resolve relative to the **source file**, then rewrite to URLs relative to this page:
+From this page (`syntax/extended/images.md`), paths resolve relative to the **source file**, then rewrite to URLs relative to this page:
 
 ![Site logo](./logo.svg)
 
