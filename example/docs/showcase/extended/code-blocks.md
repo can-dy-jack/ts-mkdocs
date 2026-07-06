@@ -1,6 +1,6 @@
 ---
 title: Code Blocks
-description: Fenced code, Shiki highlighting, copy button, line numbers, language labels
+description: Fenced code, Shiki highlighting, copy button, line numbers, hl_lines, diff highlighting
 tags:
   - Code
   - Syntax Highlighting
@@ -118,6 +118,63 @@ const greeting = 'hello'
 ```
 ````
 
+### Highlighting specific lines
+
+Pass line numbers to `hl_lines` right after the language shortcode. Line counts start at `1`:
+
+````markdown
+```python hl_lines="2 3"
+def bubble_sort(items):
+    for i in range(len(items)):
+        for j in range(len(items) - 1 - i):
+            if items[j] > items[j + 1]:
+                items[j], items[j + 1] = items[j + 1], items[j]
+```
+````
+
+Line ranges use a hyphen: `hl_lines="3-5"`.
+
+Rendered output (lines 2–3 highlighted):
+
+```python hl_lines="2 3"
+def bubble_sort(items):
+    for i in range(len(items)):
+        for j in range(len(items) - 1 - i):
+            if items[j] > items[j + 1]:
+                items[j], items[j + 1] = items[j + 1], items[j]
+```
+
+With `attr_list`:
+
+````markdown
+``` { .python hl_lines="2 4-5" }
+def example():
+    highlighted = True
+    normal = 1
+    also = 2
+    highlighted_too = 3
+```
+````
+
+### Diff highlighting
+
+Use the `diff` language for unified-diff style blocks with `+`/`-` line markers and Material-style row backgrounds:
+
+```diff
+- const old = 'removed'
++ const updated = 'added'
+  const unchanged = 'context'
+```
+
+Combine diff markers with syntax highlighting via `diff-lang` (strip prefixes, highlight with the underlying language):
+
+```diff-python
+- def greet():
+-     print('hello')
++ def greet():
++     print('hello, world')
+```
+
 ## Advanced usage
 
 ### Blank lines inside blocks
@@ -148,6 +205,8 @@ When the example theme features are on, each block above should show:
 | `content.code.copy` | Copy button on hover |
 | `content.code.wrap` | Line wrap toggle in the top bar |
 | `content.code.linenumbers` | Gutter line numbers |
+| `hl_lines="..."` | Highlighted rows with left accent bar |
+| `diff` / `diff-lang` | Red/green row backgrounds with +/- markers |
 
 ## Combining with other syntax
 

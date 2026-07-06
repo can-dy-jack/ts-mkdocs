@@ -71,6 +71,7 @@ export async function initMarkdown(config: Config): Promise<void> {
       'javascript', 'typescript', 'python', 'bash', 'shell', 'json',
       'yaml', 'toml', 'html', 'css', 'markdown', 'sql', 'go', 'rust',
       'java', 'cpp', 'c', 'ruby', 'php', 'dockerfile', 'nginx', 'mermaid',
+      'diff',
     ],
   })
 

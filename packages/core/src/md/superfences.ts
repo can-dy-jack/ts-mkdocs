@@ -8,6 +8,13 @@ import {
   parseFenceTitle,
   stripFenceTitle,
 } from './annotations.js'
+import {
+  injectHlLines,
+  parseDiffLang,
+  parseHlLines,
+  renderDiffCodeHtml,
+  stripFenceHlLines,
+} from './code-lines.js'
 
 interface SuperfencesOptions {
   highlighter: any
@@ -20,7 +27,7 @@ interface SuperfencesOptions {
 }
 
 /** Languages without a comment syntax; excluded from the *global* content.code.annotate feature. */
-const NO_COMMENT_LANGS = new Set(['', 'markdown', 'md', 'text', 'plaintext', 'plain', 'txt'])
+const NO_COMMENT_LANGS = new Set(['', 'markdown', 'md', 'text', 'plaintext', 'plain', 'txt', 'diff'])
 
 export function superfencesPlugin(md: MarkdownIt, opts: SuperfencesOptions): void {
   const {
@@ -38,13 +45,18 @@ export function superfencesPlugin(md: MarkdownIt, opts: SuperfencesOptions): voi
     const token = tokens[idx]
     const attrClass = token.attrGet('class')
     const title = parseFenceTitle(token.info || '', token.attrGet('title'))
-    const infoRaw = stripFenceTitle(token.info || '')
+    let infoRaw = stripFenceTitle(token.info || '')
+    const hlLines = parseHlLines(infoRaw, token.attrGet('hl_lines'))
+    infoRaw = stripFenceHlLines(infoRaw)
     const { lang: fenceLang, annotate: blockAnnotate } = parseAnnotateFenceInfo(infoRaw, attrClass)
     const infoLang = fenceLang || infoRaw.trim().split(/\s+/).filter(Boolean)[0] || ''
+    const diffInfo = parseDiffLang(infoLang)
     const displayLang = langLabel ? (infoLang || 'text') : infoLang
     const showHead = langLabel || Boolean(title)
+    const needsLineSpans = lineNumbers || hlLines.size > 0
     const shouldAnnotate =
-      blockAnnotate || (codeAnnotate && !NO_COMMENT_LANGS.has((infoLang || '').toLowerCase()))
+      !diffInfo.isDiff &&
+      (blockAnnotate || (codeAnnotate && !NO_COMMENT_LANGS.has((infoLang || '').toLowerCase())))
 
     if (infoLang === 'mermaid') {
       return `<pre class="mermaid">${mdInst.utils.escapeHtml(token.content)}</pre>\n`
@@ -59,7 +71,7 @@ export function superfencesPlugin(md: MarkdownIt, opts: SuperfencesOptions): voi
     }
 
     const renderOpts = {
-      lineNumbers: lineNumbers || markers.length > 0,
+      lineNumbers: needsLineSpans || markers.length > 0,
       lang: displayLang || undefined,
       langLabel,
       title,
@@ -68,7 +80,15 @@ export function superfencesPlugin(md: MarkdownIt, opts: SuperfencesOptions): voi
 
     let html: string | null = null
 
-    if (infoLang && highlighter) {
+    if (diffInfo.isDiff) {
+      html = renderDiffCodeHtml(highlighter, codeContent, diffInfo, themes, {
+        escape: mdInst.utils.escapeHtml,
+        langLabel,
+        title,
+        locale,
+        displayLang: displayLang || undefined,
+      })
+    } else if (infoLang && highlighter) {
       try {
         html = renderShikiHtml(highlighter, codeContent, infoLang, themes, {
           langLabel,
@@ -82,11 +102,15 @@ export function superfencesPlugin(md: MarkdownIt, opts: SuperfencesOptions): voi
     }
 
     if (html === null) {
-      if (lineNumbers || showHead || markers.length > 0) {
+      if (needsLineSpans || showHead || markers.length > 0) {
         html = renderPlainCodeHtml(codeContent, mdInst.utils.escapeHtml, renderOpts)
       } else {
         return defaultFence(tokens, idx, options, env, self)
       }
+    }
+
+    if (hlLines.size > 0) {
+      html = injectHlLines(html, hlLines)
     }
 
     if (markers.length > 0) {

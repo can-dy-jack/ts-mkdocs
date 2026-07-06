@@ -46,6 +46,10 @@
   --md-code-inline-font-size: .8em;
   --md-annotation-marker-size: 1rem;
   --md-annotation-marker-size-code: .92rem;
+  --md-code-hl-color: #448aff;
+  --md-code-hl-color--light: rgba(68, 138, 255, 0.1);
+  --md-typeset-del-color: hsla(6, 90%, 60%, 0.15);
+  --md-typeset-ins-color: hsla(150, 60%, 45%, 0.15);
 }
 
 [data-theme="dark"] {
@@ -59,6 +63,10 @@
   --md-code-bg-color: #181825;
   --md-typeset-color: rgba(255, 255, 255, 0.87);
   --md-typeset-a-color: var(--md-primary-fg-color);
+  --md-code-hl-color: #82b1ff;
+  --md-code-hl-color--light: rgba(130, 177, 255, 0.12);
+  --md-typeset-del-color: hsla(6, 90%, 60%, 0.2);
+  --md-typeset-ins-color: hsla(150, 60%, 45%, 0.2);
 }
 
 /* ============================================================
@@ -1233,6 +1241,56 @@ html[data-features*="content.code.linenumbers"] .md-typeset pre code .line>span 
 html[data-theme="dark"][data-features*="content.code.linenumbers"] .md-typeset pre code .line::before {
   /* background: color-mix(in srgb, var(--md-default-fg-color) 8%, transparent); */
   border-right-color: rgba(255, 255, 255, .1);
+}
+
+/* Highlighted lines (hl_lines) */
+.md-typeset pre code .line.hll {
+  background-color: var(--md-code-hl-color--light);
+  box-shadow: inset 2px 0 0 var(--md-code-hl-color);
+}
+
+/* Diff line backgrounds */
+.md-typeset pre code .line.gd {
+  background-color: var(--md-typeset-del-color);
+}
+
+.md-typeset pre code .line.gi {
+  background-color: var(--md-typeset-ins-color);
+}
+
+/* Full-bleed row backgrounds when line numbers are off */
+html:not([data-features*="content.code.linenumbers"]) .md-typeset pre code .line.hll,
+html:not([data-features*="content.code.linenumbers"]) .md-typeset pre code .line.gd,
+html:not([data-features*="content.code.linenumbers"]) .md-typeset pre code .line.gi {
+  margin: 0 -1rem;
+  padding: 0 1rem;
+}
+
+/* With line numbers: keep gutter padding-left, extend highlight into gutter + right edge */
+html[data-features*="content.code.linenumbers"] .md-typeset pre code .line.hll,
+html[data-features*="content.code.linenumbers"] .md-typeset pre code .line.gd,
+html[data-features*="content.code.linenumbers"] .md-typeset pre code .line.gi {
+  margin-right: -1rem;
+  padding-right: 1rem;
+}
+
+html[data-features*="content.code.linenumbers"] .md-typeset pre code .line.hll::before {
+  background-color: var(--md-code-hl-color--light);
+  border-right-color: var(--md-code-hl-color);
+}
+
+html[data-features*="content.code.linenumbers"] .md-typeset pre code .line.gd::before {
+  background-color: var(--md-typeset-del-color);
+}
+
+html[data-features*="content.code.linenumbers"] .md-typeset pre code .line.gi::before {
+  background-color: var(--md-typeset-ins-color);
+}
+
+/* With line numbers: single accent at gutter/code boundary, no duplicate bar */
+html[data-features*="content.code.linenumbers"] .md-typeset pre code .line.hll {
+  box-shadow: none;
+  background-color: var(--md-code-hl-color--light);
 }
 
 /* Language head (content.code.lang feature) */
@@ -3666,7 +3724,7 @@ a.md-page-author__link:active {
   width: 12rem;
   height: 12rem;
   z-index: 0;
-  color: var(--md-default-fg-color);
+  color: gray;
   opacity: .05;
   pointer-events: none;
   user-select: none;

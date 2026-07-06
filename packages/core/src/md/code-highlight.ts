@@ -165,6 +165,7 @@ export function renderShikiHtml(
     title?: string
     escape?: (value: string) => string
     locale?: string
+    headLang?: string
   } = {},
 ): string {
   const normalized = normalizeCodeContent(code)
@@ -181,7 +182,14 @@ export function renderShikiHtml(
   html = ensureNonemptyLineSpans(html)
   if (options.langLabel || options.title) {
     const escape = options.escape ?? ((value: string) => value)
-    html = wrapCodeblockWithHead(html, lang, escape, options.locale, options.title, options.langLabel)
+    html = wrapCodeblockWithHead(
+      html,
+      options.headLang ?? lang,
+      escape,
+      options.locale,
+      options.title,
+      options.langLabel,
+    )
   }
   return html
 }
