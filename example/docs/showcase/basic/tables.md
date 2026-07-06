@@ -63,6 +63,70 @@ Colons in the separator row control alignment:
 | **Search** | Built-in |
 | `content.code.copy` | Theme feature |
 
+### Column width
+
+Set column widths on header cells with `attr_list` (requires `attr_list` in `markdown_extensions`):
+
+```markdown
+| Name {: width=30% } | Description {: width=70% } |
+| --- | --- |
+| ts-mkdocs | TypeScript MkDocs implementation |
+```
+
+| Name {: width=30% } | Description {: width=70% } |
+| --- | --- |
+| ts-mkdocs | TypeScript MkDocs implementation |
+
+### Cell merging
+
+Use `@span` placeholders in cells to merge columns and rows. Requires `tables` in `markdown_extensions`.
+
+```markdown
+| Region | Q1 | Q2 |
+| --- | --- | --- |
+| North @span=2 | | 120 |
+| South | 80 | 95 |
+```
+
+| Region | Q1 | Q2 |
+| --- | --- | --- |
+| North @span=2 | | 120 |
+| South | 80 | 95 |
+
+Explicit spans:
+
+- `@span` — auto-expand into adjacent empty cells (colspan takes precedence over rowspan)
+- `@span=2` — colspan of 2
+- `@span=2:3` — colspan 2 and rowspan 3
+
+Rowspan example:
+
+```markdown
+| Item | Notes |
+| --- | --- |
+| Alpha @span=1:2 | First row |
+| | Second row |
+```
+
+| Item | Notes |
+| --- | --- |
+| Alpha @span=1:2 | First row |
+| | Second row |
+
+You can also use `attr_list` attributes (`{: rowspan=2 }`, `{: colspan=2 }`) — ghost cells in merged rows/columns are removed automatically.
+
+```markdown
+| Fruit | Definition |
+| --- | --- |
+| Apple | Pomaceous fruit {: rowspan=2 } |
+| Also Apple | |
+```
+
+| Fruit | Definition |
+| --- | --- |
+| Apple | Pomaceous fruit {: rowspan=2 } |
+| Also Apple | |
+
 ## Advanced usage
 
 Wide tables scroll horizontally on narrow viewports — add many columns to test overflow:

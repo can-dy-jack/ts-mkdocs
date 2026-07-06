@@ -20,6 +20,7 @@ import { snippetsPlugin } from './md/snippets.js'
 import { arithmatexPlugin } from './md/arithmatex.js'
 import { emojiPlugin } from './md/emoji.js'
 import { magiclinkPlugin } from './md/magiclink.js'
+import { tablesPlugin } from './md/tables.js'
 import { hasCodeAnnotateFeature, hasLangLabelFeature, hasLineNumbersFeature } from './md/code-highlight.js'
 
 export type ExtensionEntry = string | Record<string, unknown>
@@ -128,4 +129,5 @@ export function applyMarkdownExtensions(
       repo_name: config.repo_name,
     })
   }
+  if (enabled.has('tables')) md.use(tablesPlugin)
 }

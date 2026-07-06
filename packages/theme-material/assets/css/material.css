@@ -941,6 +941,14 @@ body {
   border-radius: .5rem;
 }
 
+.md-typeset table:has(colgroup) {
+  display: table;
+  width: 100%;
+  max-width: 100%;
+  table-layout: fixed;
+  overflow-x: auto;
+}
+
 [data-theme="dark"] .md-typeset table {
   border-color: rgba(255, 255, 255, 0.1);
 }
