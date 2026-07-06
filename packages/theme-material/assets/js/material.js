@@ -397,6 +397,7 @@
     }
 
     initSearch();
+    initLanguageSwitcher();
     closeDrawer = initDrawer();
     initTrafficLights();
     if (hasFeature('content.code.copy')) initCopyButtons();
@@ -485,7 +486,12 @@
 
     function loadIndex() {
       if (index) return;
-      fetch(getBaseUrl() + 'search/search_index.json')
+      var locale = html.getAttribute('data-locale');
+      var indexPath = 'search/search_index.json';
+      if (locale && CFG.i18nLocales) {
+        indexPath = 'search/search_index_' + locale + '.json';
+      }
+      fetch(getBaseUrl() + indexPath)
         .then(function (r) { return r.json(); })
         .then(function (data) {
           docs = data.docs;
@@ -1857,6 +1863,51 @@
       if (popover && popoverAnchor) {
         positionSharePopup(popover, popoverAnchor, 20);
       }
+    });
+  }
+
+  function initLanguageSwitcher() {
+    const toggle = document.getElementById('language-toggle');
+    const dropdown = document.getElementById('language-dropdown');
+    if (!toggle || !dropdown) return;
+
+    function closeDropdown() {
+      dropdown.hidden = true;
+      toggle.setAttribute('aria-expanded', 'false');
+    }
+
+    function openDropdown() {
+      dropdown.hidden = false;
+      toggle.setAttribute('aria-expanded', 'true');
+    }
+
+    toggle.addEventListener('click', function (e) {
+      e.stopPropagation();
+      if (dropdown.hidden) openDropdown();
+      else closeDropdown();
+    });
+
+    document.addEventListener('click', function (e) {
+      if (!e.target.closest('.md-language')) closeDropdown();
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') closeDropdown();
+    });
+
+    dropdown.querySelectorAll('.md-language__link').forEach(function (link) {
+      link.addEventListener('click', function (e) {
+        if (link.getAttribute('aria-current') === 'true') return;
+
+        const href = link.getAttribute('href');
+        if (!href) return;
+
+        // Site-root paths — navigate on the current host (local dev or production).
+        if (href.startsWith('/')) {
+          e.preventDefault();
+          window.location.assign(href + (window.location.hash || ''));
+        }
+      });
     });
   }
 

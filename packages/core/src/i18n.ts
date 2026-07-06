@@ -82,6 +82,9 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     'share.platform.pinterest': 'Pinterest',
     'share.platform.threads': 'Threads',
     'share.platform.bluesky': 'Bluesky',
+    'language.switch': 'Select language',
+    'language.current': 'Current language',
+    'language.unavailable': 'Not available in this language',
   },
   zh: {
     'search.placeholder': '搜索',
@@ -166,6 +169,9 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
     'share.platform.pinterest': 'Pinterest',
     'share.platform.threads': 'Threads',
     'share.platform.bluesky': 'Bluesky',
+    'language.switch': '选择语言',
+    'language.current': '当前语言',
+    'language.unavailable': '此语言暂无该页面',
   },
 }
 

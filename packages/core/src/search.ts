@@ -89,10 +89,15 @@ export function buildSearchIndex(pages: Page[], config: Config): SearchIndex {
   }
 }
 
-export function writeSearchIndex(searchIndex: SearchIndex, siteDir: string): void {
+export function writeSearchIndex(
+  searchIndex: SearchIndex,
+  siteDir: string,
+  locale?: string,
+): void {
   const searchDir = join(siteDir, 'search')
   mkdirSync(searchDir, { recursive: true })
-  writeFileSync(join(searchDir, 'search_index.json'), JSON.stringify(searchIndex))
+  const filename = locale ? `search_index_${locale}.json` : 'search_index.json'
+  writeFileSync(join(searchDir, filename), JSON.stringify(searchIndex))
 }
 
 function stripHtml(html: string): string {

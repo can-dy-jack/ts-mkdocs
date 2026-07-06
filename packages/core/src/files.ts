@@ -11,6 +11,10 @@ export interface DocFile {
   destUri: string
   url: string
   isMarkdown: boolean
+  /** Set by the i18n plugin: locale code (e.g. `en`). */
+  locale?: string
+  /** Set by the i18n plugin: source path without locale prefix. */
+  canonicalUri?: string
 }
 
 export function collectFiles(config: Config): DocFile[] {
@@ -71,4 +75,48 @@ export function buildDocFile(
 
 export function getFileForSrcUri(files: DocFile[], srcUri: string): DocFile | undefined {
   return files.find((f) => f.srcUri === srcUri)
+}
+
+/** Strip a locale directory prefix from a source URI. */
+export function stripLocalePrefix(
+  srcUri: string,
+  locales: string[],
+): { locale: string | null; path: string } {
+  const first = srcUri.split('/')[0]
+  if (locales.includes(first)) {
+    return { locale: first, path: srcUri.slice(first.length + 1) }
+  }
+  return { locale: null, path: srcUri }
+}
+
+/** Prepend a locale segment to a destination URI. */
+export function prefixDestUri(destUri: string, locale: string): string {
+  return `${locale}/${destUri}`
+}
+
+/** Prepend a locale segment to a page URL. */
+export function prefixUrl(url: string, locale: string): string {
+  if (url === './') return `${locale}/`
+  return `${locale}/${url}`
+}
+
+/** True when the file lives outside any locale directory (shared assets). */
+export function isSharedAsset(srcUri: string, locales: string[]): boolean {
+  const first = srcUri.split('/')[0]
+  return !locales.includes(first)
+}
+
+/** Derive a canonical page key from a markdown source URI (without locale prefix). */
+export function canonicalPageKey(srcUri: string, useDirectoryUrls: boolean): string {
+  const base = basename(srcUri, extname(srcUri))
+  const dir = dirname(srcUri)
+  const normalDir = dir === '.' ? '' : dir + '/'
+
+  if (base === 'index' || base === 'README') {
+    return normalDir || './'
+  }
+  if (useDirectoryUrls) {
+    return normalDir + base + '/'
+  }
+  return normalDir + base + '.html'
 }

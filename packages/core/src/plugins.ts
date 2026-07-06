@@ -9,6 +9,7 @@ import { tagsPlugin } from './plugins/tags.js'
 import { sitemapPlugin } from './plugins/sitemap.js'
 import { robotsPlugin } from './plugins/robots.js'
 import { gitRevisionDatePlugin } from './plugins/git-revision-date.js'
+import { i18nPlugin } from './plugins/i18n.js'
 
 export interface PluginEvents {
   on_config?: (config: Config) => Config | void
@@ -38,6 +39,7 @@ const BUILTIN_PLUGINS: Record<string, Plugin> = {
   sitemap: sitemapPlugin,
   robots: robotsPlugin,
   'git-revision-date': gitRevisionDatePlugin,
+  i18n: i18nPlugin,
 }
 
 export class PluginManager {

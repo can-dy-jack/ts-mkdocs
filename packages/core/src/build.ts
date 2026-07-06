@@ -50,6 +50,16 @@ import { copyExtraAssets, resolveExtraScripts, resolveExtraStylesheets } from '.
 import { resolveMathConfig } from './md/arithmatex.js'
 import { resolveMermaidConfig } from './md/mermaid.js'
 import { resolveCommentsConfig } from './comments.js'
+import {
+  buildAlternateMap,
+  getI18nConfig,
+  getPageAlternates,
+  getSiteAlternates,
+  hasI18nPlugin,
+  prefixNavConfig,
+  setBuildLocale,
+} from './plugins/i18n.js'
+import { canonicalPageKey, isSharedAsset } from './files.js'
 
 let nunjucksEnv: nunjucks.Environment | null = null
 
@@ -94,80 +104,121 @@ export async function build(config: Config): Promise<Page[]> {
     : undefined
   const repoStats = await fetchRepoStats(repoSource, resolvedConfig.repo_token)
 
-  let files = collectFiles(resolvedConfig)
-  files = await plugins.runOnFiles(files, resolvedConfig)
+  const allFiles = collectFiles(resolvedConfig)
+  const i18nConfig = getI18nConfig()
+  const useI18n = hasI18nPlugin(resolvedConfig) && i18nConfig
 
-  let nav = buildNavigation(resolvedConfig, files)
-  nav = await plugins.runOnNav(nav, resolvedConfig)
+  if (useI18n) {
+    buildAlternateMap(allFiles, i18nConfig, resolvedConfig.use_directory_urls)
+  }
 
-  const pages: Page[] = []
+  const allPages: Page[] = []
+  const locales = useI18n ? i18nConfig.languages.map((l) => l.locale) : [null]
+  let sharedAssetsCopied = false
 
-  for (const file of files) {
-    if (!file.isMarkdown) {
-      ensureDir(dirname(file.destPath))
-      copyFileSync(file.srcPath, file.destPath)
-      continue
+  for (const locale of locales) {
+    if (locale) setBuildLocale(locale)
+
+    const localeConfig = locale
+      ? { ...resolvedConfig, theme: { ...resolvedConfig.theme, language: locale } }
+      : resolvedConfig
+
+    const localeNav = locale
+      ? prefixNavConfig(resolvedConfig.nav, locale)
+      : resolvedConfig.nav
+
+    let files = useI18n ? allFiles : collectFiles(resolvedConfig)
+    files = await plugins.runOnFiles(files, localeConfig)
+
+    let nav = buildNavigation({ ...localeConfig, nav: localeNav as typeof localeConfig.nav }, files)
+    nav = await plugins.runOnNav(nav, localeConfig)
+
+    const pages: Page[] = []
+
+    for (const file of files) {
+      if (!file.isMarkdown) {
+        const isShared = useI18n && isSharedAsset(file.srcUri, i18nConfig!.locales)
+        if (isShared && sharedAssetsCopied) continue
+        ensureDir(dirname(file.destPath))
+        copyFileSync(file.srcPath, file.destPath)
+        if (isShared) sharedAssetsCopied = true
+        continue
+      }
+
+      log(`Building page: ${file.srcUri}`)
+      let page = loadPage(file, {
+        docsDir: localeConfig.docs_dir,
+        language: localeConfig.theme.language,
+        inheritMeta: hasMetaPlugin(localeConfig),
+      })
+
+      const navPage = nav.pages.find((p) => p.file.srcUri === file.srcUri)
+      if (navPage && !page.title && navPage.title) page.title = navPage.title
+
+      page.rawMarkdown = await plugins.runOnPageMarkdown(page.rawMarkdown, page, localeConfig)
+      const rendered = renderMarkdown(page.rawMarkdown)
+      page.content = await plugins.runOnPageContent(rendered.html, page, localeConfig)
+      page.toc = rendered.toc
+
+      pages.push(page)
     }
 
-    log(`Building page: ${file.srcUri}`)
-    let page = loadPage(file, {
-      docsDir: resolvedConfig.docs_dir,
-      language: resolvedConfig.theme.language,
-      inheritMeta: hasMetaPlugin(resolvedConfig),
-    })
+    const tagsEnabled = hasTagsPlugin(localeConfig)
+    const tagsConfig = getTagsPluginConfig(localeConfig)
+    const tagIndex = tagsEnabled
+      ? aggregateTags(pages, locale ? `${locale}/` : './', { sort_by: tagsConfig.sort_by })
+      : null
 
-    const navPage = nav.pages.find((p) => p.file.srcUri === file.srcUri)
-    if (navPage && !page.title && navPage.title) page.title = navPage.title
+    for (const page of pages) {
+      const navPage = nav.pages.find((p) => p.file.srcUri === page.file.srcUri)
+      if (navPage) setActivePage(nav, navPage)
 
-    page.rawMarkdown = await plugins.runOnPageMarkdown(page.rawMarkdown, page, resolvedConfig)
-    const rendered = renderMarkdown(page.rawMarkdown)
-    page.content = await plugins.runOnPageContent(rendered.html, page, resolvedConfig)
-    page.toc = rendered.toc
+      const html = renderPage(localeConfig, page, nav, navPage, repoStats, tagsEnabled, locale ?? undefined)
+      ensureDir(dirname(page.file.destPath))
+      writeFileSync(page.file.destPath, html, 'utf-8')
+    }
 
-    pages.push(page)
-  }
+    if (tagsEnabled && tagIndex) {
+      generateTagPages(localeConfig, tagIndex, nav, repoStats, locale ?? undefined)
+    }
 
-  const tagsEnabled = hasTagsPlugin(resolvedConfig)
-  const tagsConfig = getTagsPluginConfig(resolvedConfig)
-  const tagIndex = tagsEnabled
-    ? aggregateTags(pages, './', { sort_by: tagsConfig.sort_by })
-    : null
+    const searchEnabled = localeConfig.plugins.some((p) =>
+      p === 'search' || (typeof p === 'object' && 'search' in p),
+    )
+    if (searchEnabled) {
+      const searchIndex = buildSearchIndex(pages, localeConfig)
+      writeSearchIndex(searchIndex, localeConfig.site_dir, locale ?? undefined)
+    }
 
-  for (const page of pages) {
-    const navPage = nav.pages.find((p) => p.file.srcUri === page.file.srcUri)
-    if (navPage) setActivePage(nav, navPage)
+    if (locale) {
+      try {
+        const html404 = nunjucksEnv!.render('404.html', build404Context(localeConfig, repoStats, locale))
+        const notFoundPath = join(localeConfig.site_dir, locale, '404.html')
+        ensureDir(dirname(notFoundPath))
+        writeFileSync(notFoundPath, html404, 'utf-8')
+      } catch {}
+    }
 
-    const html = renderPage(resolvedConfig, page, nav, navPage, repoStats, tagsEnabled)
-    ensureDir(dirname(page.file.destPath))
-    writeFileSync(page.file.destPath, html, 'utf-8')
-  }
-
-  if (tagsEnabled && tagIndex) {
-    generateTagPages(resolvedConfig, tagIndex, nav, repoStats)
+    allPages.push(...pages)
+    if (useI18n) setBuildLocale(null)
   }
 
   copyThemeAssets(assetsDir, resolvedConfig.site_dir)
-  writeSiteBootstrap(resolvedConfig, repoStats)
+  writeSiteBootstrap(resolvedConfig, repoStats, useI18n ? i18nConfig : null)
 
   await syncStaticAssets(resolvedConfig)
 
-  const searchEnabled = resolvedConfig.plugins.some((p) =>
-    p === 'search' || (typeof p === 'object' && 'search' in p),
-  )
-  if (searchEnabled) {
-    const searchIndex = buildSearchIndex(pages, resolvedConfig)
-    writeSearchIndex(searchIndex, resolvedConfig.site_dir)
+  if (!useI18n) {
+    try {
+      const html404 = nunjucksEnv!.render('404.html', build404Context(resolvedConfig, repoStats))
+      writeFileSync(join(resolvedConfig.site_dir, '404.html'), html404)
+    } catch {}
   }
-
-  try {
-    const html404 = nunjucksEnv!.render('404.html', build404Context(resolvedConfig, repoStats))
-    writeFileSync(join(resolvedConfig.site_dir, '404.html'), html404)
-  } catch {}
 
   await plugins.runOnPostBuild(resolvedConfig)
 
   success(`Site built to: ${resolvedConfig.site_dir}`)
-  return pages
+  return allPages
 }
 
 /** Copy theme and extra static assets without rebuilding pages. */
@@ -190,11 +241,9 @@ function computeBaseUrl(destUri: string): string {
 }
 
 function isHomePage(page: Page): boolean {
-  return (
-    page.meta.template === 'home' ||
-    page.file.srcUri === 'index.md' ||
-    page.file.srcUri === 'README.md'
-  )
+  if (page.meta.template === 'home') return true
+  const uri = page.file.canonicalUri ?? page.file.srcUri
+  return uri === 'index.md' || uri === 'README.md'
 }
 
 function firstDocUrl(navItems: NavItem[]): string | undefined {
@@ -249,6 +298,7 @@ function renderPage(
   navPage: NavPage | undefined,
   repoStats?: RepoStats,
   tagsEnabled = false,
+  locale?: string,
 ): string {
   const baseUrl = computeBaseUrl(page.file.destUri)
   const isHome = isHomePage(page)
@@ -356,8 +406,16 @@ function renderPage(
     isHomepage: isHome,
   })
 
+  const canonicalKey = page.file.canonicalUri
+    ? canonicalPageKey(page.file.canonicalUri, config.use_directory_urls)
+    : canonicalPageKey(page.file.srcUri, config.use_directory_urls)
+
+  const alternates = locale
+    ? getPageAlternates(canonicalKey, locale, config.site_url)
+    : []
+
   const ctx = {
-    ...buildBaseContext(config, baseUrl, repoStats),
+    ...buildBaseContext(config, baseUrl, repoStats, locale, alternates),
     feature,
     i18n,
     page: {
@@ -393,6 +451,9 @@ function renderPage(
     ),
     html_meta_tags: resolvePageHtmlMetaTags(page.meta),
     page_author: resolvePageAuthor(page.meta, config.site_author),
+    page_canonical: canonicalKey,
+    alternates,
+    current_locale: locale ?? null,
   }
 
   const template = isHome ? 'home.html' : 'main.html'
@@ -512,14 +573,16 @@ function resolveOgImage(imageRaw: string | undefined, siteUrl?: string): string 
 function build404Context(
   config: Config,
   repoStats?: RepoStats,
+  locale?: string,
 ): Record<string, unknown> {
-  const baseUrl = resolveSiteRootBaseUrl(config.site_url)
+  const baseUrl = locale ? '../' : resolveSiteRootBaseUrl(config.site_url)
   const feature = buildFeatureContext(config)
   const i18n = getI18n(config.theme.language)
   const icons = createIconService(config)
+  const alternates = locale ? getSiteAlternates(config.site_url) : []
 
   return {
-    ...buildBaseContext(config, baseUrl, repoStats),
+    ...buildBaseContext(config, baseUrl, repoStats, locale, alternates),
     feature,
     i18n,
     page: {
@@ -544,10 +607,18 @@ function build404Context(
     og_description: config.site_description ?? '',
     og_image: resolveOgImage(config.site_image, config.site_url),
     html_meta_tags: [],
+    current_locale: locale ?? null,
+    alternates,
   }
 }
 
-function buildBaseContext(config: Config, baseUrl = './', repoStats?: RepoStats): Record<string, unknown> {
+function buildBaseContext(
+  config: Config,
+  baseUrl = './',
+  repoStats?: RepoStats,
+  locale?: string,
+  alternates: ReturnType<typeof getPageAlternates> = [],
+): Record<string, unknown> {
   const feature = buildFeatureContext(config)
   const i18n = getI18n(config.theme.language)
   const icons = createIconService(config)
@@ -579,6 +650,9 @@ function buildBaseContext(config: Config, baseUrl = './', repoStats?: RepoStats)
     og_title: config.site_name,
     og_description: config.site_description ?? '',
     og_image: resolveOgImage(config.site_image, config.site_url),
+    current_locale: locale ?? null,
+    alternates,
+    i18n_languages: getI18nConfig()?.languages ?? null,
   }
 }
 
@@ -595,7 +669,11 @@ function copyThemeAssets(assetsDir: string, siteDir: string): void {
   }
 }
 
-function writeSiteBootstrap(config: Config, repoStats?: RepoStats): void {
+function writeSiteBootstrap(
+  config: Config,
+  repoStats?: RepoStats,
+  i18nConfig?: ReturnType<typeof getI18nConfig> | null,
+): void {
   const paletteCss = buildPaletteStyles(config)
   if (paletteCss) {
     const palettePath = join(config.site_dir, 'assets/css/palette.css')
@@ -615,13 +693,21 @@ function writeSiteBootstrap(config: Config, repoStats?: RepoStats): void {
     : undefined
 
   const mermaid = resolveMermaidConfig(config)
-  const payload = {
+  const payload: Record<string, unknown> = {
     features: [...getFeatures(config)],
     i18n: getI18n(config.theme.language),
     repoSource: repoSource ?? null,
     repoSourceFacts: repoSource ? (repoStats ?? null) : null,
     settings: buildSettingsConfig(config),
     mermaid: mermaid?.enabled ? mermaid : null,
+  }
+
+  if (i18nConfig) {
+    payload.i18nLocales = i18nConfig.languages.map((l) => ({
+      locale: l.locale,
+      name: l.name,
+    }))
+    payload.defaultLocale = i18nConfig.defaultLanguage
   }
 
   const configPath = join(config.site_dir, 'assets/js/ts-mkdocs-config.js')
@@ -634,24 +720,26 @@ function generateTagPages(
   tagIndex: TagIndex,
   nav: { items: NavItem[] },
   repoStats?: RepoStats,
+  locale?: string,
 ): void {
   const feature = buildFeatureContext(config)
   const i18n = getI18n(config.theme.language)
 
-  const indexBaseUrl = '../'
+  const indexBaseUrl = locale ? '../../' : '../'
   const tagIndexTitle = i18n['tags.title']
   const tagIndexDocumentTitle = resolveDocumentTitle({
     siteName: config.site_name,
     pageTitle: tagIndexTitle,
   })
+  const tagsPrefix = locale ? `${locale}/tags/` : 'tags/'
   const indexCtx = {
-    ...buildBaseContext(config, indexBaseUrl, repoStats),
+    ...buildBaseContext(config, indexBaseUrl, repoStats, locale),
     feature,
     i18n,
     page: {
       title: tagIndexTitle,
       meta: { description: i18n['tags.description'] },
-      url: 'tags/',
+      url: tagsPrefix,
       is_homepage: false,
       is_tags_index: true,
     },
@@ -667,12 +755,12 @@ function generateTagPages(
     og_description: i18n['tags.description'],
   }
 
-  const indexPath = join(config.site_dir, 'tags', 'index.html')
+  const indexPath = join(config.site_dir, ...(locale ? [locale] : []), 'tags', 'index.html')
   ensureDir(dirname(indexPath))
   writeFileSync(indexPath, nunjucksEnv!.render('tags-index.html', indexCtx), 'utf-8')
 
   for (const tag of tagIndex.tags) {
-    renderTagArchivePage(config, tag, nav, repoStats, feature, i18n)
+    renderTagArchivePage(config, tag, nav, repoStats, feature, i18n, locale)
   }
 }
 
@@ -683,20 +771,22 @@ function renderTagArchivePage(
   repoStats: RepoStats | undefined,
   feature: FeatureContext,
   i18n: ReturnType<typeof getI18n>,
+  locale?: string,
 ): void {
-  const baseUrl = '../../'
+  const baseUrl = locale ? '../../../' : '../../'
+  const tagsPrefix = locale ? `${locale}/tags/` : 'tags/'
   const archiveDocumentTitle = resolveDocumentTitle({
     siteName: config.site_name,
     pageTitle: tag.name,
   })
   const ctx = {
-    ...buildBaseContext(config, baseUrl, repoStats),
+    ...buildBaseContext(config, baseUrl, repoStats, locale),
     feature,
     i18n,
     page: {
       title: tag.name,
       meta: {},
-      url: `tags/${tag.slug}/`,
+      url: `${tagsPrefix}${tag.slug}/`,
       is_homepage: false,
       is_tags_archive: true,
     },
@@ -710,7 +800,7 @@ function renderTagArchivePage(
     og_title: archiveDocumentTitle,
   }
 
-  const archivePath = join(config.site_dir, 'tags', tag.slug, 'index.html')
+  const archivePath = join(config.site_dir, ...(locale ? [locale] : []), 'tags', tag.slug, 'index.html')
   ensureDir(dirname(archivePath))
   writeFileSync(archivePath, nunjucksEnv!.render('tags-archive.html', ctx), 'utf-8')
 }

@@ -1,6 +1,6 @@
 <!doctype html>
 {% from "partials/tooltip.html" import tooltip %}
-<html lang="{{ config.theme.language | default('en') }}" data-theme="light" data-features="{{ feature.features | join(',') }}">
+<html lang="{{ config.theme.language | default('en') }}"{% if current_locale %} data-locale="{{ current_locale }}"{% endif %} data-theme="light" data-features="{{ feature.features | join(',') }}">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -35,6 +35,11 @@
   {% endif %}
   <meta property="og:site_name" content="{{ config.site_name }}">
   <meta property="og:locale" content="{{ og_locale }}">
+  {% if alternates %}
+  {% for alt in alternates %}
+  <link rel="alternate" hreflang="{{ alt.lang }}" href="{{ alt.hreflang | default(alt.link) }}">
+  {% endfor %}
+  {% endif %}
   {% if og_image %}
   <meta property="og:image" content="{{ og_image }}">
   {% endif %}
@@ -150,6 +155,7 @@
     </div>
 
     <div class="md-header__option">
+      {% include "partials/language-switcher.html" %}
       {% call tooltip('theme-toggle', i18n['theme.system'], 'md-tooltip--header', 'bottom') %}
       <button type="button" class="md-header__button md-header__button--theme" id="theme-toggle" aria-describedby="theme-toggle-tooltip" aria-label="{{ i18n['theme.system'] }}">
         <span class="theme-icon theme-icon--light">{{ theme_icons.light | safe }}</span>
