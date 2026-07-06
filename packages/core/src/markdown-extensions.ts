@@ -45,13 +45,13 @@ export function applyMarkdownExtensions(
   if (extensions.length === 0) {
     // Defaults matching Material for MkDocs
     enabled.add('admonition')
-    enabled.add('pymdownx.tabbed')
-    enabled.add('pymdownx.superfences')
+    enabled.add('md.tabs')
+    enabled.add('md.fences')
     enabled.add('attr_list')
     enabled.add('tables')
     enabled.add('md_in_html')
-    enabled.add('pymdownx.tasklist')
-    options.set('pymdownx.tabbed', { alternate_style: true })
+    enabled.add('md.tasklist')
+    options.set('md.tabs', { alternate_style: true })
   } else {
     for (const ext of extensions) {
       const { name, options: opts } = parseExtension(ext)
@@ -62,16 +62,16 @@ export function applyMarkdownExtensions(
 
   const admonitionTypes = resolveAdmonitionTypes(config)
   const icons = createIconService(config, admonitionTypes.icons)
-  const emojiEnabled = enabled.has('pymdownx.emoji')
+  const emojiEnabled = enabled.has('md.emoji')
   if (emojiEnabled) {
-    md.use(emojiPlugin, options.get('pymdownx.emoji') ?? {})
+    md.use(emojiPlugin, options.get('md.emoji') ?? {})
   }
   md.use(iconsPlugin, icons, { emojiEnabled })
 
   if (enabled.has('attr_list')) md.use(attrs)
-  if (enabled.has('admonition') || enabled.has('pymdownx.details')) {
+  if (enabled.has('admonition') || enabled.has('md.details')) {
     const admonitionOpts = options.get('admonition') ?? {}
-    const detailsOpts = options.get('pymdownx.details') ?? {}
+    const detailsOpts = options.get('md.details') ?? {}
     const typeDefaults = buildAdmonitionTypeDefaults(admonitionTypes.custom)
     const sharedOpts = {
       icons,
@@ -82,7 +82,7 @@ export function applyMarkdownExtensions(
       ...sharedOpts,
       defaultCollapsed: Boolean(admonitionOpts.default_collapsed ?? admonitionOpts.collapse ?? false),
     })
-    if (enabled.has('pymdownx.details')) {
+    if (enabled.has('md.details')) {
       md.use(detailsPlugin, {
         ...sharedOpts,
         defaultCollapsed: detailsOpts.default_collapsed !== undefined
@@ -91,13 +91,13 @@ export function applyMarkdownExtensions(
       })
     }
   }
-  if (enabled.has('pymdownx.tabbed')) {
+  if (enabled.has('md.tabs')) {
     md.use(contentTabsPlugin, {
-      ...(options.get('pymdownx.tabbed') ?? { alternate_style: true }),
+      ...(options.get('md.tabs') ?? { alternate_style: true }),
       icons,
     })
   }
-  if (enabled.has('pymdownx.superfences')) {
+  if (enabled.has('md.fences')) {
     md.use(superfencesPlugin, {
       highlighter,
       themes,
@@ -108,23 +108,23 @@ export function applyMarkdownExtensions(
       codeAnnotate: hasCodeAnnotateFeature(config),
     })
   }
-  if (enabled.has('pymdownx.tasklist')) md.use(tasklistPlugin)
-  if (enabled.has('pymdownx.keys')) md.use(keysPlugin)
-  if (enabled.has('pymdownx.mark')) md.use(markPlugin)
-  if (enabled.has('pymdownx.caret')) md.use(caretPlugin, options.get('pymdownx.caret') ?? {})
-  if (enabled.has('pymdownx.tilde')) md.use(tildePlugin, options.get('pymdownx.tilde') ?? {})
-  if (enabled.has('pymdownx.critic')) md.use(criticPlugin)
+  if (enabled.has('md.tasklist')) md.use(tasklistPlugin)
+  if (enabled.has('md.keys')) md.use(keysPlugin)
+  if (enabled.has('md.mark')) md.use(markPlugin)
+  if (enabled.has('md.caret')) md.use(caretPlugin, options.get('md.caret') ?? {})
+  if (enabled.has('md.tilde')) md.use(tildePlugin, options.get('md.tilde') ?? {})
+  if (enabled.has('md.critic')) md.use(criticPlugin)
   if (enabled.has('footnotes')) md.use(footnotesPlugin)
   if (enabled.has('abbr')) md.use(abbrPlugin)
   if (enabled.has('def_list')) md.use(deflistPlugin)
-  if (enabled.has('pymdownx.snippets')) {
-    md.use(snippetsPlugin, { docsDir: config.docs_dir, ...options.get('pymdownx.snippets') })
+  if (enabled.has('md.snippets')) {
+    md.use(snippetsPlugin, { docsDir: config.docs_dir, ...options.get('md.snippets') })
   }
-  if (enabled.has('pymdownx.arithmatex')) {
-    md.use(arithmatexPlugin, options.get('pymdownx.arithmatex') ?? {})
+  if (enabled.has('md.math')) {
+    md.use(arithmatexPlugin, options.get('md.math') ?? {})
   }
-  if (enabled.has('pymdownx.magiclink')) {
-    magiclinkPlugin(md, options.get('pymdownx.magiclink') ?? {}, {
+  if (enabled.has('md.links')) {
+    magiclinkPlugin(md, options.get('md.links') ?? {}, {
       repo_url: config.repo_url,
       repo_name: config.repo_name,
     })

@@ -1,9 +1,8 @@
 site_name: ts-mkdocs
 site_description: A demo site built with ts-mkdocs to validate features during development
 site_url: https://example.com/
-repo_url: https://github.com/anthropics/claude-code # test
-repo_name: anthropics/claude-code # test
-# repo_token: .env里去
+repo_url: https://github.com/can-dy-jack/ts-mkdocs
+repo_name: can-dy-jack/ts-mkdocs
 copyright: Copyright &copy; {year} ts-mkdocs contributors
 
 edit_uri: edit/main/docs/
@@ -184,32 +183,32 @@ markdown_extensions:
           title: Experimental
           icon: material/experiment
           color: '#673ab7'
-  - pymdownx.details:
+  - md.details:
       default_collapsed: true
-  - pymdownx.tabbed:
+  - md.tabs:
       alternate_style: true
-  - pymdownx.superfences:
+  - md.fences:
       mermaid:
         version: "11"
         cdn:
           base: https://cdn.jsdelivr.net/npm/mermaid@11/dist
         theme: auto
-  - pymdownx.tasklist
-  - pymdownx.keys
-  - pymdownx.mark
-  - pymdownx.magiclink:
+  - md.tasklist
+  - md.keys
+  - md.mark
+  - md.links:
       normalize_issue_symbols: true
       repo_url_shorthand: true
       repo_url_shortener: true
-  - pymdownx.emoji
-  - pymdownx.caret
-  - pymdownx.tilde
+  - md.emoji
+  - md.caret
+  - md.tilde
   - attr_list
   - tables
   - footnotes
   - abbr
   - def_list
-  - pymdownx.arithmatex:
+  - md.math:
       provider: katex
       version: "0.16.22"
       cdn:

@@ -3,7 +3,7 @@
 <!--pnpm example:build   # 构建示例站点
 pnpm example:serve   # 启动 dev server，改动文件自动刷新-->
 
-A TypeScript implementation of [MkDocs](https://github.com/mkdocs/mkdocs) with a built-in [Material](https://squidfunk.github.io/mkdocs-material/) theme. Takes a directory of Markdown files and a `mkdocs.yml` config, outputs a complete static HTML site.
+A TypeScript implementation of [MkDocs](https://github.com/mkdocs/mkdocs) with a built-in [Material](https://squidfunk.github.io/mkdocs-material/) theme. Takes a directory of Markdown files and a `ts-mkdocs.yml` config, outputs a complete static HTML site.
 
 ## Features
 
@@ -46,7 +46,7 @@ The dev server listens at `http://127.0.0.1:8000` by default.
 
 ```
 my-docs/
-├── mkdocs.yml       # site configuration
+├── ts-mkdocs.yml       # site configuration
 ├── docs/            # source Markdown files
 │   ├── index.md
 │   └── guide/
@@ -54,7 +54,7 @@ my-docs/
 └── site/            # generated output (gitignore this)
 ```
 
-## Configuration (`mkdocs.yml`)
+## Configuration (`ts-mkdocs.yml`)
 
 ```yaml
 site_name: My Documentation
@@ -169,16 +169,16 @@ Callout blocks with a colored top border, tinted title bar, icon, and expand/col
     Use `-` after `!!!` to force closed; `+` forces open.
 
 ??? note "Details block"
-    Collapsed by default when `pymdownx.details` is enabled.
+    Collapsed by default when `md.details` is enabled.
 ```
 
-Configure default open/closed state in `mkdocs.yml`:
+Configure default open/closed state in `ts-mkdocs.yml`:
 
 ```yaml
 markdown_extensions:
   - admonition:
       default_collapsed: false
-  - pymdownx.details:
+  - md.details:
       default_collapsed: true
 ```
 
@@ -259,7 +259,7 @@ See the [setup guide](guide/setup.md) for details.
 
 ### `ts-mkdocs new <directory>`
 
-Scaffold a new project with a starter `mkdocs.yml` and `docs/index.md`.
+Scaffold a new project with a starter `ts-mkdocs.yml` and `docs/index.md`.
 
 ### `ts-mkdocs build`
 
@@ -267,7 +267,7 @@ Build the static site into `site_dir`.
 
 | Flag | Default | Description |
 |------|---------|-------------|
-| `-f, --config-file <path>` | `mkdocs.yml` | Path to config file |
+| `-f, --config-file <path>` | `ts-mkdocs.yml` | Path to config file |
 | `-d, --site-dir <path>` | from config | Override output directory |
 | `--strict` | `false` | Exit with error on warnings |
 
@@ -277,7 +277,7 @@ Start the development server with live reload.
 
 | Flag | Default | Description |
 |------|---------|-------------|
-| `-f, --config-file <path>` | `mkdocs.yml` | Path to config file |
+| `-f, --config-file <path>` | `ts-mkdocs.yml` | Path to config file |
 | `-a, --dev-addr <host:port>` | `127.0.0.1:8000` | Server address |
 | `--open` | `false` | Open browser on start |
 
@@ -311,7 +311,7 @@ const myPlugin: Plugin = {
 }
 ```
 
-Register plugins programmatically via the `PluginManager`, or configure built-in ones in `mkdocs.yml`.
+Register plugins programmatically via the `PluginManager`, or configure built-in ones in `ts-mkdocs.yml`.
 
 ## Development (contributing)
 
@@ -327,7 +327,7 @@ To test with the example site:
 ```bash
 cd packages/core
 node dist/cli.js new /tmp/test-docs
-node dist/cli.js serve -f /tmp/test-docs/mkdocs.yml
+node dist/cli.js serve -f /tmp/test-docs/ts-mkdocs.yml
 ```
 
 ### Monorepo structure
@@ -337,7 +337,7 @@ packages/
 ├── core/            TypeScript build engine + CLI
 │   └── src/
 │       ├── cli.ts       CLI commands (new / build / serve)
-│       ├── config.ts    mkdocs.yml loader + Zod schema
+│       ├── config.ts    ts-mkdocs.yml loader + Zod schema
 │       ├── files.ts     Markdown file discovery
 │       ├── nav.ts       Navigation tree builder
 │       ├── markdown.ts  markdown-it renderer + admonitions

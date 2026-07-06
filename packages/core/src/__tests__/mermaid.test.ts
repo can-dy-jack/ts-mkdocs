@@ -10,7 +10,7 @@ describe('resolveMermaidConfig', () => {
 
   it('defaults when superfences is enabled without options', () => {
     expect(resolveMermaidConfig({
-      markdown_extensions: ['pymdownx.superfences'],
+      markdown_extensions: ['md.fences'],
     } as any)).toEqual({
       enabled: true,
       version: '11',
@@ -34,7 +34,7 @@ describe('resolveMermaidConfig', () => {
   it('supports custom version and cdn javascript', () => {
     expect(resolveMermaidConfig({
       markdown_extensions: [{
-        'pymdownx.superfences': {
+        'md.fences': {
           mermaid: {
             version: '10.6.1',
             cdn: {
@@ -56,7 +56,7 @@ describe('resolveMermaidConfig', () => {
   it('supports cdn base as a directory', () => {
     expect(resolveMermaidConfig({
       markdown_extensions: [{
-        'pymdownx.superfences': {
+        'md.fences': {
           mermaid: {
             cdn: { base: 'https://cdn.example.com/mermaid/dist/' },
           },
@@ -72,7 +72,7 @@ describe('resolveMermaidConfig', () => {
   it('supports cdn base as a full script url', () => {
     expect(resolveMermaidConfig({
       markdown_extensions: [{
-        'pymdownx.superfences': {
+        'md.fences': {
           mermaid: {
             cdn: { base: 'https://cdn.example.com/mermaid.esm.min.mjs' },
           },
@@ -88,7 +88,7 @@ describe('resolveMermaidConfig', () => {
   it('supports diagram and theme options', () => {
     expect(resolveMermaidConfig({
       markdown_extensions: [{
-        'pymdownx.superfences': {
+        'md.fences': {
           mermaid: {
             theme: 'forest',
             securityLevel: 'strict',

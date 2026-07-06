@@ -39,7 +39,7 @@ This generates:
 
 ```
 my-docs/
-├── mkdocs.yml
+├── ts-mkdocs.yml
 └── docs/
     └── index.md
 ```
@@ -58,7 +58,7 @@ Open <http://127.0.0.1:8000> in your browser. The page reloads automatically whe
 ts-mkdocs build
 ```
 
-Output lands in `site/` (or whatever `site_dir` is set to in `mkdocs.yml`).
+Output lands in `site/` (or whatever `site_dir` is set to in `ts-mkdocs.yml`).
 
 !!! note
     Add `site/` to your `.gitignore` — it is generated output and should not be committed.

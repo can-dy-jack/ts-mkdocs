@@ -19,7 +19,7 @@ Fenced code blocks use **Shiki** for syntax highlighting. Theme features add cop
 
 ```yaml
 markdown_extensions:
-  - pymdownx.superfences
+  - md.fences
 
 theme:
   highlight:

@@ -269,7 +269,7 @@ function resolveMathCdn(
 export function resolveMathConfig(config: Config): MathConfig | null {
   for (const ext of config.markdown_extensions ?? []) {
     const { name, options } = parseExtension(ext)
-    if (name !== 'pymdownx.arithmatex') continue
+    if (name !== 'md.math') continue
 
     const provider = options.provider === 'mathjax' ? 'mathjax' : 'katex'
     const defaultVersion = provider === 'mathjax' ? DEFAULT_MATHJAX_VERSION : DEFAULT_KATEX_VERSION

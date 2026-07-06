@@ -21,7 +21,7 @@ Scaffold a new project.
 ts-mkdocs new my-docs
 ```
 
-Creates `mkdocs.yml` and `docs/index.md` inside `<directory>`.
+Creates `ts-mkdocs.yml` and `docs/index.md` inside `<directory>`.
 
 ---
 
@@ -31,14 +31,14 @@ Build the static site.
 
 ```bash
 ts-mkdocs build
-ts-mkdocs build -f path/to/mkdocs.yml
+ts-mkdocs build -f path/to/ts-mkdocs.yml
 ts-mkdocs build -d /tmp/output
 ts-mkdocs build --strict
 ```
 
 | Flag | Default | Description |
 |------|---------|-------------|
-| `-f, --config-file <path>` | `mkdocs.yml` | Config file path |
+| `-f, --config-file <path>` | `ts-mkdocs.yml` | Config file path |
 | `-d, --site-dir <path>` | from config | Override output directory |
 | `--strict` | `false` | Treat warnings as errors |
 
@@ -56,7 +56,7 @@ ts-mkdocs serve --open
 
 | Flag | Default | Description |
 |------|---------|-------------|
-| `-f, --config-file <path>` | `mkdocs.yml` | Config file path |
+| `-f, --config-file <path>` | `ts-mkdocs.yml` | Config file path |
 | `-a, --dev-addr <host:port>` | `127.0.0.1:8000` | Bind address |
 | `--open` | `false` | Open browser on start |
 

@@ -1396,7 +1396,7 @@
     if (!source || !cfg || cfg.provider !== 'github' || !cfg.owner || !cfg.repo) return;
 
     // Facts fetched server-side at build time (optionally using a repo_token
-    // from mkdocs.yml) take priority: no client request, no exposed token.
+    // from ts-mkdocs.yml) take priority: no client request, no exposed token.
     if (CFG.repoSourceFacts) {
       applySourceFacts(source, CFG.repoSourceFacts);
       return;

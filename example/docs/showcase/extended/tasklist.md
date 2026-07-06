@@ -1,6 +1,6 @@
 ---
 title: Task Lists
-description: GitHub-style checkbox lists with pymdownx.tasklist
+description: GitHub-style checkbox lists with md.tasklist
 tags:
   - Task List
   - Markdown
@@ -13,13 +13,13 @@ authors:
 
 # Task Lists
 
-Checkbox lists track progress in tutorials and checklists. Enable with `pymdownx.tasklist`.
+Checkbox lists track progress in tutorials and checklists. Enable with `md.tasklist`.
 
 ## Configuration
 
 ```yaml
 markdown_extensions:
-  - pymdownx.tasklist
+  - md.tasklist
 ```
 
 ## Basic syntax
@@ -60,7 +60,7 @@ markdown_extensions:
 
 Task list items support inline formatting:
 
-- [ ] Edit **`mkdocs.yml`** and run `ts-mkdocs build`
+- [ ] Edit **`ts-mkdocs.yml`** and run `ts-mkdocs build`
 - [x] Read the [Configuration guide](../../guide/configuration.md)
 
 ## Combining with other syntax

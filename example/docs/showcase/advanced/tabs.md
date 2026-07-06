@@ -1,6 +1,6 @@
 ---
 title: Content Tabs
-description: Tabbed content blocks with pymdownx.tabbed
+description: Tabbed content blocks with md.tabs
 tags:
   - Tabs
   - Showcase
@@ -18,7 +18,7 @@ Switch between alternative content (languages, platforms, versions) without leav
 
 ```yaml
 markdown_extensions:
-  - pymdownx.tabbed:
+  - md.tabs:
       alternate_style: true
 ```
 
@@ -105,7 +105,7 @@ Tabs + tables + icons:
 === ":material-terminal: CLI"
 
     ```bash
-    ts-mkdocs serve -f mkdocs.yml
+    ts-mkdocs serve -f ts-mkdocs.yml
     ```
 
 See also [Code Blocks](../extended/code-blocks.md) and [Combinations](../nesting/combinations.md).

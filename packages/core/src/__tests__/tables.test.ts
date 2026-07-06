@@ -149,7 +149,7 @@ describe('table enhancements', () => {
       markdown_extensions: [
         'attr_list',
         'tables',
-        { 'pymdownx.magiclink': { repo_url_shorthand: true } },
+        { 'md.links': { repo_url_shorthand: true } },
       ],
     } as any)
 

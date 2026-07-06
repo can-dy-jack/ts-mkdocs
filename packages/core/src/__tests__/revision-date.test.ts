@@ -27,7 +27,7 @@ describe('revision-date', () => {
     clearRevisionDateCache()
   })
 
-  it('resolves plugin config from mkdocs.yml entries', () => {
+  it('resolves plugin config from ts-mkdocs.yml entries', () => {
     expect(
       getGitRevisionDatePluginConfig({
         plugins: ['git-revision-date'],

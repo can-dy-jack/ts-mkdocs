@@ -19,11 +19,11 @@ Two small inline extensions for UI documentation and emphasis.
 
 ```yaml
 markdown_extensions:
-  - pymdownx.keys
-  - pymdownx.mark
+  - md.keys
+  - md.mark
 ```
 
-## Keyboard shortcuts (`pymdownx.keys`)
+## Keyboard shortcuts (`md.keys`)
 
 ### Basic syntax
 
@@ -45,7 +45,7 @@ Copy with ++Ctrl+C++ (or ++Cmd+C++ on macOS).
 
 Force quit: ++Ctrl+Alt+Del++.
 
-## Highlighted text (`pymdownx.mark`)
+## Highlighted text (`md.mark`)
 
 ### Basic syntax
 
@@ -70,7 +70,7 @@ Wrap text in `==` (like highlight marker):
 ### Mark inside admonitions
 
 !!! warning
-    ==Do not== commit secrets to `mkdocs.yml`.
+    ==Do not== commit secrets to `ts-mkdocs.yml`.
 
 ## Combining with other syntax
 

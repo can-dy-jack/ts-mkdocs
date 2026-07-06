@@ -1094,7 +1094,7 @@ body {
   padding: 0 .1rem;
 }
 
-/* Task lists (pymdownx.tasklist) */
+/* Task lists (md.tasklist) */
 .md-typeset ul.task-list,
 .md-typeset ol.task-list {
   list-style: none;
@@ -3429,7 +3429,7 @@ body:has(.md-tabs--sticky.md-tabs--hidden) .md-sidebar {
 }
 
 /* ============================================================
-   Content Tabs (pymdownx.tabbed)
+   Content Tabs (md.tabs)
    ============================================================ */
 .tabbed-set {
   display: flex;

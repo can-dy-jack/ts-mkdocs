@@ -68,7 +68,7 @@ describe('resolveMathConfig', () => {
 
   it('defaults to katex', () => {
     expect(resolveMathConfig({
-      markdown_extensions: ['pymdownx.arithmatex'],
+      markdown_extensions: ['md.math'],
     } as any)).toEqual({
       enabled: true,
       provider: 'katex',
@@ -84,7 +84,7 @@ describe('resolveMathConfig', () => {
   it('supports mathjax provider and custom version', () => {
     expect(resolveMathConfig({
       markdown_extensions: [{
-        'pymdownx.arithmatex': { provider: 'mathjax', version: '3.2.2' },
+        'md.math': { provider: 'mathjax', version: '3.2.2' },
       }],
     } as any)).toEqual({
       enabled: true,
@@ -99,7 +99,7 @@ describe('resolveMathConfig', () => {
   it('supports custom cdn urls', () => {
     expect(resolveMathConfig({
       markdown_extensions: [{
-        'pymdownx.arithmatex': {
+        'md.math': {
           provider: 'katex',
           cdn: {
             stylesheet: 'https://example.com/katex.css',
@@ -120,7 +120,7 @@ describe('resolveMathConfig', () => {
   it('supports cdn base shorthand for katex', () => {
     expect(resolveMathConfig({
       markdown_extensions: [{
-        'pymdownx.arithmatex': {
+        'md.math': {
           cdn: { base: 'https://cdn.example.com/katex/dist/' },
         },
       }],

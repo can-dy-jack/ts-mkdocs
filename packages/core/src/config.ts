@@ -164,7 +164,7 @@ export function loadConfig(configPath: string): Config {
     const issues = result.error.issues
       .map((i) => `  - ${i.path.join('.')}: ${i.message}`)
       .join('\n')
-    throw new Error(`Invalid mkdocs.yml:\n${issues}`)
+    throw new Error(`Invalid ts-mkdocs.yml:\n${issues}`)
   }
 
   const config = result.data
@@ -174,7 +174,7 @@ export function loadConfig(configPath: string): Config {
   config.site_dir = resolve(configDir, config.site_dir)
 
   // Prefer an explicit repo_token, but fall back to an env var so the
-  // token never has to be committed to mkdocs.yml.
+  // token never has to be committed to ts-mkdocs.yml.
   if (!config.repo_token) {
     config.repo_token =
       process.env.TS_MKDOCS_GITHUB_TOKEN || process.env.GITHUB_TOKEN || process.env.GH_TOKEN || undefined

@@ -13,17 +13,17 @@ authors:
 
 # Mermaid
 
-ts-mkdocs renders [Mermaid](https://mermaid.js.org/) diagrams from ` ```mermaid ` code fences when `pymdownx.superfences` is enabled (included by default). The library is loaded from a CDN at build time — no extra `extra_javascript` wiring is required.
+ts-mkdocs renders [Mermaid](https://mermaid.js.org/) diagrams from ` ```mermaid ` code fences when `md.fences` is enabled (included by default). The library is loaded from a CDN at build time — no extra `extra_javascript` wiring is required.
 
 > https://mermaid.js.org/intro/getting-started.html
 
 ## Configuration
 
-Configure Mermaid under the `mermaid` key inside `pymdownx.superfences`:
+Configure Mermaid under the `mermaid` key inside `md.fences`:
 
 ```yaml
 markdown_extensions:
-  - pymdownx.superfences:
+  - md.fences:
       mermaid:
         version: "10.9.3"
         cdn:
@@ -43,7 +43,7 @@ You can also override the script URL directly:
 
 ```yaml
 markdown_extensions:
-  - pymdownx.superfences:
+  - md.fences:
       mermaid:
         cdn:
           javascript: https://cdn.example.com/mermaid.min.js
@@ -55,7 +55,7 @@ If `cdn` is omitted entirely, ts-mkdocs falls back to jsDelivr defaults derived 
 
 ```yaml
 markdown_extensions:
-  - pymdownx.superfences:
+  - md.fences:
       mermaid:
         theme: auto          # auto | default | dark | forest | neutral | base | null
         securityLevel: strict

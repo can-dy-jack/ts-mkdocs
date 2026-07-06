@@ -1,6 +1,6 @@
 ---
 title: Configuration
-description: Full reference for mkdocs.yml configuration options
+description: Full reference for ts-mkdocs.yml configuration options
 tags:
   - Configuration
   - Setup
@@ -13,7 +13,7 @@ authors:
 
 # Configuration
 
-All configuration lives in `mkdocs.yml` at the root of your project.
+All configuration lives in `ts-mkdocs.yml` at the root of your project.
 
 ## Minimal example
 
@@ -114,11 +114,11 @@ plugins:
 markdown_extensions:
   - admonition:
       default_collapsed: false   # !!! blocks: false = expanded by default
-  - pymdownx.details:
+  - md.details:
       default_collapsed: true    # ??? blocks: true = collapsed by default
-  - pymdownx.tabbed
-  - pymdownx.superfences
-  - pymdownx.emoji
+  - md.tabs
+  - md.fences
+  - md.emoji
   - attr_list
   - tables
 
@@ -347,7 +347,7 @@ The site footer shows copyright text, social links, and optional previous/next p
 
 ### Copyright
 
-Set `copyright` in `mkdocs.yml`. Use `{year}` as a placeholder for the current year:
+Set `copyright` in `ts-mkdocs.yml`. Use `{year}` as a placeholder for the current year:
 
 ```yaml
 copyright: Copyright &copy; {year} Your Name
@@ -355,7 +355,7 @@ copyright: Copyright &copy; {year} Your Name
 
 ### Social links
 
-Add icons under `extra.social` (see the example `mkdocs.yml` in this repo).
+Add icons under `extra.social` (see the example `ts-mkdocs.yml` in this repo).
 
 ### Previous / next navigation
 
@@ -380,7 +380,7 @@ hide:
 
 ## Footnotes
 
-Markdown footnotes let you add supplemental information without interrupting the main text. Enable the extension in `mkdocs.yml`:
+Markdown footnotes let you add supplemental information without interrupting the main text. Enable the extension in `ts-mkdocs.yml`:
 
 ```yaml
 markdown_extensions:
@@ -438,13 +438,13 @@ Syntax highlighting themes are configured separately under `theme.highlight.them
 
 ## Math
 
-Enable LaTeX math with the `pymdownx.arithmatex` extension. ts-mkdocs loads the renderer (KaTeX or MathJax) from a CDN — you do not need to add scripts under `extra_javascript`.
+Enable LaTeX math with the `md.math` extension. ts-mkdocs loads the renderer (KaTeX or MathJax) from a CDN — you do not need to add scripts under `extra_javascript`.
 
 ### Basic setup
 
 ```yaml
 markdown_extensions:
-  - pymdownx.arithmatex:
+  - md.math:
       provider: katex    # default — fast, self-contained
       # provider: mathjax  # alternative renderer
 ```
@@ -455,7 +455,7 @@ This is the configuration used by the example site:
 
 ```yaml
 markdown_extensions:
-  - pymdownx.arithmatex:
+  - md.math:
       provider: katex
       version: "0.16.22"
       cdn:
@@ -468,7 +468,7 @@ markdown_extensions:
 
 ```yaml
 markdown_extensions:
-  - pymdownx.arithmatex:
+  - md.math:
       provider: mathjax
       version: "3.2.2"
       cdn:
@@ -481,7 +481,7 @@ Override individual asset URLs when self-hosting or using a private CDN:
 
 ```yaml
 markdown_extensions:
-  - pymdownx.arithmatex:
+  - md.math:
       provider: katex
       cdn:
         stylesheet: https://cdn.example.com/katex.min.css
@@ -523,13 +523,13 @@ See [showcase/math](../showcase/advanced/math.md) for live examples and more det
 
 ## Mermaid diagrams
 
-Mermaid diagrams are rendered from ` ```mermaid ` code fences when `pymdownx.superfences` is enabled (included by default). ts-mkdocs loads the Mermaid library from a CDN at build time — you do not need to add scripts under `extra_javascript`.
+Mermaid diagrams are rendered from ` ```mermaid ` code fences when `md.fences` is enabled (included by default). ts-mkdocs loads the Mermaid library from a CDN at build time — you do not need to add scripts under `extra_javascript`.
 
 ### Basic setup
 
 ```yaml
 markdown_extensions:
-  - pymdownx.superfences:
+  - md.fences:
       mermaid:
         version: "10.9.3"
         cdn:
@@ -544,7 +544,7 @@ Override the script URL when self-hosting or using a private CDN:
 
 ```yaml
 markdown_extensions:
-  - pymdownx.superfences:
+  - md.fences:
       mermaid:
         cdn:
           javascript: https://cdn.example.com/mermaid.min.js
@@ -554,7 +554,7 @@ markdown_extensions:
 
 ```yaml
 markdown_extensions:
-  - pymdownx.superfences:
+  - md.fences:
       mermaid:
         theme: auto          # auto | default | dark | forest | neutral | base | null
         securityLevel: strict

@@ -14,15 +14,15 @@ authors:
 
 # Math
 
-ts-mkdocs renders LaTeX math when the `pymdownx.arithmatex` extension is enabled. The renderer (KaTeX or MathJax) is loaded from a CDN at build time — no extra `extra_javascript` wiring is required.
+ts-mkdocs renders LaTeX math when the `md.math` extension is enabled. The renderer (KaTeX or MathJax) is loaded from a CDN at build time — no extra `extra_javascript` wiring is required.
 
 ## Configuration
 
-Add the extension under `markdown_extensions` in `mkdocs.yml`:
+Add the extension under `markdown_extensions` in `ts-mkdocs.yml`:
 
 ```yaml
 markdown_extensions:
-  - pymdownx.arithmatex:
+  - md.math:
       provider: katex
 ```
 
@@ -32,7 +32,7 @@ KaTeX is fast and self-contained. This example site uses:
 
 ```yaml
 markdown_extensions:
-  - pymdownx.arithmatex:
+  - md.math:
       provider: katex
       version: "0.16.22"
       cdn:
@@ -51,7 +51,7 @@ You can also override individual URLs:
 
 ```yaml
 markdown_extensions:
-  - pymdownx.arithmatex:
+  - md.math:
       provider: katex
       cdn:
         stylesheet: https://cdn.example.com/katex.min.css
@@ -67,7 +67,7 @@ Switch the renderer with `provider: mathjax`:
 
 ```yaml
 markdown_extensions:
-  - pymdownx.arithmatex:
+  - md.math:
       provider: mathjax
       version: "3.2.2"
       cdn:

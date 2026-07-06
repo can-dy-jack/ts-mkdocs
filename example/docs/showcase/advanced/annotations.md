@@ -19,7 +19,7 @@ Little numbered markers that can be placed almost anywhere in a document and exp
 ```yaml
 markdown_extensions:
   - attr_list
-  - pymdownx.superfences
+  - md.fences
 
 theme:
   features:

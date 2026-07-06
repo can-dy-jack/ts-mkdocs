@@ -14,29 +14,29 @@ authors:
 
 # Superscript & Subscript
 
-Inline superscript and subscript via `pymdownx.caret` and `pymdownx.tilde` — compatible with [Material for MkDocs formatting](https://squidfunk.github.io/mkdocs-material/reference/formatting/).
+Inline superscript and subscript via `md.caret` and `md.tilde` — compatible with [Material for MkDocs formatting](https://squidfunk.github.io/mkdocs-material/reference/formatting/).
 
 ## Configuration
 
 ```yaml
 markdown_extensions:
-  - pymdownx.caret
-  - pymdownx.tilde
+  - md.caret
+  - md.tilde
 ```
 
 Both extensions are optional. Disable individual features when needed:
 
 ```yaml
 markdown_extensions:
-  - pymdownx.caret:
+  - md.caret:
       insert: true
       superscript: true
-  - pymdownx.tilde:
+  - md.tilde:
       delete: true
       subscript: true
 ```
 
-## Superscript (`pymdownx.caret`)
+## Superscript (`md.caret`)
 
 Wrap text in single `^` delimiters:
 
@@ -58,7 +58,7 @@ text^a\ superscript^
 
 Use a backslash before spaces inside the delimiter (`\ `) when the superscript contains spaces.
 
-## Subscript (`pymdownx.tilde`)
+## Subscript (`md.tilde`)
 
 Wrap text in single `~` delimiters:
 
@@ -94,7 +94,7 @@ The same extensions also support tracked changes syntax used by Material for MkD
 
 ~~Deleted text~~
 
-When `pymdownx.tilde` is enabled with `delete: true` (default), `~~…~~` renders as `<del>` instead of the built-in GFM strikethrough (`<s>`).
+When `md.tilde` is enabled with `delete: true` (default), `~~…~~` renders as `<del>` instead of the built-in GFM strikethrough (`<s>`).
 
 ## Advanced usage
 

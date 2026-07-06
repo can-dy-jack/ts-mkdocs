@@ -38,13 +38,13 @@ Two packages under `packages/`:
 - **`core/`** — Build engine + CLI (published as `ts-mkdocs`). Entry points: `src/cli.ts` (CLI), `src/index.ts` (public API).
 - **`theme-material/`** — Nunjucks templates + static assets (published as `ts-mkdocs-theme-material`). Exports `templatesDir`, `assetsDir`, `brandDir` from `index.js`.
 
-The `example/` directory contains a test site with its own `mkdocs.yml`.
+The `example/` directory contains a test site with its own `ts-mkdocs.yml`.
 
 ## Architecture
 
 ### Build Pipeline ([build.ts](packages/core/src/build.ts))
 
-1. Config loaded from `mkdocs.yml`, validated with Zod ([config.ts](packages/core/src/config.ts))
+1. Config loaded from `ts-mkdocs.yml`, validated with Zod ([config.ts](packages/core/src/config.ts))
 2. Plugin lifecycle: `on_config` → `on_files` → `on_nav` → `on_page_markdown` → `on_page_content` → `on_post_build` ([plugins.ts](packages/core/src/plugins.ts))
 3. Markdown files discovered from `docs_dir` ([files.ts](packages/core/src/files.ts))
 4. Navigation tree built from config or inferred from file structure ([nav.ts](packages/core/src/nav.ts))

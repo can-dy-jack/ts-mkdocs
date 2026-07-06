@@ -9,9 +9,9 @@
     "lint": "pnpm -r lint",
     "typecheck": "pnpm -r typecheck",
     "test": "pnpm -r test",
-    "example:build": "node packages/core/dist/cli.js build -f example/mkdocs.yml",
-    "example:serve": "node packages/core/dist/cli.js serve -f example/mkdocs.yml",
-    "start": "node packages/core/dist/cli.js serve -f example/mkdocs.yml"
+    "example:build": "node packages/core/dist/cli.js build -f example/ts-mkdocs.yml",
+    "example:serve": "node packages/core/dist/cli.js serve -f example/ts-mkdocs.yml",
+    "start": "node packages/core/dist/cli.js serve -f example/ts-mkdocs.yml"
   },
   "devDependencies": {
     "typescript": "^5.5.0"

@@ -34,7 +34,7 @@ program
     }
 
     writeFileSync(
-      resolve(projectDir, 'mkdocs.yml'),
+      resolve(projectDir, 'ts-mkdocs.yml'),
       `site_name: My Documentation
 site_description: My documentation site
 docs_dir: docs
@@ -103,7 +103,7 @@ Edit this file to get started with your documentation.
 program
   .command('build')
   .description('Build the documentation site')
-  .option('-f, --config-file <path>', 'Config file path', 'mkdocs.yml')
+  .option('-f, --config-file <path>', 'Config file path', 'ts-mkdocs.yml')
   .option('-d, --site-dir <path>', 'Output directory')
   .option('--strict', 'Enable strict mode')
   .action(async (options: { configFile: string; siteDir?: string; strict?: boolean }) => {
@@ -122,7 +122,7 @@ program
 program
   .command('serve')
   .description('Start the development server with live reload')
-  .option('-f, --config-file <path>', 'Config file path', 'mkdocs.yml')
+  .option('-f, --config-file <path>', 'Config file path', 'ts-mkdocs.yml')
   .option('-a, --dev-addr <addr>', 'Dev server address', '127.0.0.1:8000')
   .option('--open', 'Open browser after starting', false)
   .action(async (options: { configFile: string; devAddr: string; open: boolean }) => {

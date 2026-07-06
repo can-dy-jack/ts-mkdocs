@@ -62,7 +62,7 @@ Individual syntax pages show each feature in isolation. This page demonstrates *
 
 Press ++Ctrl+F++ to search the docs[^search]. See [Code Blocks](../extended/code-blocks.md) for theme features.
 
-[^search]: Requires the `search` plugin in `mkdocs.yml`.
+[^search]: Requires the `search` plugin in `ts-mkdocs.yml`.
 
 ## Nested quotes and callouts
 

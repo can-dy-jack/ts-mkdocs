@@ -14,13 +14,13 @@ authors:
 
 # MagicLink
 
-Auto-link repository references with [PyMdown MagicLink](https://facelessuser.github.io/pymdown-extensions/extensions/magiclink/) syntax. Requires `pymdownx.magiclink` in `markdown_extensions`.
+Auto-link repository references with [PyMdown MagicLink](https://facelessuser.github.io/pymdown-extensions/extensions/magiclink/) syntax. Requires `md.links` in `markdown_extensions`.
 
-The example site uses `repo_url` from `mkdocs.yml` as the default repository context, so shorthand like `#1` resolves against `anthropics/claude-code`.
+The example site uses `repo_url` from `ts-mkdocs.yml` as the default repository context, so shorthand like `#1` resolves against `anthropics/claude-code`.
 
 ```yaml
 markdown_extensions:
-  - pymdownx.magiclink:
+  - md.links:
       normalize_issue_symbols: true
       repo_url_shorthand: true
       repo_url_shortener: true

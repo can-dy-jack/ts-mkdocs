@@ -80,7 +80,7 @@ function isSuperfencesEnabled(config: Config): boolean {
   if (extensions.length === 0) return true
   for (const ext of extensions) {
     const { name } = parseExtension(ext)
-    if (name === 'pymdownx.superfences') return true
+    if (name === 'md.fences') return true
   }
   return false
 }
@@ -89,7 +89,7 @@ function getSuperfencesOptions(config: Config): Record<string, unknown> {
   const extensions = config.markdown_extensions ?? []
   for (const ext of extensions) {
     const { name, options } = parseExtension(ext)
-    if (name === 'pymdownx.superfences') return options
+    if (name === 'md.fences') return options
   }
   return {}
 }

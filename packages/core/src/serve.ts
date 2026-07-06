@@ -57,7 +57,7 @@ export async function serve(
   config: Config,
   options: ServeOptions & { configFile?: string },
 ): Promise<void> {
-  // Keep a mutable reference so config reloads on mkdocs.yml changes
+  // Keep a mutable reference so config reloads on ts-mkdocs.yml changes
   let activeConfig = config
   await build(activeConfig)
 
@@ -138,7 +138,7 @@ export async function serve(
     rebuilding = true
     try {
       if (reloadConfig && options.configFile) {
-        log('Config changed, reloading mkdocs.yml...')
+        log('Config changed, reloading ts-mkdocs.yml...')
         activeConfig = loadConfig(resolve(options.configFile))
       }
       await build(activeConfig)

@@ -81,14 +81,14 @@ https://example.com
 ### Inline code in emphasis
 
 ```markdown
-Press **`:material-check:`** after editing `mkdocs.yml`.
+Press **`:material-check:`** after editing `ts-mkdocs.yml`.
 ```
 
-Press **`:material-check:`** after editing `mkdocs.yml`.
+Press **`:material-check:`** after editing `ts-mkdocs.yml`.
 
-### Highlighted text (`pymdownx.mark`)
+### Highlighted text (`md.mark`)
 
-Requires `pymdownx.mark` in `markdown_extensions`:
+Requires `md.mark` in `markdown_extensions`:
 
 ```markdown
 ==Marked text== stands out without bold weight.
@@ -96,9 +96,9 @@ Requires `pymdownx.mark` in `markdown_extensions`:
 
 ==Marked text== stands out without bold weight.
 
-### Emoji (`pymdownx.emoji`)
+### Emoji (`md.emoji`)
 
-Requires `pymdownx.emoji` in `markdown_extensions`:
+Requires `md.emoji` in `markdown_extensions`:
 
 ```markdown
 :smile: :heart: :thumbsup: :rocket:

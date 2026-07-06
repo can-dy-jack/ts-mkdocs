@@ -18,7 +18,7 @@ ts-mkdocs supports [Giscus](https://giscus.app/) and [Utterances](https://uttera
 
 Comments appear at the bottom of a page when **both** conditions are met:
 
-1. `extra.comments` is configured in `mkdocs.yml`
+1. `extra.comments` is configured in `ts-mkdocs.yml`
 2. The page sets `comments: true` in front matter (or inherits it from `.meta.yml`)
 
 ## Giscus configuration
@@ -86,4 +86,4 @@ When `theme_dark` is set, the comment widget switches themes automatically when 
 
 ## This page
 
-This page has `comments: true` in front matter. If `extra.comments` is configured in `mkdocs.yml`, you should see the comment section below.
+This page has `comments: true` in front matter. If `extra.comments` is configured in `ts-mkdocs.yml`, you should see the comment section below.

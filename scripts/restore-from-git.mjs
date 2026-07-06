@@ -51,7 +51,7 @@ write('packages/theme-material/assets/js/material.js', cat('7a6c61d352b997f83c65
 // Docs
 write('README.md', cat('516952d706c1c40229f0f2681174a45c714caa0f'))
 write('AGENTS.md', cat('ad1557956d7a72c7203fa63c686d8672a4014ae8'))
-write('example/mkdocs.yml', cat('4be27aabef0a0c4179389eb8b871fd5d7bed37c9'))
+write('example/ts-mkdocs.yml', cat('4be27aabef0a0c4179389eb8b871fd5d7bed37c9'))
 
 // home.html - search blob
 const blobs = execSync('git fsck --lost-found 2>/dev/null | grep "dangling blob" | awk \'{print $3}\'', {

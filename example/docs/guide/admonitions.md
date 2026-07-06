@@ -15,13 +15,13 @@ authors:
 
 Admonitions are highlighted callout blocks for notes, warnings, tips, and similar content. Each block has a **colored top border**, a **tinted title bar** with an icon, and a **collapse toggle** on the right.
 
-Enable them in `mkdocs.yml`:
+Enable them in `ts-mkdocs.yml`:
 
 ```yaml
 markdown_extensions:
   - admonition:
       default_collapsed: false
-  - pymdownx.details:
+  - md.details:
       default_collapsed: true
 ```
 
@@ -49,7 +49,7 @@ Custom title:
     | Option | Extension | Default | Description |
     |--------|-----------|---------|-------------|
     | `default_collapsed` | `admonition` | `false` | Initial state for `!!!` blocks |
-    | `default_collapsed` | `pymdownx.details` | `true` | Initial state for `???` blocks |
+    | `default_collapsed` | `md.details` | `true` | Initial state for `???` blocks |
     | `collapse` | both | — | Alias for `default_collapsed` |
     | `+` / `-` suffix | per block | — | Force open / closed for one block |
     ---
@@ -91,7 +91,7 @@ All admonitions can be expanded or collapsed by clicking the title bar.
 
 ### `!!!` — standard admonitions
 
-By default, `!!!` blocks start **expanded**. Configure the default in `mkdocs.yml`:
+By default, `!!!` blocks start **expanded**. Configure the default in `ts-mkdocs.yml`:
 
 ```yaml
 markdown_extensions:
@@ -111,7 +111,7 @@ Override for a single block with `+` (force open) or `-` (force closed) immediat
 
 ### `???` — details-style admonitions
 
-Use `???` when you want collapsible callouts that **start collapsed** by default (requires `pymdownx.details` in `markdown_extensions`):
+Use `???` when you want collapsible callouts that **start collapsed** by default (requires `md.details` in `markdown_extensions`):
 
 ```markdown
 ??? note "Click to expand"
@@ -122,7 +122,7 @@ Configure the default:
 
 ```yaml
 markdown_extensions:
-  - pymdownx.details:
+  - md.details:
       default_collapsed: true    # false = start expanded
 ```
 
@@ -193,7 +193,7 @@ Icon overrides in `theme.icon.admonition` still take precedence over `types.*.ic
 | Option | Extension | Default | Description |
 |--------|-----------|---------|-------------|
 | `default_collapsed` | `admonition` | `false` | Initial state for `!!!` blocks |
-| `default_collapsed` | `pymdownx.details` | `true` | Initial state for `???` blocks |
+| `default_collapsed` | `md.details` | `true` | Initial state for `???` blocks |
 | `collapse` | both | — | Alias for `default_collapsed` |
 | `types` | `admonition` | — | Custom admonition type definitions |
 | `+` / `-` suffix | per block | — | Force open / closed for one block |

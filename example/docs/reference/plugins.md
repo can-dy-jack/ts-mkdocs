@@ -24,7 +24,7 @@ import type { Plugin } from 'ts-mkdocs'
 const myPlugin: Plugin = {
   name: 'my-plugin',
 
-  // Called after mkdocs.yml is loaded and validated.
+  // Called after ts-mkdocs.yml is loaded and validated.
   on_config(config) {
     config.extra ??= {}
     config.extra.build_time = new Date().toISOString()
@@ -82,4 +82,4 @@ const manager = new PluginManager()
 manager.register(myPlugin)
 ```
 
-Built-in plugins (`search`) are wired up automatically based on the `plugins:` list in `mkdocs.yml`.
+Built-in plugins (`search`) are wired up automatically based on the `plugins:` list in `ts-mkdocs.yml`.

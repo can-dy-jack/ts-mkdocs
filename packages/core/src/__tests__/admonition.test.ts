@@ -43,7 +43,7 @@ describe('admonition', () => {
     expect(forcedClosed).not.toContain(' open>')
   })
 
-  it('renders pymdownx.details collapsed by default', () => {
+  it('renders md.details collapsed by default', () => {
     const html = renderDetails('??? tip "More info"\n    Collapsed content\n')
     expect(html).toContain('<details class="admonition tip">')
     expect(html).not.toContain('<details class="admonition tip" open>')

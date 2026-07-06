@@ -35,7 +35,7 @@ Each Markdown page can declare metadata in YAML frontmatter at the top of the fi
 | `edit_url` | string | Full edit link override |
 | `edit_uri` | string | Edit path override relative to `repo_url` |
 | `hide` | list | Hide UI elements: `tags`, `groups`, `dates`, `authors`, `readtime`, `license`, `meta`, `footer` |
-| `comments` | boolean | Enable the comment system on this page (requires `extra.comments` in `mkdocs.yml`) |
+| `comments` | boolean | Enable the comment system on this page (requires `extra.comments` in `ts-mkdocs.yml`) |
 | `license` | bool / string / object | Article license declaration override (`false` to hide); see [Article license](#article-license) |
 | `search` | object | Search tuning: `boost`, `exclude` |
 | `hero` | object | Homepage hero: `title`, `tagline` |
@@ -93,7 +93,7 @@ search:
 
 ## Custom edit link
 
-Global edit links come from `repo_url` and `edit_uri` in `mkdocs.yml`. Override them per page when the source file lives outside the default docs folder:
+Global edit links come from `repo_url` and `edit_uri` in `ts-mkdocs.yml`. Override them per page when the source file lives outside the default docs folder:
 
 - `edit_url` — absolute URL, or a path appended to `repo_url`
 - `edit_uri` — path relative to `repo_url` that replaces the global edit path entirely
@@ -168,7 +168,7 @@ Browse all tags at [Tags](/tags/).
 
 ## Authors
 
-Define authors globally in `mkdocs.yml`, then reference them by identifier in page frontmatter:
+Define authors globally in `ts-mkdocs.yml`, then reference them by identifier in page frontmatter:
 
 ```yaml
 extra:
@@ -208,7 +208,7 @@ Authors render below the meta bar with avatar, name, title, and social link icon
 
 When enabled, a license declaration card is rendered at the bottom of each page (above tags). It shows the article title, canonical URL, author, publish date, license type, and a footer notice.
 
-Configure globally in `mkdocs.yml`:
+Configure globally in `ts-mkdocs.yml`:
 
 ```yaml
 site_url: https://example.com/   # required for the article URL line
@@ -279,7 +279,7 @@ hide:
 
 ## Reading time
 
-Reading time is computed automatically from page content. Configure it in `mkdocs.yml`:
+Reading time is computed automatically from page content. Configure it in `ts-mkdocs.yml`:
 
 ```yaml
 extra:

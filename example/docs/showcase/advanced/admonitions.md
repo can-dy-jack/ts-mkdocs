@@ -12,7 +12,7 @@ authors:
 
 # Admonitions
 
-Callout blocks with colored headers, icons, and optional collapse. Requires `admonition` and optionally `pymdownx.details`.
+Callout blocks with colored headers, icons, and optional collapse. Requires `admonition` and optionally `md.details`.
 
 Full reference: [Admonitions guide](../../guide/admonitions.md).
 
@@ -22,7 +22,7 @@ Full reference: [Admonitions guide](../../guide/admonitions.md).
 markdown_extensions:
   - admonition:
       default_collapsed: false
-  - pymdownx.details:
+  - md.details:
       default_collapsed: true
 ```
 
@@ -81,7 +81,7 @@ Three exclamation marks, type name, indented body (four spaces):
 
 ### Collapsible (`???`)
 
-`???` blocks default to **collapsed** (when `pymdownx.details` is enabled):
+`???` blocks default to **collapsed** (when `md.details` is enabled):
 
 ```markdown
 ??? note "Click to expand"
